@@ -1,0 +1,6 @@
+board:
+  name: v85xxp_board
+  full_name: V85XXP Development Board
+  vendor: custom
+  socs:
+    - name: v85xxp

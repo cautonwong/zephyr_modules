@@ -1,0 +1,13 @@
+"D:\IAR\arm\bin\armproc.dll" 
+
+"D:\IAR\arm\bin\armjlink2.dll" 
+
+"D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\I2C\I2C_EEPROM_AT24C256_100KClock\EWARM\Debug\Exe\template.out" 
+
+--plugin="D:\IAR\arm\bin\armbat.dll" 
+
+--flash_loader="D:\IAR\arm\config\flashloader\VANGO\FlashV85XXP.board" 
+
+
+
+

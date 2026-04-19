@@ -1,0 +1,16 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies V32F20X Watchdog
+compatible: "vango,v32f20x-watchdog"
+include: [base.yaml]
+properties:
+  reg:
+    type: array
+    required: true
+  clocks:
+    type: phandle-array
+    required: true
+  resets:
+    type: phandle-array
+    required: true

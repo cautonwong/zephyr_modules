@@ -1,0 +1,15 @@
+if SOC_SERIES_V85XXP
+
+config SOC_SERIES
+	default "v85xxp"
+
+config SOC
+	default "v85xxp" if SOC_V85XXP
+
+config NUM_IRQS
+	default 29
+
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+	default 6553600
+
+endif # SOC_SERIES_V85XXP

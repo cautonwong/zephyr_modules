@@ -1,0 +1,8 @@
+config SERIAL_V85XXP
+	bool "V85XXP UART driver"
+	default y
+	depends on SERIAL
+	depends on DT_HAS_V85XXP_UART_ENABLED
+	select SERIAL_HAS_DRIVER
+	help
+	  Enable the polling UART driver for the V85XXP UART block.

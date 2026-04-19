@@ -1,0 +1,10 @@
+# Drivers configuration
+menu "RN8xxx Drivers"
+    depends on SOC_SERIES_RN8XXX
+
+config RN8XXX_GPIO
+    bool "RN8xxx GPIO Driver"
+    default y
+    depends on GPIO
+
+endmenu

@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2024 Renergy Technologies
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <arm/armv6-m.dtsi>
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <mem.h>
+
+/ {
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        cpu0: cpu@0 {
+            device_type = "cpu";
+            compatible = "arm,cortex-m0";
+            reg = <0>;
+        };
+    };
+
+    sram0: memory@20000000 {
+        compatible = "mmio-sram";
+        reg = <0x20000000 DT_SIZE_K(32)>;
+    };
+
+    flash0: flash@0 {
+        compatible = "soc-nv-flash";
+        reg = <0x00000000 DT_SIZE_K(128)>;
+    };
+
+    soc {
+        uart0: uart@40004000 {
+            compatible = "renergy,rn8xxx-uart";
+            reg = <0x40004000 0x400>;
+            interrupts = <3 0>;
+            status = "disabled";
+        };
+
+        gpioa: gpio@40010000 {
+            compatible = "renergy,rn8xxx-gpio";
+            reg = <0x40010000 0x400>;
+            gpio-controller;
+            #gpio-cells = <2>;
+            status = "okay";
+        };
+    };
+};

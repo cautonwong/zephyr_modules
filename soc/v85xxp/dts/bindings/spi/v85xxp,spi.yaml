@@ -1,0 +1,14 @@
+description: V85XXP SPI controller
+
+compatible: "v85xxp,spi"
+
+include:
+  - name: spi-controller.yaml
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true

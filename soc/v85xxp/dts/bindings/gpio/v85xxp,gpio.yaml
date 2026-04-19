@@ -1,0 +1,14 @@
+description: V85XXP GPIO controller
+
+compatible: "v85xxp,gpio"
+
+include:
+  - name: gpio-controller.yaml
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  "#gpio-cells":
+    const: 2

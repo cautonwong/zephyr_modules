@@ -1,0 +1,9 @@
+config DMA_V32F20X
+    bool "V32F20X DMA Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_DMA_ENABLED
+    select DMA
+    select VANGO_V32F20X_HAL_DMA if SOC_V32F20X_CPU1
+    select VANGO_V32F20X_HAL_BDMA if SOC_V32F20X_CPU0
+    help
+      Enable support for Vango V32F20X DMA/BDMA controller.

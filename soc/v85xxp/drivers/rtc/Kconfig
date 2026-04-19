@@ -1,0 +1,7 @@
+config RTC_V85XXP
+	bool "V85XXP RTC driver"
+	default y
+	depends on RTC
+	depends on DT_HAS_V85XXP_RTC_ENABLED
+	help
+	  Enable RTC driver for V85XXP.

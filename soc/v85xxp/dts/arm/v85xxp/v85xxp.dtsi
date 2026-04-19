@@ -1,0 +1,264 @@
+/*
+ * Copyright (c) 2026
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <arm/armv6-m.dtsi>
+#include <mem.h>
+
+/ {
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-m0";
+			reg = <0>;
+		};
+	};
+
+	sram0: memory@20000000 {
+		compatible = "mmio-sram";
+		reg = <0x20000000 DT_SIZE_K(64)>;
+	};
+
+	flash0: flash@0 {
+		compatible = "soc-nv-flash";
+		reg = <0x00000000 DT_SIZE_K(512)>;
+		erase-block-size = <1024>;
+		write-block-size = <4>;
+	};
+
+	soc {
+		nvic: interrupt-controller@e000e100 {
+			arm,num-irq-priority-bits = <2>;
+		};
+
+		flashc: flash-controller@fff00 {
+			compatible = "v85xxp,flash-controller";
+			reg = <0x000fff00 0x100>;
+			status = "okay";
+		};
+
+		dma0: dma@40010000 {
+			compatible = "v85xxp,dma";
+			reg = <0x40010000 0x80>;
+			interrupts = <22 0>;
+			#dma-cells = <1>;
+			dma-channels = <4>;
+			dma-requests = <32>;
+			status = "disabled";
+		};
+
+		uart0: uart@40011800 {
+			compatible = "v85xxp,uart";
+			reg = <0x40011800 0x18>;
+			interrupts = <6 0>;
+			status = "disabled";
+		};
+
+		uart1: uart@40011820 {
+			compatible = "v85xxp,uart";
+			reg = <0x40011820 0x18>;
+			interrupts = <7 0>;
+			status = "disabled";
+		};
+
+		uart2: uart@40011840 {
+			compatible = "v85xxp,uart";
+			reg = <0x40011840 0x18>;
+			interrupts = <8 0>;
+			status = "disabled";
+		};
+
+		uart3: uart@40011860 {
+			compatible = "v85xxp,uart";
+			reg = <0x40011860 0x18>;
+			interrupts = <9 0>;
+			status = "disabled";
+		};
+
+		uart4: uart@40011880 {
+			compatible = "v85xxp,uart";
+			reg = <0x40011880 0x18>;
+			interrupts = <10 0>;
+			status = "disabled";
+		};
+
+		uart5: uart@400118a0 {
+			compatible = "v85xxp,uart";
+			reg = <0x400118a0 0x18>;
+			interrupts = <11 0>;
+			status = "disabled";
+		};
+
+		gpiob: gpio@40000020 {
+			compatible = "v85xxp,gpio";
+			reg = <0x40000020 0x14>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			ngpios = <16>;
+			status = "disabled";
+		};
+
+		gpioc: gpio@40000040 {
+			compatible = "v85xxp,gpio";
+			reg = <0x40000040 0x14>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			ngpios = <16>;
+			status = "disabled";
+		};
+
+		gpiod: gpio@40000060 {
+			compatible = "v85xxp,gpio";
+			reg = <0x40000060 0x14>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			ngpios = <16>;
+			status = "disabled";
+		};
+
+		gpioe: gpio@40000080 {
+			compatible = "v85xxp,gpio";
+			reg = <0x40000080 0x14>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			ngpios = <16>;
+			status = "disabled";
+		};
+
+		gpiof: gpio@400000a0 {
+			compatible = "v85xxp,gpio";
+			reg = <0x400000a0 0x14>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			ngpios = <16>;
+			status = "disabled";
+		};
+
+		i2c0: i2c@40010800 {
+			compatible = "v85xxp,i2c";
+			reg = <0x40010800 0x1c>;
+			interrupts = <4 0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		spi1: spi@40011000 {
+			compatible = "v85xxp,spi";
+			reg = <0x40011000 0x18>;
+			interrupts = <5 0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		spi2: spi@40015800 {
+			compatible = "v85xxp,spi";
+			reg = <0x40015800 0x18>;
+			interrupts = <27 0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		spi3: spi@40016000 {
+			compatible = "v85xxp,spi";
+			reg = <0x40016000 0x18>;
+			interrupts = <28 0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		pwm0: pwm@40012900 {
+			compatible = "v85xxp,pwm";
+			reg = <0x40012900 0x20>;
+			interrupts = <18 0>;
+			#pwm-cells = <3>;
+			status = "disabled";
+		};
+
+		pwm1: pwm@40012920 {
+			compatible = "v85xxp,pwm";
+			reg = <0x40012920 0x20>;
+			interrupts = <19 0>;
+			#pwm-cells = <3>;
+			status = "disabled";
+		};
+
+		pwm2: pwm@40012940 {
+			compatible = "v85xxp,pwm";
+			reg = <0x40012940 0x20>;
+			interrupts = <20 0>;
+			#pwm-cells = <3>;
+			status = "disabled";
+		};
+
+		pwm3: pwm@40012960 {
+			compatible = "v85xxp,pwm";
+			reg = <0x40012960 0x20>;
+			interrupts = <21 0>;
+			#pwm-cells = <3>;
+			status = "disabled";
+		};
+
+		tmr0: counter@40012800 {
+			compatible = "v85xxp,tmr-counter";
+			reg = <0x40012800 0x10>;
+			interrupts = <14 0>;
+			max-top-value = <0xffffffff>;
+			status = "disabled";
+		};
+
+		tmr1: counter@40012820 {
+			compatible = "v85xxp,tmr-counter";
+			reg = <0x40012820 0x10>;
+			interrupts = <15 0>;
+			max-top-value = <0xffffffff>;
+			status = "disabled";
+		};
+
+		tmr2: counter@40012840 {
+			compatible = "v85xxp,tmr-counter";
+			reg = <0x40012840 0x10>;
+			interrupts = <16 0>;
+			max-top-value = <0xffffffff>;
+			status = "disabled";
+		};
+
+		tmr3: counter@40012860 {
+			compatible = "v85xxp,tmr-counter";
+			reg = <0x40012860 0x10>;
+			interrupts = <17 0>;
+			max-top-value = <0xffffffff>;
+			status = "disabled";
+		};
+
+		wdt0: watchdog@40014000 {
+			compatible = "v85xxp,wdt";
+			reg = <0x40014000 0x500>;
+			interrupts = <0 0>;
+			status = "disabled";
+		};
+
+		adc0: adc@40014200 {
+			compatible = "v85xxp,adc";
+			reg = <0x40014200 0x100>;
+			interrupts = <24 0>;
+			#io-channel-cells = <1>;
+			status = "disabled";
+		};
+
+		rtc0: rtc@40014800 {
+			compatible = "v85xxp,rtc";
+			reg = <0x40014800 0xf4>;
+			interrupts = <1 0>;
+			clock-frequency = <32768>;
+			status = "disabled";
+		};
+	};
+};

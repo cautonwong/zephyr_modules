@@ -1,0 +1,8 @@
+identifier: v85xxp_board
+name: V85XXP Development Board
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+supported:
+  - v85xxp_board

@@ -1,0 +1,36 @@
+/dts-v1/;
+#include <arm/vango/v32f20x/v32f20x.dtsi>
+
+/ {
+    model = "V32F20X Development Board";
+    compatible = "vango,v32f20x-board";
+
+    chosen {
+        zephyr,sram = &sram0;
+        zephyr,flash = &flash0;
+        zephyr,console = &uart0;
+        zephyr,shell-uart = &uart0;
+    };
+
+    aliases {
+        uart-0 = &uart0;
+        gpio-0 = &gpioa;
+        gpio-1 = &gpiob;
+    };
+};
+
+&uart0 {
+    pinctrl-0 = <&uart0_default>;
+    pinctrl-names = "default";
+    status = "okay";
+    current-speed = <115200>;
+};
+
+&pinctrl {
+    uart0_default: uart0_default {
+        group1 {
+            pinmux = <VANGO_PINMUX(VANGO_PORT_A, 9, 1)>, /* UART0_TX */
+                     <VANGO_PINMUX(VANGO_PORT_A, 10, 1)>; /* UART0_RX */
+        };
+    };
+};

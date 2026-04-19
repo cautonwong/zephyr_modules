@@ -1,0 +1,18 @@
+config ZEPHYR_CMSIS_MODULE
+	bool
+	default y
+
+config HAS_CMSIS_CORE
+	bool
+	select HAS_CMSIS_CORE_A if CPU_AARCH32_CORTEX_A
+	select HAS_CMSIS_CORE_R if CPU_AARCH32_CORTEX_R
+
+if HAS_CMSIS_CORE
+
+config HAS_CMSIS_CORE_A
+	bool
+
+config HAS_CMSIS_CORE_R
+	bool
+
+endif

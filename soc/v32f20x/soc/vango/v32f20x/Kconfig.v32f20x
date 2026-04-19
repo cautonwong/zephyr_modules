@@ -1,0 +1,58 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/soc/vango/v32f20x/Kconfig.soc"
+
+if SOC_SERIES_V32F20X
+
+config SOC_FAMILY
+    default "vango"
+
+config SOC_SERIES
+    default "v32f20x"
+
+config SOC
+    default "v32f20x"
+
+# 1. Register HAL capability
+config HAS_V32F20X_HAL
+    bool
+    default y
+
+# 2. Force Enable HAL Component Symbols
+# To ensure they are active when building the HAL library
+
+config VANGO_V32F20X_HAL_ADC
+    default y if ADC
+config VANGO_V32F20X_HAL_CAN
+    default y if CAN
+config VANGO_V32F20X_HAL_CLK
+    default y
+config VANGO_V32F20X_HAL_CRC
+    default y
+config VANGO_V32F20X_HAL_CRYPT
+    default y
+config VANGO_V32F20X_HAL_DAC
+    default y
+config VANGO_V32F20X_HAL_DMA
+    bool
+config VANGO_V32F20X_HAL_BDMA
+    bool
+config VANGO_V32F20X_HAL_GPIO
+    default y
+config VANGO_V32F20X_HAL_I2C
+    default y if I2C
+config VANGO_V32F20X_HAL_UART
+    default y if SERIAL
+config VANGO_V32F20X_HAL_SPI
+    default y if SPI
+config VANGO_V32F20X_HAL_SYSCFG
+    default y
+config VANGO_V32F20X_HAL_TIMER
+    default y
+config VANGO_V32F20X_HAL_WDT
+    default y if WATCHDOG
+config VANGO_V32F20X_HAL_MISC
+    default y
+
+endif

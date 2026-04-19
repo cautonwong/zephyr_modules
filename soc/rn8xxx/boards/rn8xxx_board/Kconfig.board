@@ -1,0 +1,3 @@
+config BOARD_RN8XXX_BOARD
+    bool "RN8xxx Development Board"
+    depends on SOC_SERIES_RN8XXX

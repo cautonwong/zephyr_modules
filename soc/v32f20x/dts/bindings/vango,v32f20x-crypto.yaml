@@ -1,0 +1,88 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies V32F20X Crypto Acceleration Engine
+
+compatible: "vango,v32f20x-crypto"
+
+properties:
+  reg:
+    type: array
+    type: array
+    required: true
+    description: Memory address and size of crypto engine
+
+  interrupts:
+    type: array
+    type: array
+    description: Optional crypto interrupt for completion notification
+
+  clocks:
+    type: phandle-array
+    required: true
+    description: Clock source for crypto peripheral
+
+  resets:
+    type: phandle-array
+    required: true
+    description: Reset control for crypto peripheral
+
+  dmas:
+    type: phandle-array
+    description: Optional DMA channels for crypto operations
+
+  dma-names:
+    type: string-array
+    description: Names of DMA channels ("in", "out")
+
+  supports-aes:
+    type: boolean
+    description: Support for AES encryption
+
+  aes-modes:
+    type: string-array
+    default: ["ecb", "cbc", "ctr", "ofb", "cfb"]
+    description: Supported AES modes
+
+  aes-key-sizes:
+    type: array
+    default: [128, 192, 256]
+    description: Supported AES key sizes in bits
+
+  supports-des:
+    type: boolean
+    description: Support for DES/3DES encryption
+
+  supports-hash:
+    type: boolean
+    description: Support for hash functions
+
+  hash-algorithms:
+    type: string-array
+    default: ["sha1", "sha256", "sha384", "sha512", "md5"]
+    description: Supported hash algorithms
+
+  supports-hmac:
+    type: boolean
+    description: Support for HMAC operations
+
+  supports-rsa:
+    type: boolean
+    description: Support for RSA operations
+
+  supports-ecc:
+    type: boolean
+    description: Support for ECC operations
+
+  max-sessions:
+    type: int
+    default: 4
+    description: Maximum concurrent crypto sessions
+
+  supports-high-speed:
+    type: boolean
+    description: Support for high-speed operation
+
+  max-throughput-mbps:
+    type: int
+    description: Maximum crypto throughput in Mbps

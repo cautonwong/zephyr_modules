@@ -1,0 +1,9 @@
+# SoC selection
+choice
+    prompt "RN8xxx SoC Selection"
+    depends on SOC_SERIES_RN8XXX
+
+config SOC_RN8318
+    bool "RN8318"
+
+endchoice

@@ -1,0 +1,4 @@
+name: v32f20x_hal
+build:
+  cmake: zephyr
+  kconfig: zephyr/Kconfig

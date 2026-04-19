@@ -1,0 +1,20 @@
+config CLOCK_CONTROL_V32F20X
+    bool "V32F20X Clock Control Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_CLOCK_ENABLED
+    select CLOCK_CONTROL
+    select VANGO_V32F20X_HAL_CLK
+    select VANGO_V32F20X_HAL_SYSCFG
+    help
+      Enable driver for Vango V32F20X clock controller, managing 
+      peripheral clocks and system oscillators.
+
+config RESET_V32F20X
+    bool "V32F20X Reset Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_RESET_ENABLED
+    select RESET
+    select VANGO_V32F20X_HAL_SYSCFG
+    help
+      Enable driver for Vango V32F20X reset controller, providing
+      software-controlled reset for individual peripherals.

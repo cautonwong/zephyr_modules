@@ -1,0 +1,2 @@
+# Source the SoC definition
+source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/soc/vango/v32f20x/Kconfig.soc"

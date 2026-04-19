@@ -1,0 +1,6 @@
+if BOARD_V32F20X_BOARD
+
+config BOARD
+    default "v32f20x_board"
+
+endif # BOARD_V32F20X_BOARD

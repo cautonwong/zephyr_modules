@@ -1,0 +1,2 @@
+zephyr_library()
+zephyr_library_sources_ifdef(CONFIG_COUNTER_V85XXP_TMR counter_v85xxp_tmr.c)

@@ -1,0 +1,6 @@
+if BOARD_V85XXP_BOARD
+
+config BOARD
+	default "v85xxp_board"
+
+endif # BOARD_V85XXP_BOARD

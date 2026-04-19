@@ -1,0 +1,55 @@
+# Professional Kconfig for V32F20X HAL
+
+config HAS_V32F20X_HAL
+	bool
+	help
+	  Enable V32F20X HAL
+
+config VANGO_V32F20X_HAL_ADC
+	bool
+config VANGO_V32F20X_HAL_CAN
+	bool
+config VANGO_V32F20X_HAL_CLK
+	bool
+config VANGO_V32F20X_HAL_CRC
+	bool
+config VANGO_V32F20X_HAL_CRYPT
+	bool
+config VANGO_V32F20X_HAL_DAC
+	bool
+config VANGO_V32F20X_HAL_DMA
+	bool
+config VANGO_V32F20X_HAL_BDMA
+	bool
+config VANGO_V32F20X_HAL_FLASH
+	bool
+config VANGO_V32F20X_HAL_GPIO
+	bool
+config VANGO_V32F20X_HAL_I2C
+	bool
+config VANGO_V32F20X_HAL_I2S
+	bool
+config VANGO_V32F20X_HAL_MAILBOX
+	bool
+config VANGO_V32F20X_HAL_OSPI
+	bool
+config VANGO_V32F20X_HAL_PMU
+	bool
+config VANGO_V32F20X_HAL_RNG
+	bool
+config VANGO_V32F20X_HAL_RTC
+	bool
+config VANGO_V32F20X_HAL_SDIO
+	bool
+config VANGO_V32F20X_HAL_SPI
+	bool
+config VANGO_V32F20X_HAL_SYSCFG
+	bool
+config VANGO_V32F20X_HAL_TIMER
+	bool
+config VANGO_V32F20X_HAL_UART
+	bool
+config VANGO_V32F20X_HAL_WDT
+	bool
+config VANGO_V32F20X_HAL_MISC
+	bool

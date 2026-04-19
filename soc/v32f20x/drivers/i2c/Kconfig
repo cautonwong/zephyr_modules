@@ -1,0 +1,8 @@
+config I2C_V32F20X
+    bool "V32F20X I2C Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_I2C_ENABLED
+    select I2C
+    select VANGO_V32F20X_HAL_I2C
+    help
+      Enable support for Vango V32F20X I2C.

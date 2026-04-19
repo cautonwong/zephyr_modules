@@ -1,0 +1,23 @@
+/dts-v1/;
+#include <arm/v85xxp/v85xxp.dtsi>
+
+/ {
+	model = "V85XXP Development Board";
+	compatible = "v85xxp,v85xxp-board";
+
+	chosen {
+		zephyr,console = &uart5;
+		zephyr,shell-uart = &uart5;
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+	};
+
+	aliases {
+		serial-0 = &uart5;
+	};
+};
+
+&uart5 {
+	current-speed = <115200>;
+	status = "okay";
+};

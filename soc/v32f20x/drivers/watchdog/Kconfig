@@ -1,0 +1,8 @@
+config WDT_V32F20X
+    bool "V32F20X Watchdog Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_WDT_ENABLED
+    select WATCHDOG
+    select VANGO_V32F20X_HAL_WDT
+    help
+      Enable support for Vango V32F20X Watchdog.

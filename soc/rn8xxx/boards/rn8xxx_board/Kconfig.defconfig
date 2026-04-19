@@ -1,0 +1,6 @@
+if BOARD_RN8XXX_BOARD
+
+config BOARD
+    default "rn8xxx_board"
+
+endif # BOARD_RN8XXX_BOARD

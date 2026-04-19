@@ -1,0 +1,12 @@
+description: Vango Technologies V32F20x Clock Controller
+
+compatible: "vango,v32f20x-clock"
+
+include: [base.yaml, clock-controller.yaml]
+
+properties:
+  "#clock-cells":
+    const: 1
+
+clock-cells:
+  - id

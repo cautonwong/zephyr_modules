@@ -1,0 +1,8 @@
+config SPI_V32F20X
+    bool "V32F20X SPI Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_SPI_ENABLED
+    select SPI
+    select VANGO_V32F20X_HAL_SPI
+    help
+      Enable support for Vango V32F20X SPI.

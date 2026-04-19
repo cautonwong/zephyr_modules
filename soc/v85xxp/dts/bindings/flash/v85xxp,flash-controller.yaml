@@ -1,0 +1,9 @@
+description: V85XXP internal flash controller
+
+compatible: "v85xxp,flash-controller"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true

@@ -1,0 +1,15 @@
+description: V85XXP timer counter
+
+compatible: "v85xxp,tmr-counter"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true
+
+  max-top-value:
+    type: int

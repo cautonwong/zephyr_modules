@@ -1,0 +1,9 @@
+family:
+  - name: vango
+    series:
+      - name: v32f20x
+        socs:
+          - name: v32f20x
+            cpuclusters:
+              - name: cpu0
+              - name: cpu1

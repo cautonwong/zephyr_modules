@@ -1,0 +1,7 @@
+config SPI_V85XXP
+	bool "V85XXP SPI driver"
+	default y
+	depends on SPI
+	depends on DT_HAS_V85XXP_SPI_ENABLED
+	help
+	  Enable SPI master driver for V85XXP.

@@ -1,0 +1,17 @@
+description: V85XXP PWM controller
+
+compatible: "v85xxp,pwm"
+
+include:
+  - name: pwm-controller.yaml
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true
+
+  "#pwm-cells":
+    const: 3

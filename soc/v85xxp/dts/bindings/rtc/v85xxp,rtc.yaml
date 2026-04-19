@@ -1,0 +1,14 @@
+description: V85XXP RTC
+
+compatible: "v85xxp,rtc"
+
+include:
+  - name: rtc.yaml
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true

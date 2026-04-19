@@ -1,0 +1,213 @@
+/*
+ * Copyright (c) 2024 Vango Technologies
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <arm/armv8-m.dtsi>
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pinctrl/vango-v32f20x-pinctrl.h>
+#include <mem.h>
+
+/ {
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        cpu0: cpu@0 {
+            device_type = "cpu";
+            compatible = "arm,cortex-m0";
+            reg = <0>;
+        };
+
+        cpu1: cpu@1 {
+            device_type = "cpu";
+            compatible = "arm,cortex-m33";
+            reg = <1>;
+            #address-cells = <1>;
+            #size-cells = <1>;
+
+            mpu: mpu@e000ed90 {
+                compatible = "arm,armv8m-mpu";
+                reg = <0xe000ed90 0x40>;
+            };
+        };
+    };
+
+    sram0: memory@20000000 {
+        compatible = "mmio-sram";
+        reg = <0x20000000 DT_SIZE_K(1104)>;
+    };
+
+    flash0: flash@8000000 {
+        compatible = "soc-nv-flash";
+        reg = <0x08000000 DT_SIZE_K(2304)>;
+    };
+
+    soc {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+        interrupt-parent = <&nvic>;
+
+        nvic: interrupt-controller@e000e100 {
+            compatible = "arm,v8m-nvic";
+            reg = <0xe000e100 0xc00>;
+            interrupt-controller;
+            #interrupt-cells = <2>;
+            arm,num-irq-priority-bits = <3>;
+        };
+
+        systick: timer@e000e010 {
+            compatible = "arm,armv8m-systick";
+            reg = <0xe000e010 0x10>;
+        };
+
+        syscfg: syscfg@40200000 {
+            compatible = "vango,v32f20x-syscfg", "syscon";
+            reg = <0x40200000 0x1000>;
+
+            reset: reset-controller {
+                compatible = "vango,v32f20x-reset";
+                #reset-cells = <1>;
+            };
+
+            clock: clock-controller {
+                compatible = "vango,v32f20x-clock";
+                #clock-cells = <1>;
+            };
+        };
+
+        pinctrl: pinctrl@40106400 {
+            compatible = "vango,v32f20x-pinctrl";
+            reg = <0x40106400 0x400>;
+        };
+
+        mailbox0: mailbox@40090000 {
+            compatible = "vango,v32f20x-mailbox";
+            reg = <0x40090000 0x1000>;
+            interrupts = <0 0>;
+            status = "okay";
+        };
+
+        /* DMA Controllers */
+        dma0: dma@40000000 {
+            compatible = "vango,v32f20x-dma";
+            reg = <0x40000000 0x1000>;
+            interrupts = <1 0>;
+            resets = <&reset 0>;
+            dma-channels = <8>;
+            #dma-cells = <1>;
+            status = "disabled";
+        };
+
+        dma1: dma@40001000 {
+            compatible = "vango,v32f20x-dma";
+            reg = <0x40001000 0x1000>;
+            interrupts = <2 0>;
+            resets = <&reset 1>;
+            dma-channels = <8>;
+            #dma-cells = <1>;
+            status = "disabled";
+        };
+
+        bdma: dma@41080800 {
+            compatible = "vango,v32f20x-dma";
+            reg = <0x41080800 0x1000>;
+            interrupts = <2 0>;
+            resets = <&reset 112>;
+            dma-channels = <4>;
+            #dma-cells = <1>;
+            status = "disabled";
+        };
+
+        /* FLEXCOMM 0-13 */
+        uart0: uart@40010000 { compatible = "vango,v32f20x-uart"; reg = <0x40010000 0x800>; interrupts = <60 0>; clocks = <&clock 32>; resets = <&reset 32>; status = "disabled"; };
+        uart1: uart@40010800 { compatible = "vango,v32f20x-uart"; reg = <0x40010800 0x800>; interrupts = <61 0>; clocks = <&clock 33>; resets = <&reset 33>; status = "disabled"; };
+        uart2: uart@40011000 { compatible = "vango,v32f20x-uart"; reg = <0x40011000 0x800>; interrupts = <62 0>; clocks = <&clock 34>; resets = <&reset 34>; status = "disabled"; };
+        uart3: uart@40011800 { compatible = "vango,v32f20x-uart"; reg = <0x40011800 0x800>; interrupts = <63 0>; clocks = <&clock 35>; resets = <&reset 35>; status = "disabled"; };
+        uart4: uart@40012000 { compatible = "vango,v32f20x-uart"; reg = <0x40012000 0x800>; interrupts = <64 0>; clocks = <&clock 36>; resets = <&reset 36>; status = "disabled"; };
+        uart5: uart@40012800 { compatible = "vango,v32f20x-uart"; reg = <0x40012800 0x800>; interrupts = <65 0>; clocks = <&clock 37>; resets = <&reset 37>; status = "disabled"; };
+        uart6: uart@40013000 { compatible = "vango,v32f20x-uart"; reg = <0x40013000 0x800>; interrupts = <66 0>; clocks = <&clock 38>; resets = <&reset 38>; status = "disabled"; };
+        uart7: uart@40013800 { compatible = "vango,v32f20x-uart"; reg = <0x40013800 0x800>; interrupts = <67 0>; clocks = <&clock 39>; resets = <&reset 39>; status = "disabled"; };
+        uart8: uart@40014000 { compatible = "vango,v32f20x-uart"; reg = <0x40014000 0x800>; interrupts = <68 0>; clocks = <&clock 40>; resets = <&reset 40>; status = "disabled"; };
+        uart9: uart@40014800 { compatible = "vango,v32f20x-uart"; reg = <0x40014800 0x800>; interrupts = <69 0>; clocks = <&clock 41>; resets = <&reset 41>; status = "disabled"; };
+        uart10: uart@40015000 { compatible = "vango,v32f20x-uart"; reg = <0x40015000 0x800>; interrupts = <70 0>; clocks = <&clock 42>; resets = <&reset 42>; status = "disabled"; };
+        uart11: uart@40015800 { compatible = "vango,v32f20x-uart"; reg = <0x40015800 0x800>; interrupts = <71 0>; clocks = <&clock 43>; resets = <&reset 43>; status = "disabled"; };
+        uart12: uart@40016000 { compatible = "vango,v32f20x-uart"; reg = <0x40016000 0x800>; interrupts = <72 0>; clocks = <&clock 44>; resets = <&reset 44>; status = "disabled"; };
+        uart13: uart@40016800 { compatible = "vango,v32f20x-uart"; reg = <0x40016800 0x800>; interrupts = <73 0>; clocks = <&clock 45>; resets = <&reset 45>; status = "disabled"; };
+
+        /* Standalone UARTs (14-19) */
+        uart14: uart@41030000 { compatible = "vango,v32f20x-uart"; reg = <0x41030000 0x800>; interrupts = <3 0>; clocks = <&clock 100>; resets = <&reset 100>; status = "disabled"; };
+        uart15: uart@41030800 { compatible = "vango,v32f20x-uart"; reg = <0x41030800 0x800>; interrupts = <4 0>; clocks = <&clock 101>; resets = <&reset 101>; status = "disabled"; };
+        uart16: uart@41031000 { compatible = "vango,v32f20x-uart"; reg = <0x41031000 0x800>; interrupts = <5 0>; clocks = <&clock 102>; resets = <&reset 102>; status = "disabled"; };
+        uart17: uart@41031800 { compatible = "vango,v32f20x-uart"; reg = <0x41031800 0x800>; interrupts = <6 0>; clocks = <&clock 103>; resets = <&reset 103>; status = "disabled"; };
+        uart18: uart@41032000 { compatible = "vango,v32f20x-uart"; reg = <0x41032000 0x800>; interrupts = <7 0>; clocks = <&clock 104>; resets = <&reset 104>; status = "disabled"; };
+        uart19: uart@41032800 { compatible = "vango,v32f20x-uart"; reg = <0x41032800 0x800>; interrupts = <8 0>; clocks = <&clock 105>; resets = <&reset 105>; status = "disabled"; };
+
+        /* I2C & SPI */
+        i2c0: i2c@40010000 { compatible = "vango,v32f20x-i2c"; reg = <0x40010000 0x800>; interrupts = <60 0>; clocks = <&clock 32>; resets = <&reset 32>; status = "disabled"; #address-cells = <1>; #size-cells = <0>; };
+        spi0: spi@40010000 { compatible = "vango,v32f20x-spi"; reg = <0x40010000 0x800>; interrupts = <60 0>; clocks = <&clock 32>; resets = <&reset 32>; status = "disabled"; #address-cells = <1>; #size-cells = <0>; };
+
+        /* GPIOs */
+        gpioa: gpio@40104000 {
+            compatible = "vango,v32f20x-gpio";
+            reg = <0x40104000 0x400>;
+            gpio-controller;
+            #gpio-cells = <2>;
+            ngpios = <16>;
+            interrupts = <82 0>, <83 0>, <84 0>, <85 0>, <86 0>, <87 0>, <88 0>, <89 0>,
+                         <90 0>, <91 0>, <92 0>, <93 0>, <94 0>, <95 0>, <96 0>, <97 0>;
+            resets = <&reset 48>;
+            status = "okay";
+        };
+        gpiob: gpio@40104400 { compatible = "vango,v32f20x-gpio"; reg = <0x40104400 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+        gpioc: gpio@40104800 { compatible = "vango,v32f20x-gpio"; reg = <0x40104800 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+        gpiod: gpio@40104c00 { compatible = "vango,v32f20x-gpio"; reg = <0x40104c00 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+        gpioe: gpio@40105000 { compatible = "vango,v32f20x-gpio"; reg = <0x40105000 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+        gpiof: gpio@40105400 { compatible = "vango,v32f20x-gpio"; reg = <0x40105400 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+        gpiog: gpio@40105800 { compatible = "vango,v32f20x-gpio"; reg = <0x40105800 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+        gpioh: gpio@40105c00 { compatible = "vango,v32f20x-gpio"; reg = <0x40105c00 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+        gpioi: gpio@40106000 { compatible = "vango,v32f20x-gpio"; reg = <0x40106000 0x400>; gpio-controller; #gpio-cells = <2>; ngpios = <16>; resets = <&reset 48>; status = "okay"; };
+
+        /* Timers & PWM */
+        btmr0: timer@40050000 { compatible = "vango,v32f20x-timer"; reg = <0x40050000 0x20>; interrupts = <14 0>; clocks = <&clock 14>; resets = <&reset 14>; status = "disabled"; };
+        btmr1: timer@40050020 { compatible = "vango,v32f20x-timer"; reg = <0x40050020 0x20>; interrupts = <15 0>; clocks = <&clock 15>; resets = <&reset 15>; status = "disabled"; };
+        
+        bpwm0: pwm@40060000 {
+            compatible = "vango,v32f20x-pwm";
+            reg = <0x40060000 0x100>;
+            clocks = <&clock 20>;
+            resets = <&reset 20>;
+            #pwm-cells = <2>;
+            status = "disabled";
+        };
+
+        /* ADC & DAC */
+        adc0: adc@400a1000 { 
+            compatible = "vango,v32f20x-adc"; 
+            reg = <0x400a1000 0x100>; 
+            interrupts = <51 0>; 
+            clocks = <&clock 51>; 
+            resets = <&reset 51>; 
+            #io-channel-cells = <1>; 
+            status = "disabled"; 
+        };
+        adc1: adc@400a1100 { 
+            compatible = "vango,v32f20x-adc"; 
+            reg = <0x400a1100 0x100>; 
+            interrupts = <52 0>; 
+            clocks = <&clock 52>; 
+            resets = <&reset 52>; 
+            #io-channel-cells = <1>; 
+            status = "disabled"; 
+        };
+        dac0: dac@400a0000 { 
+            compatible = "vango,v32f20x-dac"; 
+            reg = <0x400a0000 0x800>; 
+            clocks = <&clock 48>; 
+            resets = <&reset 48>; 
+            #io-channel-cells = <1>; 
+            status = "disabled"; 
+        };
+    };
+};

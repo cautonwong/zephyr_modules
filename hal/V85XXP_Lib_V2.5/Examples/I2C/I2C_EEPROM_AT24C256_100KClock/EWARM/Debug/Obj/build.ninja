@@ -1,0 +1,61 @@
+#Generating source browse information for project template
+
+
+#Abbreviations
+cc = D$:\IAR\common\bin\SourceIndexer.exe
+ll = D$:\IAR\common\bin\PbdLink.exe
+bd = D$:\IAR\common\bin\makeBrowseData.exe
+
+
+
+#Rules
+rule index
+  depfile = $out.dep
+  command = $cc -out=$out -f $in
+rule link
+  command = $ll -M $out $in
+rule browsedata
+  command = $bd $in -output  $out
+
+
+
+#Build steps
+build system_target.pbi : index system_target.xcl
+build lib_CodeRAM.pbi : index lib_CodeRAM.xcl
+build lib_cortex.pbi : index lib_cortex.xcl
+build lib_LoadNVR.pbi : index lib_LoadNVR.xcl
+build lib_adc.pbi : index lib_adc.xcl
+build lib_adc_tiny.pbi : index lib_adc_tiny.xcl
+build lib_ana.pbi : index lib_ana.xcl
+build lib_clk.pbi : index lib_clk.xcl
+build lib_cmp.pbi : index lib_cmp.xcl
+build lib_crypt.pbi : index lib_crypt.xcl
+build lib_dma.pbi : index lib_dma.xcl
+build lib_flash.pbi : index lib_flash.xcl
+build lib_gpio.pbi : index lib_gpio.xcl
+build lib_i2c.pbi : index lib_i2c.xcl
+build lib_iso7816.pbi : index lib_iso7816.xcl
+build lib_lcd.pbi : index lib_lcd.xcl
+build lib_misc.pbi : index lib_misc.xcl
+build lib_pmu.pbi : index lib_pmu.xcl
+build lib_pwm.pbi : index lib_pwm.xcl
+build lib_rtc.pbi : index lib_rtc.xcl
+build lib_spi.pbi : index lib_spi.xcl
+build lib_tmr.pbi : index lib_tmr.xcl
+build lib_u32k.pbi : index lib_u32k.xcl
+build lib_uart.pbi : index lib_uart.xcl
+build lib_version.pbi : index lib_version.xcl
+build lib_wdt.pbi : index lib_wdt.xcl
+build main.pbi : index main.xcl
+build target_isr.pbi : index target_isr.xcl
+build v_stdio.pbi : index v_stdio.xcl
+build template_part0.pbi : link system_target.pbi lib_CodeRAM.pbi lib_cortex.pbi lib_LoadNVR.pbi lib_adc.pbi
+build template_part1.pbi : link lib_adc_tiny.pbi lib_ana.pbi lib_clk.pbi lib_cmp.pbi lib_crypt.pbi
+build template_part2.pbi : link lib_dma.pbi lib_flash.pbi lib_gpio.pbi lib_i2c.pbi lib_iso7816.pbi
+build template_part3.pbi : link lib_lcd.pbi lib_misc.pbi lib_pmu.pbi lib_pwm.pbi lib_rtc.pbi
+build template_part4.pbi : link lib_spi.pbi lib_tmr.pbi lib_u32k.pbi lib_uart.pbi lib_version.pbi
+build template_part5.pbi : link lib_wdt.pbi main.pbi target_isr.pbi v_stdio.pbi
+build template.pbd : link template_part0.pbi template_part1.pbi template_part2.pbi template_part3.pbi template_part4.pbi template_part5.pbi
+build template.pbw : browsedata template.pbd
+
+

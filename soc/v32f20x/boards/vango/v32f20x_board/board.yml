@@ -1,0 +1,6 @@
+board:
+  name: v32f20x_board
+  full_name: Vango V32F20x Board
+  vendor: vango
+  socs:
+    - name: v32f20x

@@ -1,0 +1,29 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+config SOC_V32F20X_CPU0
+	bool "V32F20X Cortex-M0 Core"
+	select ARM
+	select CPU_CORTEX_M0
+	select SOC_FAMILY_VANGO
+	select CPU_CORTEX_M_HAS_SYSTICK
+	select CORTEX_M_SYSTICK
+	select HAS_V32F20X_HAL
+
+config SOC_V32F20X_CPU1
+	bool "V32F20X Cortex-M33 Core"
+	select ARM
+	select CPU_CORTEX_M33
+	select CPU_HAS_ARM_MPU
+	select CPU_HAS_FPU
+	select ARMV8_M_DSP
+	select SOC_FAMILY_VANGO
+	select CPU_CORTEX_M_HAS_SYSTICK
+	select CORTEX_M_SYSTICK
+	select HAS_V32F20X_HAL
+
+config SOC_SERIES_V32F20X
+	bool
+	default y if SOC_V32F20X_CPU0 || SOC_V32F20X_CPU1
+	select SOC_FAMILY_VANGO
+	select HAS_V32F20X_HAL

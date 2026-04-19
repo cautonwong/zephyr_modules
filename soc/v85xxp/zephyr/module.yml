@@ -1,0 +1,8 @@
+name: v85xxp_soc
+build:
+  cmake: zephyr
+  kconfig: zephyr/Kconfig
+  settings:
+    board_root: .
+    dts_root: .
+    soc_root: .

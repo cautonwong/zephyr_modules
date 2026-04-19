@@ -1,0 +1,475 @@
+###############################################################################
+#
+# IAR ELF Linker V9.30.1.335/W64 for ARM                  18/Feb/2023  13:02:28
+# Copyright 2007-2022 IAR Systems AB.
+#
+#    Output file  =
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Exe\template.out
+#    Map file     =
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\List\template.map
+#    Command line =
+#        -f
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Exe\template.out.rsp
+#        (D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_adc.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_adc_tiny.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_ana.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_clk.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_cmp.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\Device\lib_CodeRAM.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\Device\lib_cortex.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_crypt.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_dma.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_flash.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_gpio.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_i2c.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_iso7816.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_lcd.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\Device\lib_LoadNVR.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_misc.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_pmu.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_pwm.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_rtc.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_spi.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_tmr.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_u32k.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_uart.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_version.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\lib_wdt.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\User\main.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\EWARM\startup_target.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\EWARM\system_target.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\User\target_isr.o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\User\v_stdio.o
+#        --redirect _Printf=_PrintfFull --redirect _Scanf=_ScanfFull
+#        --no_out_extension -o
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Exe\template.out
+#        --map
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\List\template.map
+#        --config
+#        D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\target_flash.icf
+#        --entry main --vfe --text_out locale --cpu=Cortex-M0 --fpu=None)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__CPP_Runtime   = 1
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The basic heap was selected because --advanced_heap
+was not specified and the application did not appear to
+be primarily optimized for speed.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at address 0x0 { ro section .intvec };
+"A1":  place at address 0xc0 { ro section .Reset_Handler_text };
+"P1":  place in [from 0x0 to 0x7'ffff] { ro };
+define block CSTACK with size = 4K, alignment = 8 { };
+define block HEAP with size = 1K, alignment = 8 { };
+"P2":  place in [from 0x2000'0000 to 0x2000'ffff] {
+          rw, block CSTACK, block HEAP };
+initialize by copy { rw };
+
+  Section              Kind         Address    Size  Object
+  -------              ----         -------    ----  ------
+"A0":                                          0xc0
+  .intvec              ro code          0x0    0xc0  startup_target.o [1]
+                                     - 0xc0    0xc0
+
+"A1":                                         0x24c
+  .Reset_Handler_text  ro code         0xc0    0x18  startup_target.o [1]
+  .Reset_Handler_text  ro code         0xd8   0x234  startup_target.o [1]
+                                    - 0x30c   0x24c
+
+"P1":                                        0x2a75
+  .text                ro code        0x30c  0x1022  xprintffull.o [5]
+  .rodata              const         0x132e     0x2  xlocale_c.o [5]
+  .text                ro code       0x1330    0x8c  xlocale_c.o [5]
+  .text                ro code       0x13bc    0x12  strchr.o [7]
+  .rodata              const         0x13ce     0x2  xlocale_c.o [5]
+  .text                ro code       0x13d0    0x48  xfail_s.o [5]
+  .text                ro code       0x1418     0xe  strlen.o [7]
+  .rodata              const         0x1426     0x1  xlocale_c.o [5]
+  .text                ro code       0x1428    0x16  memchr.o [7]
+  .text                ro code       0x1440    0x4e  ABImemcpy.o [7]
+  .text                ro code       0x148e    0x2a  frexp.o [6]
+  .text                ro code       0x14b8    0x32  DblCmpLe.o [6]
+  .text                ro code       0x14ea    0x32  DblCmpGe.o [6]
+  .text                ro code       0x151c    0x70  ldexp.o [6]
+  .text                ro code       0x158c    0x52  DblToI32.o [6]
+  .text                ro code       0x15e0    0x34  IxxToDbl.o [6]
+  .text                ro code       0x1614   0x1a8  DblAddSub.o [6]
+  .text                ro code       0x17bc    0xe0  I32DivModFast.o [7]
+  .text                ro code       0x189c    0xc2  DblDiv.o [6]
+  .text                ro code       0x195e   0x184  DblMul.o [6]
+  .text                ro code       0x1ae2     0xa  xmbcurmax.o [5]
+  .text                ro code       0x1aec    0x7c  I64DivMod.o [7]
+  .text                ro code       0x1b68     0xa  abort.o [5]
+  .text                ro code       0x1b74     0x2  IntDivZer.o [7]
+  .text                ro code       0x1b78     0x2  I64DivZer.o [7]
+  .text                ro code       0x1b7c     0xc  XXexit.o [7]
+  .text                ro code       0x1b88   0x540  lib_clk.o [2]
+  .text                ro code       0x20c8    0xec  main.o [4]
+  .text                ro code       0x21b4    0xe0  lib_rtc.o [2]
+  .text                ro code       0x2294    0x68  v_stdio.o [4]
+  .text                ro code       0x22fc   0x324  lib_uart.o [2]
+  .text                ro code       0x2620    0xf8  lib_cortex.o [3]
+  .text                ro code       0x2718    0x10  lib_wdt.o [2]
+  .text                ro code       0x2728    0x28  printf.o [5]
+  .text                ro code       0x2750    0xe0  system_target.o [1]
+  .text                ro code       0x2830    0xb8  target_isr.o [4]
+  .rodata              const         0x28e8    0x8a  xprintffull.o [5]
+  .text                ro code       0x2972    0x80  lz77_init_single.o [7]
+  .rodata              const         0x29f4    0x70  lib_cortex.o [3]
+  .rodata              const         0x2a64    0x70  lib_uart.o [2]
+  .rodata              const         0x2ad4    0x6c  lib_clk.o [2]
+  .rodata              const         0x2b40    0x6c  lib_rtc.o [2]
+  .text                ro code       0x2bac    0x44  putchar.o [5]
+  .text                ro code       0x2bf0    0x3c  zero_init3.o [7]
+  .text                ro code       0x2c2c    0x28  data_init.o [7]
+  .iar.init_table      const         0x2c54    0x20  - Linker created -
+  .rodata              const         0x2c74    0x20  main.o [4]
+  .text                ro code       0x2c94    0x1e  cmain.o [7]
+  .text                ro code       0x2cb2     0x4  low_level_init.o [5]
+  .text                ro code       0x2cb6     0x8  exit.o [5]
+  .text                ro code       0x2cc0     0xa  cexit.o [7]
+  .rodata              const         0x2ccc    0x1c  main.o [4]
+  .text                ro code       0x2ce8    0x1c  cstartup_M.o [7]
+  .text                ro code       0x2d04    0x1c  xencoding_8859_1.o [5]
+  .text                ro code       0x2d20    0x16  xprout.o [5]
+  .rodata              const         0x2d36     0x0  zero_init3.o [7]
+  .rodata              const         0x2d36     0x0  lz77_init_single.o [7]
+  Initializer bytes    const         0x2d36    0x4b  <for P2-1>
+                                   - 0x2d81  0x2a75
+
+"P2", part 1 of 3:                             0xcc
+  P2-1                          0x2000'0000    0xcc  <Init block>
+    .data              inited   0x2000'0000     0x4  main.o [4]
+    .data              inited   0x2000'0004    0x38  xlocale_c.o [5]
+    .data              inited   0x2000'003c    0x48  xlocale_c.o [5]
+    .data              inited   0x2000'0084    0x48  xfiles.o [5]
+                              - 0x2000'00cc    0xcc
+
+"P2", part 2 of 3:                             0x64
+  .bss                 zero     0x2000'00cc    0x50  xfiles.o [5]
+  .bss                 zero     0x2000'011c     0x4  main.o [4]
+  .bss                 zero     0x2000'0120     0x4  main.o [4]
+  .bss                 zero     0x2000'0124     0x4  main.o [4]
+  .bss                 zero     0x2000'0128     0x4  xfail_s.o [5]
+  .bss                 zero     0x2000'012c     0x1  main.o [4]
+                              - 0x2000'012d    0x61
+
+"P2", part 3 of 3:                           0x1000
+  CSTACK                        0x2000'0130  0x1000  <Block>
+    CSTACK             uninit   0x2000'0130  0x1000  <Block tail>
+                              - 0x2000'1130  0x1000
+
+Unused ranges:
+
+         From           To      Size
+         ----           --      ----
+       0x2d81     0x7'ffff  0x7'd27f
+  0x2000'1130  0x2000'ffff    0xeed0
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address      Size
+          -------      ----
+Zero (__iar_zero_init3)
+    1 destination range, total size 0x61:
+          0x2000'00cc  0x61
+
+Copy/lz77 (__iar_lz77_init_single3)
+    1 source range, total size 0x4b (36% of destination):
+               0x2d36  0x4b
+    1 destination range, total size 0xcc:
+          0x2000'0000  0xcc
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module              ro code  ro data  rw data
+    ------              -------  -------  -------
+command line/config:
+    ---------------------------------------------
+    Total:
+
+D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\EWARM: [1]
+    startup_target.o        780
+    system_target.o         224
+    ---------------------------------------------
+    Total:                1'004
+
+D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib: [2]
+    lib_clk.o             1'344      108
+    lib_rtc.o               224      108
+    lib_uart.o              804      112
+    lib_wdt.o                16
+    ---------------------------------------------
+    Total:                2'388      328
+
+D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\Device: [3]
+    lib_cortex.o            248      112
+    ---------------------------------------------
+    Total:                  248      112
+
+D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\User: [4]
+    main.o                  236       61       17
+    target_isr.o            184
+    v_stdio.o               104
+    ---------------------------------------------
+    Total:                  524       61       17
+
+dl6M_tlf.a: [5]
+    abort.o                  10
+    exit.o                    8
+    low_level_init.o          4
+    printf.o                 40
+    putchar.o                68
+    xencoding_8859_1.o       28
+    xfail_s.o                72                 4
+    xfiles.o                          27      152
+    xlocale_c.o             140       52      128
+    xmbcurmax.o              10
+    xprintffull.o         4'130      138
+    xprout.o                 22
+    ---------------------------------------------
+    Total:                4'532      217      284
+
+m6M_tl.a: [6]
+    DblAddSub.o             424
+    DblCmpGe.o               50
+    DblCmpLe.o               50
+    DblDiv.o                194
+    DblMul.o                388
+    DblToI32.o               82
+    IxxToDbl.o               52
+    frexp.o                  42
+    ldexp.o                 112
+    ---------------------------------------------
+    Total:                1'394
+
+rt6M_tl.a: [7]
+    ABImemcpy.o              78
+    I32DivModFast.o         224
+    I64DivMod.o             124
+    I64DivZer.o               2
+    IntDivZer.o               2
+    XXexit.o                 12
+    cexit.o                  10
+    cmain.o                  30
+    cstartup_M.o             28
+    data_init.o              40
+    lz77_init_single.o      128
+    memchr.o                 22
+    strchr.o                 18
+    strlen.o                 14
+    zero_init3.o             60
+    ---------------------------------------------
+    Total:                  792
+
+    Gaps                     13        4
+    Linker created                    32    4'096
+-------------------------------------------------
+    Grand Total:         10'895      754    4'397
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                       Address   Size  Type      Object
+-----                       -------   ----  ----      ------
+.iar.init_table$$Base        0x2c54          --   Gb  - Linker created -
+.iar.init_table$$Limit       0x2c74          --   Gb  - Linker created -
+?main                        0x2c95         Code  Gb  cmain.o [7]
+ANA_IRQHandler               0x28e3    0x2  Code  Gb  target_isr.o [4]
+CLK_ClockConfig              0x1b89  0x328  Code  Gb  lib_clk.o [2]
+CLK_GetHCLKFreq              0x1ecd  0x1c4  Code  Gb  lib_clk.o [2]
+CLK_GetPCLKFreq              0x2095   0x14  Code  Gb  lib_clk.o [2]
+CORTEX_SetPriority_ClearPending_EnableIRQ
+                             0x26c5   0x3e  Code  Gb  lib_cortex.o [3]
+CSTACK$$Base            0x2000'0130          --   Gb  - Linker created -
+CSTACK$$Limit           0x2000'1130          --   Gb  - Linker created -
+CacheMore                    0x1335   0x28  Code  Lc  xlocale_c.o [5]
+Clock_Init                   0x20c9   0x28  Code  Gb  main.o [4]
+DMA_IRQHandler               0x28df    0x2  Code  Gb  target_isr.o [4]
+FLASH_IRQHandler             0x28e1    0x2  Code  Gb  target_isr.o [4]
+HardFault_Handler            0x2835    0x4  Code  Gb  target_isr.o [4]
+I2C_IRQHandler               0x2847    0x2  Code  Gb  target_isr.o [4]
+ISO78160_IRQHandler          0x28cb    0x2  Code  Gb  target_isr.o [4]
+ISO78161_IRQHandler          0x28cd    0x2  Code  Gb  target_isr.o [4]
+NMI_Handler                  0x2831    0x4  Code  Gb  target_isr.o [4]
+PMU_IRQHandler               0x283f    0x2  Code  Gb  target_isr.o [4]
+PWM0_IRQHandler              0x28d7    0x2  Code  Gb  target_isr.o [4]
+PWM1_IRQHandler              0x28d9    0x2  Code  Gb  target_isr.o [4]
+PWM2_IRQHandler              0x28db    0x2  Code  Gb  target_isr.o [4]
+PWM3_IRQHandler              0x28dd    0x2  Code  Gb  target_isr.o [4]
+PendSV_Handler               0x283b    0x2  Code  Gb  target_isr.o [4]
+RTC_IRQHandler               0x2841    0x2  Code  Gb  target_isr.o [4]
+RTC_PrescalerConfig          0x2255   0x38  Code  Gb  lib_rtc.o [2]
+RTC_WaitForSynchro           0x21e9    0xc  Code  Gb  lib_rtc.o [2]
+RTC_WriteProtection          0x21b5   0x34  Code  Gb  lib_rtc.o [2]
+RTC_WriteRegisters           0x21f5   0x48  Code  Gb  lib_rtc.o [2]
+RX_Buffer               0x2000'0120    0x4  Data  Gb  main.o [4]
+Region$$Table$$Base          0x2c54          --   Gb  - Linker created -
+Region$$Table$$Limit         0x2c74          --   Gb  - Linker created -
+Reset_Handler                  0xc1         Code  Wk  startup_target.o [1]
+SPI1_IRQHandler              0x2849    0x2  Code  Gb  target_isr.o [4]
+SPI2_IRQHandler              0x28e5    0x2  Code  Gb  target_isr.o [4]
+SPI3_IRQHandler              0x28e7    0x2  Code  Gb  target_isr.o [4]
+SVC_Handler                  0x2839    0x2  Code  Gb  target_isr.o [4]
+Stdio_Init                   0x2295   0x1a  Code  Gb  v_stdio.o [4]
+SysTick_Handler              0x283d    0x2  Code  Gb  target_isr.o [4]
+SystemInit                   0x2751   0xae  Code  Gb  system_target.o [1]
+TMR0_IRQHandler              0x28cf    0x2  Code  Gb  target_isr.o [4]
+TMR1_IRQHandler              0x28d1    0x2  Code  Gb  target_isr.o [4]
+TMR2_IRQHandler              0x28d3    0x2  Code  Gb  target_isr.o [4]
+TMR3_IRQHandler              0x28d5    0x2  Code  Gb  target_isr.o [4]
+TX_Buffer               0x2000'0000    0x4  Data  Gb  main.o [4]
+U32K0_IRQHandler             0x2843    0x2  Code  Gb  target_isr.o [4]
+U32K1_IRQHandler             0x2845    0x2  Code  Gb  target_isr.o [4]
+UART0_IRQHandler             0x284b   0x62  Code  Gb  target_isr.o [4]
+UART1_IRQHandler             0x28c1    0x2  Code  Gb  target_isr.o [4]
+UART2_IRQHandler             0x28c3    0x2  Code  Gb  target_isr.o [4]
+UART3_IRQHandler             0x28c5    0x2  Code  Gb  target_isr.o [4]
+UART4_IRQHandler             0x28c7    0x2  Code  Gb  target_isr.o [4]
+UART5_IRQHandler             0x28c9    0x2  Code  Gb  target_isr.o [4]
+UART_ClearINTStatus          0x253b   0x50  Code  Gb  lib_uart.o [2]
+UART_DeInit                  0x22fd   0x4e  Code  Gb  lib_uart.o [2]
+UART_GetINTStatus            0x24dd   0x5e  Code  Gb  lib_uart.o [2]
+UART_INTConfig               0x2455   0x7e  Code  Gb  lib_uart.o [2]
+UART_Init                    0x234b   0xf0  Code  Gb  lib_uart.o [2]
+UART_ReceiveData             0x25c7   0x38  Code  Gb  lib_uart.o [2]
+UART_SendData                0x258b   0x3c  Code  Gb  lib_uart.o [2]
+WDT_Clear                    0x2719    0x8  Code  Gb  lib_wdt.o [2]
+_Encoding_8859_1_Mbrlen
+                             0x2d15    0x2  Code  Gb  xencoding_8859_1.o [5]
+_Encoding_8859_1_Wctomb
+                             0x2d05   0x10  Code  Gb  xencoding_8859_1.o [5]
+_LC                           0x30d    0x8  Code  Lc  xprintffull.o [5]
+_LitobFull                   0x1185  0x124  Code  Lc  xprintffull.o [5]
+_Locale_lconv           0x2000'0004   0x38  Data  Lc  xlocale_c.o [5]
+_PrintfFull                   0x315  0xc9c  Code  Gb  xprintffull.o [5]
+_Prout                       0x2d21   0x16  Code  Gb  xprout.o [5]
+_PutcharsFull                0x12f9   0x36  Code  Lc  xprintffull.o [5]
+_PutstrFull                  0x10c5   0xc0  Code  Lc  xprintffull.o [5]
+_PuttxtFull                   0xfb1  0x114  Code  Lc  xprintffull.o [5]
+__CHIP_INIT                    0xd9         Code  Wk  startup_target.o [1]
+__ICFEDIT_region_RAM_end__ {Abs}
+                        0x2000'ffff         Data  Gb  <internal module>
+__ICFEDIT_region_RAM_start__ {Abs}
+                        0x2000'0000         Data  Gb  <internal module>
+__NVIC_ClearPendingIRQ       0x2639   0x18  Code  Lc  lib_cortex.o [3]
+__NVIC_EnableIRQ             0x2621   0x18  Code  Lc  lib_cortex.o [3]
+__NVIC_SetPriority           0x2651   0x74  Code  Lc  lib_cortex.o [3]
+__aeabi_cdcmple              0x14b9         Code  Gb  DblCmpLe.o [6]
+__aeabi_cdrcmple             0x14eb         Code  Gb  DblCmpGe.o [6]
+__aeabi_d2iz                 0x158d         Code  Gb  DblToI32.o [6]
+__aeabi_d2uiz                0x15b1         Code  Gb  DblToI32.o [6]
+__aeabi_ddiv                 0x189d         Code  Gb  DblDiv.o [6]
+__aeabi_dmul                 0x195f         Code  Gb  DblMul.o [6]
+__aeabi_dsub                 0x16cf         Code  Gb  DblAddSub.o [6]
+__aeabi_i2d                  0x1601         Code  Gb  IxxToDbl.o [6]
+__aeabi_idiv                 0x17e9         Code  Gb  I32DivModFast.o [7]
+__aeabi_idiv0                0x1b75         Code  Gb  IntDivZer.o [7]
+__aeabi_idivmod              0x17e9         Code  Gb  I32DivModFast.o [7]
+__aeabi_ldiv0                0x1b79         Code  Gb  I64DivZer.o [7]
+__aeabi_memcpy               0x1475         Code  Gb  ABImemcpy.o [7]
+__aeabi_memcpy4              0x1441         Code  Gb  ABImemcpy.o [7]
+__aeabi_memcpy8              0x1441         Code  Gb  ABImemcpy.o [7]
+__aeabi_ui2d                 0x15e1         Code  Gb  IxxToDbl.o [6]
+__aeabi_uidiv                0x17ef         Code  Gb  I32DivModFast.o [7]
+__aeabi_uidivmod             0x17ef         Code  Gb  I32DivModFast.o [7]
+__aeabi_uldivmod             0x1aed         Code  Gb  I64DivMod.o [7]
+__cmain                      0x2c95         Code  Gb  cmain.o [7]
+__exit                       0x1b7d         Code  Gb  XXexit.o [7]
+__iar_Fail_s                 0x13d1   0x22  Code  Gb  xfail_s.o [5]
+__iar_Mbcurmax               0x1ae3    0xa  Code  Gb  xmbcurmax.o [5]
+__iar_Memchr                 0x1429         Code  Gb  memchr.o [7]
+__iar_Memcpy                 0x1481         Code  Gb  ABImemcpy.o [7]
+__iar_Stdout            0x2000'0084   0x48  Data  Gb  xfiles.o [5]
+__iar_Strchr                 0x13bd         Code  Gb  strchr.o [7]
+__iar_d2uiz                  0x15b5         Code  Gb  DblToI32.o [6]
+__iar_data_init3             0x2c2d   0x28  Code  Gb  data_init.o [7]
+__iar_frexp                  0x149b         Code  Gb  frexp.o [6]
+__iar_frexp64                0x148f         Code  Gb  frexp.o [6]
+__iar_frexpl                 0x149b         Code  Gb  frexp.o [6]
+__iar_globLocale        0x2000'003c   0x48  Data  Lc  xlocale_c.o [5]
+__iar_global_Locale          0x1331    0x4  Code  Gb  xlocale_c.o [5]
+__iar_ldexp64                0x151d         Code  Gb  ldexp.o [6]
+__iar_lz77_init_single3
+                             0x2973   0x80  Code  Gb  lz77_init_single.o [7]
+__iar_program_start          0x2ce9         Code  Gb  cstartup_M.o [7]
+__iar_scalbln64              0x151d         Code  Gb  ldexp.o [6]
+__iar_scalbn64               0x151d         Code  Gb  ldexp.o [6]
+__iar_zero_init3             0x2bf1   0x3c  Code  Gb  zero_init3.o [7]
+__low_level_init             0x2cb3    0x4  Code  Gb  low_level_init.o [5]
+__vector_table                  0x0         Data  Gb  startup_target.o [1]
+__write                      0x22af   0x26  Code  Gb  v_stdio.o [4]
+_call_main                   0x2ca1         Code  Gb  cmain.o [7]
+_exit                        0x2cc1         Code  Gb  cexit.o [7]
+_gLocale_mblen               0x1399    0xa  Code  Gb  xlocale_c.o [5]
+_gLocale_mblenInt            0x135d   0x34  Code  Gb  xlocale_c.o [5]
+_gLocale_wctomb              0x13a3    0xa  Code  Gb  xlocale_c.o [5]
+_gLocale_wctombInt           0x1391    0x8  Code  Gb  xlocale_c.o [5]
+abort                        0x1b69    0xa  Code  Gb  abort.o [5]
+assert_errhandler            0x21b1    0x4  Code  Gb  main.o [4]
+exit                         0x2cb7    0x8  Code  Gb  exit.o [5]
+fputc                        0x22d5   0x16  Code  Gb  v_stdio.o [4]
+frexp                        0x148f         Code  Gb  frexp.o [6]
+frexpl                       0x148f         Code  Gb  frexp.o [6]
+ldexp                        0x151d         Code  Gb  ldexp.o [6]
+ldexpl                       0x151d         Code  Gb  ldexp.o [6]
+localeconv                   0x13ad    0x4  Code  Gb  xlocale_c.o [5]
+main                         0x20f1   0xa0  Code  Gb  main.o [4]
+memchr                       0x1429         Code  Gb  memchr.o [7]
+nRXLen                  0x2000'0124    0x4  Data  Gb  main.o [4]
+nTXLen                  0x2000'011c    0x4  Data  Gb  main.o [4]
+obuf                    0x2000'00cc   0x50  Data  Lc  xfiles.o [5]
+printf                       0x2729   0x28  Code  Gb  printf.o [5]
+putchar                      0x2bad   0x44  Code  Gb  putchar.o [5]
+scalbln                      0x151d         Code  Gb  ldexp.o [6]
+scalblnl                     0x151d         Code  Gb  ldexp.o [6]
+scalbn                       0x151d         Code  Gb  ldexp.o [6]
+scalbnl                      0x151d         Code  Gb  ldexp.o [6]
+scale                        0x12a9   0x44  Code  Lc  xprintffull.o [5]
+sec_hand                0x2000'0128    0x4  Data  Lc  xfail_s.o [5]
+strchr                       0x13bd         Code  Gb  strchr.o [7]
+strlen                       0x1419         Code  Gb  strlen.o [7]
+test_success            0x2000'012c    0x1  Data  Gb  main.o [4]
+
+
+[1] = D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\EWARM
+[2] = D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib
+[3] = D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\FWLib\Device
+[4] = D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Obj\User
+[5] = dl6M_tlf.a
+[6] = m6M_tl.a
+[7] = rt6M_tl.a
+
+  10'895 bytes of readonly  code memory
+     754 bytes of readonly  data memory
+   4'397 bytes of readwrite data memory
+
+Errors: none
+Warnings: none

@@ -1,0 +1,18 @@
+description: V85XXP UART
+
+compatible: "v85xxp,uart"
+
+include:
+  - name: uart-controller.yaml
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true
+
+  current-speed:
+    type: int
+    default: 115200

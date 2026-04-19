@@ -1,0 +1,4 @@
+config HAS_RN8XXX_HAL
+    bool "RN8xxx HAL"
+    help
+      Enable RN8xxx HAL

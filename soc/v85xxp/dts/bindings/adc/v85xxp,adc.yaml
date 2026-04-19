@@ -1,0 +1,17 @@
+description: V85XXP ADC controller
+
+compatible: "v85xxp,adc"
+
+include:
+  - name: adc-controller.yaml
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true
+
+  "#io-channel-cells":
+    const: 1

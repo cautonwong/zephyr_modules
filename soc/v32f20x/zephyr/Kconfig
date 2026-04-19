@@ -1,0 +1,2 @@
+# Professional Kconfig for V32F20X Module
+source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/drivers/Kconfig"

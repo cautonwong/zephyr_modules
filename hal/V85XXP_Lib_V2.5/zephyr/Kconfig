@@ -1,0 +1,4 @@
+config HAS_V85XXP_HAL
+    bool "V85XXP HAL"
+    help
+      Enable V85XXP HAL

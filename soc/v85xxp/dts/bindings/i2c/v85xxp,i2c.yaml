@@ -1,0 +1,14 @@
+description: V85XXP I2C controller
+
+compatible: "v85xxp,i2c"
+
+include:
+  - name: i2c-controller.yaml
+  - name: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true

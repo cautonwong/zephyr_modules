@@ -1,0 +1,12 @@
+description: V85XXP watchdog
+
+compatible: "v85xxp,wdt"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true

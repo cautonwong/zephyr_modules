@@ -1,0 +1,9 @@
+config PINCTRL_V32F20X
+    bool "V32F20X Pinctrl Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_PINCTRL_ENABLED
+    select PINCTRL
+    select VANGO_V32F20X_HAL_GPIO
+    help
+      Enable driver for Vango V32F20X pin multiplexing and 
+      configuration (Pinctrl).

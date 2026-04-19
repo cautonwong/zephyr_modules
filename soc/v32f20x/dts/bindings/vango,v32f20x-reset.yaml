@@ -1,0 +1,12 @@
+description: Vango Technologies V32F20x Reset Controller
+
+compatible: "vango,v32f20x-reset"
+
+include: [base.yaml, reset-controller.yaml]
+
+properties:
+  "#reset-cells":
+    const: 1
+
+reset-cells:
+  - id

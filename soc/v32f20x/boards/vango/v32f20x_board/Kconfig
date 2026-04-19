@@ -1,0 +1,5 @@
+# Board Kconfig
+config BOARD_V32F20X_BOARD
+	bool "Vango V32F20x Board"
+	select SOC_V32F20X
+	select SOC_V32F20X_CPU0

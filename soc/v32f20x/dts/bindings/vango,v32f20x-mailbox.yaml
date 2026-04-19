@@ -1,0 +1,14 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies V32F20X Mailbox (IPC)
+
+compatible: "vango,v32f20x-mailbox"
+
+include: [base.yaml]
+
+properties:
+  reg:
+    required: true
+  interrupts:
+    required: true

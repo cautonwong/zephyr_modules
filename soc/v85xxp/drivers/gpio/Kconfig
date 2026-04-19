@@ -1,0 +1,8 @@
+config GPIO_V85XXP
+	bool "V85XXP GPIO driver"
+	default y
+	depends on GPIO
+	depends on DT_HAS_V85XXP_GPIO_ENABLED
+	select GPIO_GET_CONFIG
+	help
+	  Enable GPIO driver for V85XXP GPIOB..GPIOF ports.

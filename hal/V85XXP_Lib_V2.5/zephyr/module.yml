@@ -1,0 +1,4 @@
+name: v85xxp_hal
+build:
+  cmake: zephyr
+  kconfig: zephyr/Kconfig

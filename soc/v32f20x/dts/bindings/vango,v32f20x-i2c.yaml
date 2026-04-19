@@ -1,0 +1,20 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies V32F20X I2C
+
+compatible: "vango,v32f20x-i2c"
+
+include: [i2c-controller.yaml, pinctrl-device.yaml, base.yaml]
+
+properties:
+  reg:
+    required: true
+  interrupts:
+    required: true
+  clocks:
+    type: phandle-array
+    required: true
+  resets:
+    type: phandle-array
+    required: true

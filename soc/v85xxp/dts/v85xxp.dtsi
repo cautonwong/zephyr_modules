@@ -1,0 +1,6 @@
+/*
+ * Legacy include wrapper.
+ * Keep this file for compatibility and route to the canonical location.
+ */
+
+#include <arm/v85xxp/v85xxp.dtsi>

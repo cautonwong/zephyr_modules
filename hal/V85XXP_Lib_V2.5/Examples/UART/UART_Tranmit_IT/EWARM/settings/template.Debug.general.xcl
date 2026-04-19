@@ -1,0 +1,13 @@
+"D:\iar\arm\bin\armPROC.dll" 
+
+"D:\iar\arm\bin\armJET.dll" 
+
+"D:\work\V8500P\开发工具\DriveLibrary\V85XXP_Lib_V2.5\V85XXP_Lib_V2.5\Examples\UART\UART_Tranmit_IT\EWARM\Debug\Exe\template.out" 
+
+--plugin="D:\iar\arm\bin\armbat.dll" 
+
+--flash_loader="D:\iar\arm\config\flashloader\VANGO\FlashV85XXP.board" 
+
+
+
+

@@ -1,0 +1,8 @@
+# SoC configuration
+config SOC_SERIES_RN8XXX
+    bool "RN8xxx Series MCU"
+    select ARM
+    select CPU_CORTEX_M0
+    select SOC_FAMILY_RN8XXX
+    help
+      Enable support for RN8xxx series

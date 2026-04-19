@@ -1,0 +1,9 @@
+if SOC_SERIES_RN8XXX
+
+config SOC_SERIES
+    default "rn8xxx"
+
+config SOC
+    default "rn8318" if SOC_RN8318
+
+endif # SOC_SERIES_RN8XXX

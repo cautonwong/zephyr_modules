@@ -1,0 +1,4 @@
+name: cmsis
+build:
+  cmake: zephyr
+  kconfig: zephyr/Kconfig

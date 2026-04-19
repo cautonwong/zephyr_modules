@@ -1,0 +1,24 @@
+config SOC_SERIES_V85XXP
+	bool
+	select SOC_FAMILY_ARM
+	help
+	  Enable support for the V85XXP Cortex-M0 SoC series.
+
+config SOC_FAMILY_V85XXP
+	bool
+	select HAS_V85XXP_HAL
+
+config SOC_V85XXP
+	bool
+	select SOC_SERIES_V85XXP
+	select ARM
+	select CPU_CORTEX_M0
+	select HAS_CMSIS_CORE
+	help
+	  V85XXP Cortex-M0 SoC.
+
+config SOC_SERIES
+	default "v85xxp" if SOC_SERIES_V85XXP
+
+config SOC
+	default "v85xxp" if SOC_V85XXP

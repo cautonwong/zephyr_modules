@@ -1,0 +1,8 @@
+identifier: rn8xxx_board
+name: RN8xxx Development Board
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+supported:
+  - rn8xxx_board

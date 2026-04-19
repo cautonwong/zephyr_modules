@@ -1,0 +1,40 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies V32F20X DAC Controller
+
+compatible: "vango,v32f20x-dac"
+
+include: [dac-controller.yaml, pinctrl-device.yaml]
+
+properties:
+  reg:
+    type: array
+    type: array
+    required: true
+    description: Memory address and size of DAC controller
+
+  interrupts:
+    type: array
+    type: array
+    description: Optional DAC interrupt
+
+  clocks:
+    type: phandle-array
+    required: true
+    description: Clock source for DAC peripheral
+
+  resets:
+    type: phandle-array
+    required: true
+    description: Reset control for DAC peripheral
+
+  num-channels:
+    type: int
+    required: true
+    description: Number of DAC output channels
+
+  resolution:
+    type: int
+    default: 12
+    description: DAC resolution in bits

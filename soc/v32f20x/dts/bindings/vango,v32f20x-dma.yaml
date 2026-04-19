@@ -1,0 +1,33 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies V32F20X DMA Controller
+
+compatible: "vango,v32f20x-dma"
+
+include: [dma-controller.yaml, base.yaml]
+
+properties:
+  reg:
+    type: array
+    required: true
+  interrupts:
+    type: array
+    required: true
+  dma-channels:
+    type: int
+    required: true
+    description: Number of DMA channels (8 for DMA0/1, 4 for BDMA)
+  clocks:
+    type: phandle-array
+    required: false
+  resets:
+    type: phandle-array
+    required: true
+  "#dma-cells":
+    type: int
+    const: 1
+    description: <channel>
+
+dma-cells:
+  - channel

@@ -1,0 +1,3 @@
+# Kconfig for RN8xxx SoC module
+source "soc/arm/rn8xxx/Kconfig"
+source "drivers/Kconfig"
