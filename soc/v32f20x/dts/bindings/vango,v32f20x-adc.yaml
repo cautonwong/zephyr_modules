@@ -5,7 +5,6 @@ description: Vango Technologies V32F20X ADC
 
 compatible: "vango,v32f20x-adc"
 
-# Professional Practice: Inherit from standard Zephyr ADC controller
 include: [adc-controller.yaml, base.yaml]
 
 properties:

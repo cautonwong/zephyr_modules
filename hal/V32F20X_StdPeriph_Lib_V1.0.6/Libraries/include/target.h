@@ -9,6 +9,9 @@
 #ifndef __TARGET_H
 #define __TARGET_H
 
+#include <stdint.h>
+#include <zephyr/toolchain.h>
+
 #ifdef V32F209XX
 #elif defined V32F207XX
   #ifdef V32F20XXX_CM33_CORE1

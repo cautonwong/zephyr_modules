@@ -1,10 +1,11 @@
 # Copyright (c) 2024 Vango Technologies
 # SPDX-License-Identifier: Apache-2.0
 
+zephyr_sources(soc.c)
+
+# Professional Practice: Define the specific chip macro required by Vango HAL
+zephyr_library_definitions(V32F209XX)
+
+# Ensure HAL and SOC headers are in the search path
 zephyr_include_directories(.)
-
-# Add sources
-zephyr_library_sources(soc.c)
-
-# For this Zephyr version, we MUST explicitly set SOC_LINKER_SCRIPT for Cortex-M
-set(SOC_LINKER_SCRIPT ${ZEPHYR_BASE}/include/zephyr/arch/arm/cortex_m/scripts/linker.ld CACHE INTERNAL "")
+zephyr_include_directories(include)

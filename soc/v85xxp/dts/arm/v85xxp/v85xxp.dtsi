@@ -31,76 +31,94 @@
 	};
 
 	soc {
-		nvic: interrupt-controller@e000e100 {
-			arm,num-irq-priority-bits = <2>;
-		};
+	clock: clock-controller@40010000 {
+		compatible = "v85xxp,clock";
+		#clock-cells = <1>;
+		status = "okay";
+	};
 
-		flashc: flash-controller@fff00 {
-			compatible = "v85xxp,flash-controller";
-			reg = <0x000fff00 0x100>;
-			status = "okay";
-		};
+	pinctrl: pinctrl@40000000 {
+		compatible = "v85xxp,pinctrl";
+		status = "okay";
+	};
 
-		dma0: dma@40010000 {
-			compatible = "v85xxp,dma";
-			reg = <0x40010000 0x80>;
-			interrupts = <22 0>;
-			#dma-cells = <1>;
-			dma-channels = <4>;
-			dma-requests = <32>;
-			status = "disabled";
-		};
+	nvic: interrupt-controller@e000e100 {
+		arm,num-irq-priority-bits = <2>;
+	};
 
-		uart0: uart@40011800 {
-			compatible = "v85xxp,uart";
-			reg = <0x40011800 0x18>;
-			interrupts = <6 0>;
-			status = "disabled";
-		};
+	flashc: flash-controller@fff00 {
+		compatible = "v85xxp,flash-controller";
+		reg = <0x000fff00 0x100>;
+		status = "okay";
+	};
 
-		uart1: uart@40011820 {
-			compatible = "v85xxp,uart";
-			reg = <0x40011820 0x18>;
-			interrupts = <7 0>;
-			status = "disabled";
-		};
+	dma0: dma@40010000 {
+		compatible = "v85xxp,dma";
+		reg = <0x40010000 0x80>;
+		interrupts = <22 0>;
+		#dma-cells = <1>;
+		dma-channels = <4>;
+		dma-requests = <32>;
+		status = "disabled";
+	};
 
-		uart2: uart@40011840 {
-			compatible = "v85xxp,uart";
-			reg = <0x40011840 0x18>;
-			interrupts = <8 0>;
-			status = "disabled";
-		};
+	uart0: uart@40011800 {
+		compatible = "v85xxp,uart";
+		reg = <0x40011800 0x18>;
+		interrupts = <6 0>;
+		clocks = <&clock 0x80000004>; /* UART0 APB Clock */
+		status = "disabled";
+	};
 
-		uart3: uart@40011860 {
-			compatible = "v85xxp,uart";
-			reg = <0x40011860 0x18>;
-			interrupts = <9 0>;
-			status = "disabled";
-		};
+	uart1: uart@40011820 {
+		compatible = "v85xxp,uart";
+		reg = <0x40011820 0x18>;
+		interrupts = <7 0>;
+		clocks = <&clock 0x80000008>;
+		status = "disabled";
+	};
 
-		uart4: uart@40011880 {
-			compatible = "v85xxp,uart";
-			reg = <0x40011880 0x18>;
-			interrupts = <10 0>;
-			status = "disabled";
-		};
+	uart2: uart@40011840 {
+		compatible = "v85xxp,uart";
+		reg = <0x40011840 0x18>;
+		interrupts = <8 0>;
+		clocks = <&clock 0x80000010>;
+		status = "disabled";
+	};
 
-		uart5: uart@400118a0 {
-			compatible = "v85xxp,uart";
-			reg = <0x400118a0 0x18>;
-			interrupts = <11 0>;
-			status = "disabled";
-		};
+	uart3: uart@40011860 {
+		compatible = "v85xxp,uart";
+		reg = <0x40011860 0x18>;
+		interrupts = <9 0>;
+		clocks = <&clock 0x80000020>;
+		status = "disabled";
+	};
 
-		gpiob: gpio@40000020 {
-			compatible = "v85xxp,gpio";
-			reg = <0x40000020 0x14>;
-			gpio-controller;
-			#gpio-cells = <2>;
-			ngpios = <16>;
-			status = "disabled";
-		};
+	uart4: uart@40011880 {
+		compatible = "v85xxp,uart";
+		reg = <0x40011880 0x18>;
+		interrupts = <10 0>;
+		clocks = <&clock 0x80000040>;
+		status = "disabled";
+	};
+
+	uart5: uart@400118a0 {
+		compatible = "v85xxp,uart";
+		reg = <0x400118a0 0x18>;
+		interrupts = <11 0>;
+		clocks = <&clock 0x80000080>;
+		status = "disabled";
+	};
+
+	gpiob: gpio@40000020 {
+		compatible = "v85xxp,gpio";
+		reg = <0x40000020 0x14>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		ngpios = <16>;
+		clocks = <&clock 0x00000002>; /* GPIO AHB Clock */
+		status = "disabled";
+	};
 
 		gpioc: gpio@40000040 {
 			compatible = "v85xxp,gpio";
