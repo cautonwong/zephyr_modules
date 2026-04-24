@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026
+ * Copyright (c) 2026 Vango Technologies
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -10,39 +10,26 @@
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/spi.h>
+#include <zephyr/drivers/clock_control.h>
+#include <zephyr/drivers/pinctrl.h>
 
 #include <soc.h>
 #include "lib_spi.h"
+#include "lib_clk.h"
 
 struct v85xxp_spi_config {
 	SPI_Type *base;
+	const struct device *clock_dev;
+	clock_control_subsys_t clock_subsys;
+	const struct pinctrl_dev_config *pincfg;
 };
 
 struct v85xxp_spi_data {
 	struct spi_config cfg;
 };
 
-static uint32_t v85xxp_spi_gate_mask(SPI_Type *base)
-{
-	switch ((uintptr_t)base) {
-	case SPI1_BASE:
-		return MISC2_PCLKEN_SPI1;
-	case SPI2_BASE:
-		return MISC2_PCLKEN_SPI2;
-	case SPI3_BASE:
-		return MISC2_PCLKEN_SPI3;
-	default:
-		return 0U;
-	}
-}
-
 static uint32_t v85xxp_spi_clk_div(const struct spi_config *cfg)
 {
-	switch (SPI_WORD_SIZE_GET(cfg->operation)) {
-	default:
-		break;
-	}
-
 	if (cfg->frequency >= 2000000U) {
 		return SPI_CLKDIV_2;
 	}
@@ -137,8 +124,14 @@ static int v85xxp_spi_release(const struct device *dev,
 static int v85xxp_spi_init(const struct device *dev)
 {
 	const struct v85xxp_spi_config *cfg = dev->config;
+	int ret;
 
-	MISC2->PCLKEN |= v85xxp_spi_gate_mask(cfg->base);
+	ret = clock_control_on(cfg->clock_dev, cfg->clock_subsys);
+	if (ret != 0) return ret;
+
+	ret = pinctrl_apply_state(cfg->pincfg, PINCTRL_STATE_DEFAULT);
+	if (ret < 0 && ret != -ENOENT) return ret;
+
 	SPI_DeviceInit(cfg->base);
 	return 0;
 }
@@ -149,8 +142,12 @@ static DEVICE_API(spi, v85xxp_spi_api) = {
 };
 
 #define V85XXP_SPI_INIT(inst) \
+	PINCTRL_DT_INST_DEFINE(inst); \
 	static const struct v85xxp_spi_config v85xxp_spi_cfg_##inst = { \
 		.base = (SPI_Type *)DT_INST_REG_ADDR(inst), \
+		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(inst)), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, identifier), \
+		.pincfg = PINCTRL_DT_INST_DEV_CONFIG_GET(inst), \
 	}; \
 	static struct v85xxp_spi_data v85xxp_spi_data_##inst; \
 	DEVICE_DT_INST_DEFINE(inst, v85xxp_spi_init, NULL, \

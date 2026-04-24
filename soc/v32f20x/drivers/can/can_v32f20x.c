@@ -104,11 +104,41 @@ static void can_v32f20x_isr(const struct device *dev)
 	}
 }
 
+static int can_v32f20x_add_rx_filter(const struct device *dev,
+				      can_rx_callback_t callback,
+				      void *user_data,
+				      const struct can_filter *filter)
+{
+	const struct can_v32f20x_config *config = dev->config;
+	CAN_FilterInitType filter_init;
+
+	filter_init.CAN_FilterNumber = 0; /* Simple implementation uses index 0 */
+	filter_init.CAN_FilterMode = CAN_FilterMode_IdMask;
+	filter_init.CAN_FilterScale = (filter->flags & CAN_FILTER_IDE) ? CAN_FilterScale_32bit : CAN_FilterScale_16bit;
+	filter_init.CAN_FilterIdHigh = (filter->id >> 16) & 0xFFFF;
+	filter_init.CAN_FilterIdLow = filter->id & 0xFFFF;
+	filter_init.CAN_FilterMaskIdHigh = (filter->mask >> 16) & 0xFFFF;
+	filter_init.CAN_FilterMaskIdLow = filter->mask & 0xFFFF;
+	filter_init.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
+	filter_init.CAN_FilterActivation = ENABLE;
+
+	CAN_FilterInit(config->regs, &filter_init);
+	return 0;
+}
+
+static int can_v32f20x_get_capabilities(const struct device *dev, can_mode_t *cap)
+{
+	ARG_UNUSED(dev);
+	*cap = CAN_MODE_NORMAL | CAN_MODE_LOOPBACK;
+	return 0;
+}
+
 static const struct can_driver_api can_v32f20x_api = {
 	.set_mode = can_v32f20x_set_mode,
 	.set_timing = can_v32f20x_set_timing,
 	.send = can_v32f20x_send,
-	.get_capabilities = NULL, /* TODO: Add caps */
+	.add_rx_filter = can_v32f20x_add_rx_filter,
+	.get_capabilities = can_v32f20x_get_capabilities,
 };
 
 static int can_v32f20x_init(const struct device *dev)

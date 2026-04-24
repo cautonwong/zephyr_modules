@@ -3,24 +3,27 @@
 menu "V32F20X Drivers"
     depends on SOC_SERIES_V32F20X
 
-# 1. GPIO & Pinctrl
+# 1. Foundation Infrastructure
+source "drivers/clock_control/Kconfig"
+source "drivers/pinctrl/Kconfig"
+source "drivers/reset/Kconfig"
+source "drivers/dma/Kconfig"
+
+# 2. IO & Bus Drivers
 config V32F20X_GPIO
     bool "V32F20X GPIO Driver"
     default y
     depends on DT_HAS_VANGO_V32F20X_GPIO_ENABLED
     select GPIO
-    select VANGO_V32F20X_HAL_GPIO
     help
       Enable support for Vango V32F20X GPIO controller.
 
-# 2. Bus Drivers
 config V32F20X_UART
     bool "V32F20X UART Driver"
     default y
     depends on DT_HAS_VANGO_V32F20X_UART_ENABLED
     select SERIAL_HAS_DRIVER
     select SERIAL_SUPPORT_INTERRUPT
-    select VANGO_V32F20X_HAL_UART
     help
       Enable support for Vango V32F20X UART.
 
@@ -29,7 +32,6 @@ config I2C_V32F20X
     default y
     depends on DT_HAS_VANGO_V32F20X_I2C_ENABLED
     select I2C
-    select VANGO_V32F20X_HAL_I2C
     help
       Enable support for Vango V32F20X I2C.
 
@@ -38,7 +40,6 @@ config SPI_V32F20X
     default y
     depends on DT_HAS_VANGO_V32F20X_SPI_ENABLED
     select SPI
-    select VANGO_V32F20X_HAL_SPI
     help
       Enable support for Vango V32F20X SPI.
 
@@ -47,49 +48,102 @@ config CAN_V32F20X
     default y
     depends on DT_HAS_VANGO_V32F20X_CAN_ENABLED
     select CAN
-    select VANGO_V32F20X_HAL_CAN
     help
       Enable support for Vango V32F20X CAN.
 
-# 3. System & IPC
-config V32F20X_MAILBOX
-    bool "V32F20X Mailbox Driver"
+# 3. Specialized High-Speed/Comm
+config SDIO_V32F20X
+    bool "V32F20X SDIO Driver"
     default y
-    depends on DT_HAS_VANGO_V32F20X_MAILBOX_ENABLED
-    select VANGO_V32F20X_HAL_MAILBOX
+    depends on DT_HAS_VANGO_V32F20X_SDIO_ENABLED
     help
-      Enable support for Vango V32F20X Mailbox (IPC).
+      Enable support for Vango V32F20X SDIO controller.
 
-config COUNTER_V32F20X
-    bool "V32F20X Counter Driver"
+config OSPI_V32F20X
+    bool "V32F20X OSPI Driver"
     default y
-    depends on DT_HAS_VANGO_V32F20X_TIMER_ENABLED
-    select COUNTER
-    select VANGO_V32F20X_HAL_TIMER
+    depends on DT_HAS_VANGO_V32F20X_OSPI_ENABLED
     help
-      Enable support for Vango V32F20X Timer as Counter.
+      Enable support for Vango V32F20X Octal SPI.
+
+config I2S_V32F20X
+    bool "V32F20X I2S Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_I2S_ENABLED
+    help
+      Enable support for Vango V32F20X I2S Audio.
+
+config V32F20X_ISO7816
+    bool "V32F20X ISO7816 Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_ISO7816_ENABLED
+    help
+      Enable support for Vango V32F20X Smart Card interface.
+
+# 4. Analog & Mixed Signal
+config ADC_V32F20X
+    bool "V32F20X ADC Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_ADC_ENABLED
+    select ADC
+    help
+      Enable support for Vango V32F20X ADC.
+
+config DAC_V32F20X
+    bool "V32F20X DAC Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_DAC_ENABLED
+    help
+      Enable support for Vango V32F20X DAC.
 
 config PWM_V32F20X
     bool "V32F20X PWM Driver"
     default y
     depends on DT_HAS_VANGO_V32F20X_PWM_ENABLED
     select PWM
-    select VANGO_V32F20X_HAL_TIMER
     help
       Enable support for Vango V32F20X PWM.
+
+config COMP_V32F20X
+    bool "V32F20X Comparator Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_COMPARATOR_ENABLED
+    help
+      Enable support for Vango V32F20X Analog Comparator.
+
+# 5. Multimedia & Security
+config DCMI_V32F20X
+    bool "V32F20X DCMI Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_DCMI_ENABLED
+    help
+      Enable support for Vango V32F20X Digital Camera Interface.
+
+config CRYPT_V32F20X
+    bool "V32F20X CRYPT Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_CRYPT_ENABLED
+    help
+      Enable support for Vango V32F20X Cryptographic Accelerator.
 
 config CRC_V32F20X
     bool "V32F20X CRC Driver"
     default y
     depends on DT_HAS_VANGO_V32F20X_CRC_ENABLED
-    select VANGO_V32F20X_HAL_CRC
     help
-      Enable support for Vango V32F20X Hardware CRC.
+      Enable support for Vango V32F20X CRC.
 
-source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/drivers/clock_control/Kconfig"
-source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/drivers/reset/Kconfig"
-source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/drivers/pinctrl/Kconfig"
-source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/drivers/dma/Kconfig"
-source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/drivers/watchdog/Kconfig"
+# 6. System & IPC
+config MAILBOX_V32F20X
+    bool "V32F20X Mailbox Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_MAILBOX_ENABLED
+    help
+      Enable support for Vango V32F20X Mailbox (Inter-core).
+
+source "drivers/timer/Kconfig"
+source "drivers/watchdog/Kconfig"
+source "drivers/flash/Kconfig"
+source "drivers/entropy/Kconfig"
 
 endmenu

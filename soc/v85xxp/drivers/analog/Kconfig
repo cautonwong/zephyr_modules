@@ -1,0 +1,8 @@
+# Professional Analog Kconfig for V85XXP
+
+config ANALOG_V85XXP
+    bool "V85XXP Analog/Comparator Driver"
+    default y
+    depends on DT_HAS_V85XXP_ANALOG_ENABLED
+    help
+      Enable support for Vango V85XXP Analog module (CMP, VDD Alarm, etc.).

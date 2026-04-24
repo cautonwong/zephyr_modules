@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026
+ * Copyright (c) 2026 Vango Technologies
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -11,57 +11,81 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/gpio/gpio_utils.h>
+#include <zephyr/drivers/clock_control.h>
 
 #include <soc.h>
 #include "lib_gpio.h"
+#include "lib_clk.h"
 
 struct v85xxp_gpio_config {
 	struct gpio_driver_config common;
-	GPIO_Type *base;
+	uintptr_t base;
+	const struct device *clock_dev;
+	clock_control_subsys_t clock_subsys;
 };
 
 struct v85xxp_gpio_data {
 	struct gpio_driver_data common;
-	gpio_port_value_t out_cache;
+	sys_slist_t callbacks;
 };
+
+/* 判断是否为 PMUIO (Port A) */
+static inline bool is_pmuio(uintptr_t base)
+{
+	return (base >= 0x40014000 && base < 0x40015000);
+}
 
 static int v85xxp_gpio_pin_configure(const struct device *dev,
 				     gpio_pin_t pin,
 				     gpio_flags_t flags)
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
-	struct v85xxp_gpio_data *data = dev->data;
 	GPIO_InitType init = {0};
-	uint16_t pin_mask;
 
 	if (pin >= 16U) {
 		return -EINVAL;
 	}
 
-	if ((flags & GPIO_SINGLE_ENDED) != 0U &&
-	    (flags & GPIO_LINE_OPEN_DRAIN) == 0U) {
-		return -ENOTSUP;
-	}
+	/* 设置引脚 */
+	init.GPIO_Pin = BIT(pin);
 
+	/* 设置模式 */
 	if ((flags & GPIO_INPUT) != 0U) {
 		init.GPIO_Mode = GPIO_MODE_INPUT;
 	} else if ((flags & GPIO_OUTPUT) != 0U) {
-		init.GPIO_Mode = ((flags & GPIO_LINE_OPEN_DRAIN) != 0U) ?
-			GPIO_MODE_OUTPUT_OD : GPIO_MODE_OUTPUT_CMOS;
+		if ((flags & GPIO_LINE_OPEN_DRAIN) != 0U) {
+			init.GPIO_Mode = (flags & GPIO_INPUT) ? GPIO_MODE_INOUT_OD : GPIO_MODE_OUTPUT_OD;
+		} else {
+			init.GPIO_Mode = (flags & GPIO_INPUT) ? GPIO_MODE_INOUT_CMOS : GPIO_MODE_OUTPUT_CMOS;
+		}
+	} else if ((flags & GPIO_DISCONNECTED) != 0U) {
+		init.GPIO_Mode = GPIO_MODE_FORBIDDEN;
 	} else {
 		return -ENOTSUP;
 	}
 
-	pin_mask = BIT(pin);
-	init.GPIO_Pin = pin_mask;
-	GPIOBToF_Init(cfg->base, &init);
+	/* 执行初始化 (基于硬件事实区分 A 和 B-F) */
+	if (is_pmuio(cfg->base)) {
+		GPIOA_Init((GPIOA_Type *)cfg->base, &init);
+	} else {
+		GPIOBToF_Init((GPIO_Type *)cfg->base, &init);
+	}
 
-	if ((flags & GPIO_OUTPUT_INIT_HIGH) != 0U) {
-		cfg->base->DAT |= pin_mask;
-		data->out_cache |= pin_mask;
-	} else if ((flags & GPIO_OUTPUT_INIT_LOW) != 0U) {
-		cfg->base->DAT &= ~pin_mask;
-		data->out_cache &= ~pin_mask;
+	/* 设置初始电平 */
+	if ((flags & GPIO_OUTPUT) != 0U) {
+		if ((flags & GPIO_OUTPUT_INIT_HIGH) != 0U) {
+			if (is_pmuio(cfg->base)) {
+				((GPIOA_Type *)cfg->base)->DAT |= BIT(pin);
+			} else {
+				((GPIO_Type *)cfg->base)->DAT |= BIT(pin);
+			}
+		} else if ((flags & GPIO_OUTPUT_INIT_LOW) != 0U) {
+			if (is_pmuio(cfg->base)) {
+				((GPIOA_Type *)cfg->base)->DAT &= ~BIT(pin);
+			} else {
+				((GPIO_Type *)cfg->base)->DAT &= ~BIT(pin);
+			}
+		}
 	}
 
 	return 0;
@@ -72,7 +96,11 @@ static int v85xxp_gpio_port_get_raw(const struct device *dev,
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
 
-	*value = cfg->base->STS;
+	if (is_pmuio(cfg->base)) {
+		*value = ((GPIOA_Type *)cfg->base)->STS;
+	} else {
+		*value = ((GPIO_Type *)cfg->base)->STS;
+	}
 	return 0;
 }
 
@@ -81,12 +109,17 @@ static int v85xxp_gpio_port_set_masked_raw(const struct device *dev,
 					   gpio_port_value_t value)
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
-	struct v85xxp_gpio_data *data = dev->data;
-	uint16_t out = (uint16_t)data->out_cache;
+	uint32_t port_val;
 
-	out = (out & ~mask) | ((uint16_t)value & mask);
-	cfg->base->DAT = out;
-	data->out_cache = out;
+	if (is_pmuio(cfg->base)) {
+		port_val = ((GPIOA_Type *)cfg->base)->DAT;
+		port_val = (port_val & ~mask) | (value & mask);
+		((GPIOA_Type *)cfg->base)->DAT = (uint16_t)port_val;
+	} else {
+		port_val = ((GPIO_Type *)cfg->base)->DAT;
+		port_val = (port_val & ~mask) | (value & mask);
+		((GPIO_Type *)cfg->base)->DAT = (uint16_t)port_val;
+	}
 	return 0;
 }
 
@@ -94,10 +127,12 @@ static int v85xxp_gpio_port_set_bits_raw(const struct device *dev,
 					 gpio_port_pins_t pins)
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
-	struct v85xxp_gpio_data *data = dev->data;
 
-	cfg->base->DAT |= (uint16_t)pins;
-	data->out_cache = cfg->base->DAT;
+	if (is_pmuio(cfg->base)) {
+		((GPIOA_Type *)cfg->base)->DAT |= (uint16_t)pins;
+	} else {
+		((GPIO_Type *)cfg->base)->DAT |= (uint16_t)pins;
+	}
 	return 0;
 }
 
@@ -105,10 +140,12 @@ static int v85xxp_gpio_port_clear_bits_raw(const struct device *dev,
 					   gpio_port_pins_t pins)
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
-	struct v85xxp_gpio_data *data = dev->data;
 
-	cfg->base->DAT &= ~((uint16_t)pins);
-	data->out_cache = cfg->base->DAT;
+	if (is_pmuio(cfg->base)) {
+		((GPIOA_Type *)cfg->base)->DAT &= ~((uint16_t)pins);
+	} else {
+		((GPIO_Type *)cfg->base)->DAT &= ~((uint16_t)pins);
+	}
 	return 0;
 }
 
@@ -116,59 +153,26 @@ static int v85xxp_gpio_port_toggle_bits(const struct device *dev,
 					gpio_port_pins_t pins)
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
-	struct v85xxp_gpio_data *data = dev->data;
 
-	cfg->base->DAT ^= (uint16_t)pins;
-	data->out_cache = cfg->base->DAT;
-	return 0;
-}
-
-static int v85xxp_gpio_pin_interrupt_configure(const struct device *dev,
-					       gpio_pin_t pin,
-					       enum gpio_int_mode mode,
-					       enum gpio_int_trig trig)
-{
-	ARG_UNUSED(dev);
-	ARG_UNUSED(pin);
-	ARG_UNUSED(mode);
-	ARG_UNUSED(trig);
-	return -ENOTSUP;
-}
-
-static int v85xxp_gpio_get_config(const struct device *dev,
-				  gpio_pin_t pin,
-				  gpio_flags_t *flags)
-{
-	const struct v85xxp_gpio_config *cfg = dev->config;
-	uint16_t pin_mask;
-
-	if (pin >= 16U) {
-		return -EINVAL;
+	if (is_pmuio(cfg->base)) {
+		((GPIOA_Type *)cfg->base)->DAT ^= (uint16_t)pins;
+	} else {
+		((GPIO_Type *)cfg->base)->DAT ^= (uint16_t)pins;
 	}
-
-	pin_mask = BIT(pin);
-	*flags = 0;
-
-	if ((cfg->base->IE & pin_mask) != 0U) {
-		*flags |= GPIO_INPUT;
-	}
-	if ((cfg->base->OEN & pin_mask) != 0U) {
-		*flags |= GPIO_OUTPUT;
-	}
-	if ((cfg->base->ATT & pin_mask) != 0U) {
-		*flags |= GPIO_LINE_OPEN_DRAIN | GPIO_SINGLE_ENDED;
-	}
-
 	return 0;
 }
 
 static int v85xxp_gpio_init(const struct device *dev)
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
-	struct v85xxp_gpio_data *data = dev->data;
+	int ret;
 
-	MISC2->HCLKEN |= MISC2_HCLKEN_GPIO;
-	data->out_cache = cfg->base->DAT;
+	/* 使能时钟 */
+	ret = clock_control_on(cfg->clock_dev, cfg->clock_subsys);
+	if (ret != 0) {
+		return ret;
+	}
+
 	return 0;
 }
 
@@ -179,8 +183,6 @@ static DEVICE_API(gpio, v85xxp_gpio_api) = {
 	.port_set_bits_raw = v85xxp_gpio_port_set_bits_raw,
 	.port_clear_bits_raw = v85xxp_gpio_port_clear_bits_raw,
 	.port_toggle_bits = v85xxp_gpio_port_toggle_bits,
-	.pin_interrupt_configure = v85xxp_gpio_pin_interrupt_configure,
-	.get_config = v85xxp_gpio_get_config,
 };
 
 #define V85XXP_GPIO_INIT(inst) \
@@ -188,7 +190,9 @@ static DEVICE_API(gpio, v85xxp_gpio_api) = {
 		.common = { \
 			.port_pin_mask = GPIO_PORT_PIN_MASK_FROM_DT_INST(inst), \
 		}, \
-		.base = (GPIO_Type *)DT_INST_REG_ADDR(inst), \
+		.base = DT_INST_REG_ADDR(inst), \
+		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(inst)), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, identifier), \
 	}; \
 	static struct v85xxp_gpio_data v85xxp_gpio_data_##inst; \
 	DEVICE_DT_INST_DEFINE(inst, v85xxp_gpio_init, NULL, \

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026
+ * Copyright (c) 2026 Vango Technologies
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -10,13 +10,16 @@
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/counter.h>
+#include <zephyr/drivers/clock_control.h>
 
 #include <soc.h>
 #include "lib_tmr.h"
+#include "lib_clk.h"
 
 struct v85xxp_counter_config {
 	TMR_Type *base;
-	uint32_t freq_hz;
+	const struct device *clock_dev;
+	clock_control_subsys_t clock_subsys;
 	uint32_t top;
 };
 
@@ -28,7 +31,6 @@ struct v85xxp_counter_data {
 static int v85xxp_counter_start(const struct device *dev)
 {
 	const struct v85xxp_counter_config *cfg = dev->config;
-
 	TMR_Cmd(cfg->base, ENABLE);
 	return 0;
 }
@@ -36,7 +38,6 @@ static int v85xxp_counter_start(const struct device *dev)
 static int v85xxp_counter_stop(const struct device *dev)
 {
 	const struct v85xxp_counter_config *cfg = dev->config;
-
 	TMR_Cmd(cfg->base, DISABLE);
 	return 0;
 }
@@ -44,7 +45,6 @@ static int v85xxp_counter_stop(const struct device *dev)
 static uint32_t v85xxp_counter_get_value(const struct device *dev)
 {
 	const struct v85xxp_counter_config *cfg = dev->config;
-
 	return TMR_GetCurrentValue(cfg->base);
 }
 
@@ -55,9 +55,7 @@ static int v85xxp_counter_set_top_value(const struct device *dev,
 	struct v85xxp_counter_data *data = dev->data;
 	TMR_InitType init;
 
-	if ((cfg_in->ticks == 0U) || (cfg_in->ticks > 0xFFFFFFFFU)) {
-		return -EINVAL;
-	}
+	if ((cfg_in->ticks == 0U) || (cfg_in->ticks > 0xFFFFFFFFU)) return -EINVAL;
 
 	TMR_StructInit(&init);
 	init.ClockSource = TMR_CLKSRC_INTERNAL;
@@ -73,45 +71,30 @@ static int v85xxp_counter_set_top_value(const struct device *dev,
 static uint32_t v85xxp_counter_get_pending_int(const struct device *dev)
 {
 	const struct v85xxp_counter_config *cfg = dev->config;
-
 	return TMR_GetINTStatus(cfg->base);
 }
 
 static uint32_t v85xxp_counter_get_top_value(const struct device *dev)
 {
 	const struct v85xxp_counter_config *cfg = dev->config;
-
 	return cfg->top;
-}
-
-static int v85xxp_counter_set_alarm(const struct device *dev,
-				    uint8_t chan_id,
-				    const struct counter_alarm_cfg *alarm_cfg)
-{
-	ARG_UNUSED(dev);
-	ARG_UNUSED(chan_id);
-	ARG_UNUSED(alarm_cfg);
-	return -ENOTSUP;
-}
-
-static int v85xxp_counter_cancel_alarm(const struct device *dev, uint8_t chan_id)
-{
-	ARG_UNUSED(dev);
-	ARG_UNUSED(chan_id);
-	return -ENOTSUP;
 }
 
 static uint32_t v85xxp_counter_get_freq(const struct device *dev)
 {
 	const struct v85xxp_counter_config *cfg = dev->config;
+	uint32_t rate;
 
-	return cfg->freq_hz;
+	if (clock_control_get_rate(cfg->clock_dev, cfg->clock_subsys, &rate) != 0) return 0;
+	return rate;
 }
 
 static int v85xxp_counter_init(const struct device *dev)
 {
 	const struct v85xxp_counter_config *cfg = dev->config;
 	TMR_InitType init;
+
+	if (clock_control_on(cfg->clock_dev, cfg->clock_subsys) != 0) return -EIO;
 
 	TMR_DeInit(cfg->base);
 	TMR_StructInit(&init);
@@ -129,16 +112,14 @@ static DEVICE_API(counter, v85xxp_counter_api) = {
 	.set_top_value = v85xxp_counter_set_top_value,
 	.get_pending_int = v85xxp_counter_get_pending_int,
 	.get_top_value = v85xxp_counter_get_top_value,
-	.set_alarm = v85xxp_counter_set_alarm,
-	.cancel_alarm = v85xxp_counter_cancel_alarm,
 	.get_freq = v85xxp_counter_get_freq,
-	.get_num_of_channels = counter_get_num_of_channels,
 };
 
 #define V85XXP_COUNTER_INIT(inst) \
 	static const struct v85xxp_counter_config v85xxp_counter_cfg_##inst = { \
 		.base = (TMR_Type *)DT_INST_REG_ADDR(inst), \
-		.freq_hz = V85XXP_PCLK_CLOCK_HZ, \
+		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(inst)), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, identifier), \
 		.top = DT_INST_PROP_OR(inst, max_top_value, 0xFFFFFFFF), \
 	}; \
 	static struct v85xxp_counter_data v85xxp_counter_data_##inst; \

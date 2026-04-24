@@ -209,5 +209,99 @@
             #io-channel-cells = <1>; 
             status = "disabled"; 
         };
+
+        /* Missing Peripherals Completion */
+        dcmi0: dcmi@40201000 {
+            compatible = "vango,v32f20x-dcmi";
+            reg = <0x40201000 0x100>;
+            interrupts = <78 0>;
+            status = "disabled";
+        };
+
+        ospi0: ospi@60000000 {
+            compatible = "vango,v32f20x-ospi";
+            reg = <0x60000000 0x1000>;
+            interrupts = <75 0>;
+            status = "disabled";
+        };
+
+        sdio0: sdio@40084000 {
+            compatible = "vango,v32f20x-sdio";
+            reg = <0x40084000 0x1000>;
+            interrupts = <76 0>;
+            status = "disabled";
+        };
+
+        i2s0: i2s@40083000 {
+            compatible = "vango,v32f20x-i2s";
+            reg = <0x40083000 0x800>;
+            interrupts = <77 0>;
+            status = "disabled";
+        };
+
+        iso0: iso7816@40040000 {
+            compatible = "vango,v32f20x-iso7816";
+            reg = <0x40040000 0x40>;
+            interrupts = <79 0>;
+            status = "disabled";
+        };
+
+        comp0: comparator@40101800 {
+            compatible = "vango,v32f20x-comparator";
+            reg = <0x40101800 0x40>;
+            status = "disabled";
+        };
+
+        enceng0: enceng@40206000 {
+            compatible = "vango,v32f20x-enceng";
+            reg = <0x40206000 0x100>;
+            status = "disabled";
+        };
+
+        crypt0: crypt@4120c000 {
+            compatible = "vango,v32f20x-crypt";
+            reg = <4120c000 0x100>;
+            status = "disabled";
+        };
+
+        eth0: eth@40202000 {
+            compatible = "vango,v32f20x-eth";
+            reg = <0x40202000 0x2000>;
+            interrupts = <80 0>;
+            status = "disabled";
+        };
+
+        usb_hs: usb@20240000 {
+            compatible = "vango,v32f20x-usb-hs";
+            reg = <0x20240000 0x10000>;
+            interrupts = <81 0>;
+            status = "disabled";
+        };
+
+        usb_fs: usb@20280000 {
+            compatible = "vango,v32f20x-usb-fs";
+            reg = <0x20280000 0x10000>;
+            status = "disabled";
+        };
+
+        eadc0: adc@400a0800 {
+            compatible = "vango,v32f20x-eadc";
+            reg = <0x400a0800 0x400>;
+            clocks = <&clock 49>;
+            status = "disabled";
+        };
+
+        hfm0: meter@21015000 {
+            compatible = "vango,v32f20x-hfm";
+            reg = <0x21015000 0x1000>;
+            clocks = <&clock 16>; /* Energy module clock */
+            status = "disabled";
+        };
+
+        pmu0: pmu@41100800 {
+            compatible = "vango,v32f20x-pmu";
+            reg = <0x41100800 0x118>;
+            status = "okay";
+        };
     };
 };

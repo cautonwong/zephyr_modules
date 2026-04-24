@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026
+ * Copyright (c) 2026 Vango Technologies
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -10,13 +10,16 @@
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/pwm.h>
+#include <zephyr/drivers/clock_control.h>
 
 #include <soc.h>
 #include "lib_pwm.h"
+#include "lib_clk.h"
 
 struct v85xxp_pwm_config {
 	PWM_Type *base;
-	uint32_t clock_hz;
+	const struct device *clock_dev;
+	clock_control_subsys_t clock_subsys;
 };
 
 struct v85xxp_pwm_data {
@@ -30,14 +33,12 @@ static int v85xxp_pwm_set_cycles(const struct device *dev,
 				 pwm_flags_t flags)
 {
 	const struct v85xxp_pwm_config *cfg = dev->config;
-	struct v85xxp_pwm_data *data = dev->data;
 	PWM_BaseInitType base_init;
 	PWM_OCInitType oc_init;
 
 	if (channel > 2U || period_cycles == 0U || period_cycles > 0xFFFFU) {
 		return -EINVAL;
 	}
-
 	if (pulse_cycles > period_cycles || flags != 0U) {
 		return -ENOTSUP;
 	}
@@ -57,7 +58,6 @@ static int v85xxp_pwm_set_cycles(const struct device *dev,
 	PWM_CCRConfig(cfg->base, PWM_CHANNEL_0, period_cycles);
 	PWM_OutputCmd(cfg->base, channel, ENABLE);
 
-	data->period_cycles = period_cycles;
 	return 0;
 }
 
@@ -66,16 +66,19 @@ static int v85xxp_pwm_get_cycles_per_sec(const struct device *dev,
 					 uint64_t *cycles)
 {
 	const struct v85xxp_pwm_config *cfg = dev->config;
+	uint32_t rate;
 
-	ARG_UNUSED(channel);
-	*cycles = cfg->clock_hz;
+	if (clock_control_get_rate(cfg->clock_dev, cfg->clock_subsys, &rate) != 0) {
+		return -EIO;
+	}
+	*cycles = (uint64_t)rate / 2U; /* PWM_CLKDIV_2 */
 	return 0;
 }
 
 static int v85xxp_pwm_init(const struct device *dev)
 {
-	ARG_UNUSED(dev);
-	return 0;
+	const struct v85xxp_pwm_config *cfg = dev->config;
+	return clock_control_on(cfg->clock_dev, cfg->clock_subsys);
 }
 
 static DEVICE_API(pwm, v85xxp_pwm_api) = {
@@ -86,7 +89,8 @@ static DEVICE_API(pwm, v85xxp_pwm_api) = {
 #define V85XXP_PWM_INIT(inst) \
 	static const struct v85xxp_pwm_config v85xxp_pwm_cfg_##inst = { \
 		.base = (PWM_Type *)DT_INST_REG_ADDR(inst), \
-		.clock_hz = V85XXP_PCLK_CLOCK_HZ / 2U, \
+		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(inst)), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, identifier), \
 	}; \
 	static struct v85xxp_pwm_data v85xxp_pwm_data_##inst; \
 	DEVICE_DT_INST_DEFINE(inst, v85xxp_pwm_init, NULL, \
