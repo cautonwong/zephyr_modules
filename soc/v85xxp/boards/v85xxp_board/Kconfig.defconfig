@@ -1,6 +1,16 @@
+# Copyright (c) 2026 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
 if BOARD_V85XXP_BOARD
 
 config BOARD
 	default "v85xxp_board"
+
+# Critical: Ensure the SOC Series is selected to trigger linker script discovery
+config SOC_SERIES_V85XXP
+	default y
+
+config SOC_V85XXP
+	default y
 
 endif # BOARD_V85XXP_BOARD

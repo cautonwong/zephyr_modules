@@ -34,12 +34,14 @@
 	soc {
 		clock: clock-controller@40010000 {
 			compatible = "v85xxp,clock";
+			reg = <0x40010000 0x1000>;
 			#clock-cells = <1>;
 			status = "okay";
 		};
 
 		pinctrl: pinctrl@40000000 {
 			compatible = "v85xxp,pinctrl";
+			reg = <0x40000000 0x400>;
 			status = "okay";
 		};
 
@@ -112,7 +114,7 @@
 			status = "disabled";
 		};
 
-		gpioa: gpio@40014000 {
+		gpioa: gpio@40014018 {
 			compatible = "v85xxp,gpio";
 			reg = <0x40014018 0x14>; /* PMUIO address */
 			gpio-controller;

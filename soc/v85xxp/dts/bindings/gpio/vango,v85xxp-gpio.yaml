@@ -1,0 +1,14 @@
+description: Vango V85XXP GPIO Controller
+compatible: "v85xxp,gpio"
+include: [gpio-controller.yaml, base.yaml]
+gpio-cells:
+  - pin
+  - flags
+properties:
+    reg:
+      required: true
+    ngpios:
+      type: int
+      required: true
+    clocks:
+      required: false

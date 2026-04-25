@@ -1,0 +1,24 @@
+# Copyright (c) 2026 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+# Direct flat inclusion to prevent hierarchical path resolution errors
+rsource "drivers/clock_control/Kconfig"
+rsource "drivers/pinctrl/Kconfig"
+rsource "drivers/dma/Kconfig"
+
+# GPIO & UART handled directly here or via flat rsource
+config V85XXP_GPIO
+    bool "V85XXP GPIO Driver"
+    default y
+    depends on SOC_SERIES_V85XXP
+    select GPIO
+
+config V85XXP_UART
+    bool "V85XXP UART Driver"
+    default y
+    depends on SOC_SERIES_V85XXP
+    select SERIAL_HAS_DRIVER
+
+rsource "drivers/watchdog/Kconfig"
+rsource "drivers/flash/Kconfig"
+rsource "drivers/analog/Kconfig"

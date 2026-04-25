@@ -1,0 +1,18 @@
+description: Vango V85XXP DMA Controller
+compatible: "v85xxp,dma"
+include: [dma-controller.yaml, base.yaml]
+dma-cells:
+  - channel
+properties:
+    reg:
+      required: true
+    interrupts:
+      required: true
+    clocks:
+      required: true
+    dma-channels:
+      type: int
+      required: true
+    dma-requests:
+      type: int
+      required: true

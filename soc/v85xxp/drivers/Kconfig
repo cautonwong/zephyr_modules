@@ -1,12 +1,13 @@
 # Professional Drivers Kconfig for V85XXP
+# Using strict rsource for hierarchical isolation
 
 menu "V85XXP Drivers"
     depends on SOC_SERIES_V85XXP
 
-# 1. Foundation Infrastructure
-source "drivers/clock_control/Kconfig"
-source "drivers/pinctrl/Kconfig"
-source "drivers/dma/Kconfig"
+# 1. Foundation Infrastructure (Strict relative inclusion)
+rsource "clock_control/Kconfig"
+rsource "pinctrl/Kconfig"
+rsource "dma/Kconfig"
 
 # 2. IO & Bus Drivers
 config V85XXP_GPIO
@@ -42,15 +43,7 @@ config SPI_V85XXP
     help
       Enable support for Vango V85XXP SPI.
 
-# 3. Dedicated Communication
-config V85XXP_ISO7816
-    bool "V85XXP ISO7816 Driver"
-    default y
-    depends on DT_HAS_V85XXP_ISO7816_ENABLED
-    help
-      Enable support for Vango V85XXP ISO7816 Smart Card interface.
-
-# 4. Analog & Timers
+# 3. Analog & Timers
 config ADC_V85XXP
     bool "V85XXP ADC Driver"
     default y
@@ -67,39 +60,8 @@ config PWM_V85XXP
     help
       Enable support for Vango V85XXP PWM.
 
-config RTC_V85XXP
-    bool "V85XXP RTC Driver"
-    default y
-    depends on DT_HAS_V85XXP_RTC_ENABLED
-    select RTC
-    help
-      Enable support for Vango V85XXP RTC.
-
-config COUNTER_V85XXP_TMR
-    bool "V85XXP Counter Driver"
-    default y
-    depends on DT_HAS_V85XXP_TMR_COUNTER_ENABLED
-    select COUNTER
-    help
-      Enable support for Vango V85XXP Timer as Counter.
-
-# 5. System & Graphics
-config LCD_V85XXP
-    bool "V85XXP LCD Driver"
-    default y
-    depends on DT_HAS_V85XXP_LCD_ENABLED
-    help
-      Enable support for Vango V85XXP Segment LCD Controller.
-
-config CRYPT_V85XXP
-    bool "V85XXP CRYPT Driver"
-    default y
-    depends on DT_HAS_V85XXP_CRYPT_ENABLED
-    help
-      Enable support for Vango V85XXP Cryptographic Accelerator.
-
-source "drivers/watchdog/Kconfig"
-source "drivers/flash/Kconfig"
+rsource "watchdog/Kconfig"
+rsource "flash/Kconfig"
+rsource "analog/Kconfig"
 
 endmenu
-source "drivers/analog/Kconfig"

@@ -1,0 +1,10 @@
+description: Vango V85XXP UART
+compatible: "v85xxp,uart"
+include: [uart-controller.yaml, pinctrl-device.yaml, base.yaml]
+properties:
+    reg:
+      required: true
+    interrupts:
+      required: true
+    clocks:
+      required: true

@@ -1,0 +1,6 @@
+description: Vango V85XXP Pinctrl
+compatible: "v85xxp,pinctrl"
+include: [pinctrl-device.yaml, base.yaml]
+properties:
+    reg:
+      required: false

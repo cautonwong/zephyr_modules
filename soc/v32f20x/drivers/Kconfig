@@ -1,13 +1,14 @@
 # Professional Drivers Kconfig for V32F20X
+# Using strict rsource for hierarchical isolation
 
 menu "V32F20X Drivers"
     depends on SOC_SERIES_V32F20X
 
 # 1. Foundation Infrastructure
-source "drivers/clock_control/Kconfig"
-source "drivers/pinctrl/Kconfig"
-source "drivers/reset/Kconfig"
-source "drivers/dma/Kconfig"
+rsource "clock_control/Kconfig"
+rsource "pinctrl/Kconfig"
+rsource "reset/Kconfig"
+rsource "dma/Kconfig"
 
 # 2. IO & Bus Drivers
 config V32F20X_GPIO
@@ -51,36 +52,7 @@ config CAN_V32F20X
     help
       Enable support for Vango V32F20X CAN.
 
-# 3. Specialized High-Speed/Comm
-config SDIO_V32F20X
-    bool "V32F20X SDIO Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_SDIO_ENABLED
-    help
-      Enable support for Vango V32F20X SDIO controller.
-
-config OSPI_V32F20X
-    bool "V32F20X OSPI Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_OSPI_ENABLED
-    help
-      Enable support for Vango V32F20X Octal SPI.
-
-config I2S_V32F20X
-    bool "V32F20X I2S Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_I2S_ENABLED
-    help
-      Enable support for Vango V32F20X I2S Audio.
-
-config V32F20X_ISO7816
-    bool "V32F20X ISO7816 Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_ISO7816_ENABLED
-    help
-      Enable support for Vango V32F20X Smart Card interface.
-
-# 4. Analog & Mixed Signal
+# 3. Analog & Specialized
 config ADC_V32F20X
     bool "V32F20X ADC Driver"
     default y
@@ -89,61 +61,9 @@ config ADC_V32F20X
     help
       Enable support for Vango V32F20X ADC.
 
-config DAC_V32F20X
-    bool "V32F20X DAC Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_DAC_ENABLED
-    help
-      Enable support for Vango V32F20X DAC.
-
-config PWM_V32F20X
-    bool "V32F20X PWM Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_PWM_ENABLED
-    select PWM
-    help
-      Enable support for Vango V32F20X PWM.
-
-config COMP_V32F20X
-    bool "V32F20X Comparator Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_COMPARATOR_ENABLED
-    help
-      Enable support for Vango V32F20X Analog Comparator.
-
-# 5. Multimedia & Security
-config DCMI_V32F20X
-    bool "V32F20X DCMI Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_DCMI_ENABLED
-    help
-      Enable support for Vango V32F20X Digital Camera Interface.
-
-config CRYPT_V32F20X
-    bool "V32F20X CRYPT Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_CRYPT_ENABLED
-    help
-      Enable support for Vango V32F20X Cryptographic Accelerator.
-
-config CRC_V32F20X
-    bool "V32F20X CRC Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_CRC_ENABLED
-    help
-      Enable support for Vango V32F20X CRC.
-
-# 6. System & IPC
-config MAILBOX_V32F20X
-    bool "V32F20X Mailbox Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_MAILBOX_ENABLED
-    help
-      Enable support for Vango V32F20X Mailbox (Inter-core).
-
-source "drivers/timer/Kconfig"
-source "drivers/watchdog/Kconfig"
-source "drivers/flash/Kconfig"
-source "drivers/entropy/Kconfig"
+rsource "timer/Kconfig"
+rsource "watchdog/Kconfig"
+rsource "flash/Kconfig"
+rsource "entropy/Kconfig"
 
 endmenu

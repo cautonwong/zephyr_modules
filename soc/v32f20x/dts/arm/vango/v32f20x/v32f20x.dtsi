@@ -260,7 +260,7 @@
 
         crypt0: crypt@4120c000 {
             compatible = "vango,v32f20x-crypt";
-            reg = <4120c000 0x100>;
+            reg = <0x4120c000 0x100>;
             status = "disabled";
         };
 

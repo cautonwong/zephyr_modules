@@ -1,3 +1,6 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
 if SOC_SERIES_V32F20X
 
 config SOC_SERIES
@@ -11,23 +14,6 @@ config SYS_CLOCK_HW_CYCLES_PER_SEC
 
 config NUM_IRQS
 	default 128
-
-# Core Driver Support
-config PINCTRL
-	default y
-
-config PINCTRL_V32F20X
-	default y
-
-# Default Driver settings
-config V32F20X_GPIO
-	default y
-
-config V32F20X_UART
-	default y
-
-config CLOCK_CONTROL_V32F20X
-	default y
 
 if SOC_V32F20X_CPU1 # M33
 config ARM_MPU

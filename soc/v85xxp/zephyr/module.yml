@@ -1,8 +1,11 @@
+# Copyright (c) 2026 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
 name: v85xxp_soc
 build:
   cmake: zephyr
   kconfig: zephyr/Kconfig
   settings:
     board_root: .
-    dts_root: .
     soc_root: .
+    dts_root: .

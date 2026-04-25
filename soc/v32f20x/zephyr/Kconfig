@@ -1,2 +1,4 @@
-# Professional Kconfig for V32F20X Module
-source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/drivers/Kconfig"
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/Kconfig"

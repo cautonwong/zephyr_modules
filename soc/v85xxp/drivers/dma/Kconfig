@@ -1,7 +1,7 @@
 config DMA_V85XXP
-	bool "V85XXP DMA driver"
-	default y
-	depends on DMA
-	depends on DT_HAS_V85XXP_DMA_ENABLED
-	help
-	  Enable DMA driver for V85XXP DMA controller.
+    bool "V85XXP DMA Driver"
+    default y
+    depends on DT_HAS_V85XXP_DMA_ENABLED
+    select DMA
+    help
+      Enable support for Vango V85XXP DMA controller.

@@ -1,0 +1,25 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+# Direct flat inclusion
+rsource "drivers/clock_control/Kconfig"
+rsource "drivers/pinctrl/Kconfig"
+rsource "drivers/reset/Kconfig"
+rsource "drivers/dma/Kconfig"
+
+config V32F20X_GPIO
+    bool "V32F20X GPIO Driver"
+    default y
+    depends on SOC_SERIES_V32F20X
+    select GPIO
+
+config V32F20X_UART
+    bool "V32F20X UART Driver"
+    default y
+    depends on SOC_SERIES_V32F20X
+    select SERIAL_HAS_DRIVER
+
+rsource "drivers/timer/Kconfig"
+rsource "drivers/watchdog/Kconfig"
+rsource "drivers/flash/Kconfig"
+rsource "drivers/entropy/Kconfig"

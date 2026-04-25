@@ -1,0 +1,8 @@
+description: Vango V85XXP Clock Controller
+compatible: "v85xxp,clock"
+include: [clock-controller.yaml, base.yaml]
+clock-cells:
+  - id
+properties:
+    reg:
+      required: true

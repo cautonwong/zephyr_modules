@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
 if SOC_SERIES_V85XXP
 
 config SOC_SERIES

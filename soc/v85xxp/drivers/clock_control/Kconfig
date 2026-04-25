@@ -1,0 +1,7 @@
+config CLOCK_CONTROL_V85XXP
+    bool "V85XXP Clock Control Driver"
+    default y
+    depends on DT_HAS_V85XXP_CLOCK_ENABLED
+    select CLOCK_CONTROL
+    help
+      Enable driver for Vango V85XXP clock controller.

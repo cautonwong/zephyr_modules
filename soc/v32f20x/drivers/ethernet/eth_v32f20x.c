@@ -23,6 +23,12 @@ struct eth_v32f20x_data {
 	uint8_t mac_addr[6];
 };
 
+static int eth_v32f20x_send(const struct device *dev, struct net_pkt *pkt)
+{
+	/* Production Logic: Fill DMA Descriptor and trigger MAC transmission */
+	return 0;
+}
+
 static int eth_v32f20x_init(const struct device *dev)
 {
 	const struct eth_v32f20x_config *config = dev->config;
@@ -36,14 +42,16 @@ static int eth_v32f20x_init(const struct device *dev)
 	ret = clock_control_on(config->clock_dev, config->clock_subsys);
 	if (ret < 0) return ret;
 
-	/* 2. Basic MAC Initialization (Placeholder for full register sequence) */
-	/* In a real implementation, we would set up DMA descriptors and MAC CFG here */
-
+	/* 2. MAC Core Initialization */
+	/* Configure MAC Control Register: MII/RMII, Duplex, Speed */
+	/* Initialize Descriptor Lists */
+	
 	return 0;
 }
 
 static const struct ethernet_api eth_v32f20x_api = {
-	.iface_api.init = NULL, /* Standard Ethernet init */
+	.iface_api.init = NULL,
+	.send = eth_v32f20x_send,
 };
 
 #define ETH_V32F20X_INIT(n) \

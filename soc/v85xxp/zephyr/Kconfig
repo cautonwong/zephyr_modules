@@ -1,1 +1,4 @@
-source "drivers/Kconfig"
+# Copyright (c) 2026 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+source "$(ZEPHYR_V85XXP_SOC_MODULE_DIR)/Kconfig"

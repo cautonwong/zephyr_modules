@@ -1,2 +1,4 @@
+# Professional Driver CMake for V85XXP UART
+
 zephyr_library()
-zephyr_library_sources_ifdef(CONFIG_SERIAL_V85XXP uart_v85xxp.c)
+zephyr_library_sources(uart_v85xxp.c)

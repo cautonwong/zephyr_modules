@@ -1,8 +1,14 @@
-# Professional Analog Kconfig for V85XXP
+config ADC_V85XXP
+    bool "V85XXP ADC Driver"
+    default y
+    depends on DT_HAS_V85XXP_ADC_ENABLED
+    select ADC
+    help
+      Enable support for Vango V85XXP ADC.
 
 config ANALOG_V85XXP
-    bool "V85XXP Analog/Comparator Driver"
+    bool "V85XXP Analog Misc Driver"
     default y
     depends on DT_HAS_V85XXP_ANALOG_ENABLED
     help
-      Enable support for Vango V85XXP Analog module (CMP, VDD Alarm, etc.).
+      Enable support for Vango V85XXP Analog mixed signal blocks.
