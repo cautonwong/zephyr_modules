@@ -1,6 +1,23 @@
+# Copyright (c) 2026 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
 description: Vango V85XXP Pinctrl
 compatible: "v85xxp,pinctrl"
-include: [pinctrl-device.yaml, base.yaml]
+include: [base.yaml]
 properties:
     reg:
-      required: false
+      required: true
+
+child-binding:
+  description: Vango V85XXP pin configuration node
+  include: [pinctrl-device.yaml]
+  child-binding:
+    description: Vango V85XXP pin configuration group
+    properties:
+      pinmux:
+        required: true
+        type: array
+      bias-pull-up:
+        type: boolean
+      bias-pull-down:
+        type: boolean

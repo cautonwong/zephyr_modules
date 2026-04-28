@@ -6,3 +6,10 @@ config FLASH_V85XXP
     select FLASH_HAS_PAGE_LAYOUT
     help
       Enable support for Vango V85XXP internal flash.
+
+config FLASH_INIT_PRIORITY
+    int "Flash init priority"
+    default 50
+    depends on FLASH_V85XXP
+    help
+      Initialization priority for the V85XXP internal flash driver.

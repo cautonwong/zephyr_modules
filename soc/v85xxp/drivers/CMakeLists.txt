@@ -4,7 +4,7 @@
 zephyr_library_named(v85xxp_drivers)
 
 # Infrastructure
-zephyr_library_sources_ifdef(CONFIG_CLOCK_CONTROL_V85XXP  clock_control/clock_v85xxp.c)
+zephyr_library_sources_ifdef(CONFIG_CLOCK_CONTROL_V85XXP  clock_control/clock_control_v85xxp.c)
 zephyr_library_sources_ifdef(CONFIG_PINCTRL_V85XXP        pinctrl/pinctrl_v85xxp.c)
 zephyr_library_sources_ifdef(CONFIG_DMA_V85XXP            dma/dma_v85xxp.c)
 

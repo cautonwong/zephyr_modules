@@ -192,7 +192,7 @@ static DEVICE_API(gpio, v85xxp_gpio_api) = {
 		}, \
 		.base = DT_INST_REG_ADDR(inst), \
 		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(inst)), \
-		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, identifier), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, id), \
 	}; \
 	static struct v85xxp_gpio_data v85xxp_gpio_data_##inst; \
 	DEVICE_DT_INST_DEFINE(inst, v85xxp_gpio_init, NULL, \

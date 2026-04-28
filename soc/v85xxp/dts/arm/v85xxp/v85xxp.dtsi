@@ -49,6 +49,11 @@
 			arm,num-irq-priority-bits = <2>;
 		};
 
+		systick: timer@e000e010 {
+			compatible = "arm,armv6m-systick";
+			reg = <0xe000e010 0x10>;
+		};
+
 		flashc: flash-controller@fff00 {
 			compatible = "v85xxp,flash-controller";
 			reg = <0x000fff00 0x100>;

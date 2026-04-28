@@ -104,13 +104,13 @@ static int v85xxp_uart_fifo_read(const struct device *dev, uint8_t *rx_data, con
 static void v85xxp_uart_irq_tx_enable(const struct device *dev)
 {
 	const struct v85xxp_uart_config *config = dev->config;
-	UART_ITConfig(config->base, UART_IT_TXDONE, ENABLE);
+	UART_INTConfig(config->base, UART_INT_TXDONE, ENABLE);
 }
 
 static void v85xxp_uart_irq_tx_disable(const struct device *dev)
 {
 	const struct v85xxp_uart_config *config = dev->config;
-	UART_ITConfig(config->base, UART_IT_TXDONE, DISABLE);
+	UART_INTConfig(config->base, UART_INT_TXDONE, DISABLE);
 }
 
 static int v85xxp_uart_irq_tx_ready(const struct device *dev)
@@ -122,13 +122,13 @@ static int v85xxp_uart_irq_tx_ready(const struct device *dev)
 static void v85xxp_uart_irq_rx_enable(const struct device *dev)
 {
 	const struct v85xxp_uart_config *config = dev->config;
-	UART_ITConfig(config->base, UART_IT_RXFULL, ENABLE);
+	UART_INTConfig(config->base, UART_INT_RX, ENABLE);
 }
 
 static void v85xxp_uart_irq_rx_disable(const struct device *dev)
 {
 	const struct v85xxp_uart_config *config = dev->config;
-	UART_ITConfig(config->base, UART_IT_RXFULL, DISABLE);
+	UART_INTConfig(config->base, UART_INT_RX, DISABLE);
 }
 
 static int v85xxp_uart_irq_rx_ready(const struct device *dev)
@@ -147,7 +147,7 @@ static void v85xxp_uart_irq_callback_set(const struct device *dev, uart_irq_call
 static int v85xxp_uart_irq_is_pending(const struct device *dev)
 {
 	const struct v85xxp_uart_config *config = dev->config;
-	return (config->base->INTSTAT & (UART_INTSTAT_RXFULL_Msk | UART_INTSTAT_TXDONE_Msk));
+	return (UART_GetINTStatus(config->base, UART_INT_Msk) != RESET);
 }
 
 static int v85xxp_uart_irq_update(const struct device *dev)
@@ -170,7 +170,6 @@ static int v85xxp_uart_init(const struct device *dev)
 	const struct v85xxp_uart_config *config = dev->config;
 	struct v85xxp_uart_data *data = dev->data;
 	UART_InitType init_struct;
-	uint32_t pclk;
 	int ret;
 
 	/* 1. Enable Clock */
@@ -181,15 +180,14 @@ static int v85xxp_uart_init(const struct device *dev)
 	ret = pinctrl_apply_state(config->pincfg, PINCTRL_STATE_DEFAULT);
 	if (ret < 0 && ret != -ENOENT) return ret;
 
-	/* 3. Get Clock Rate */
-	CLK_GetClockConfig(NULL); // Sync HAL state if needed
-	pclk = CLK_GetPCLKFreq();
-
-	/* 4. Configure UART via HAL */
-	init_struct.UART_Baudrate = config->baud_rate;
-	init_struct.UART_StopBits = UART_STOPBITS_1;
-	init_struct.UART_Parity = UART_PARITY_NONE;
+	/* 3. Configure UART via HAL */
+	init_struct.Baudrate = config->baud_rate;
+	init_struct.Parity = UART_PARITY_NONE;
+	init_struct.FirstBit = UART_FIRSTBIT_LSB;
+	init_struct.Mode = UART_MODE_TX | UART_MODE_RX;
+	
 	UART_Init(config->base, &init_struct);
+	UART_Cmd(config->base, init_struct.Mode, ENABLE);
 
 	data->uart_cfg.baudrate = config->baud_rate;
 
@@ -237,7 +235,7 @@ static const struct uart_driver_api v85xxp_uart_driver_api = {
 	static const struct v85xxp_uart_config v85xxp_uart_config_##inst = { \
 		.base = (UART_Type *)DT_INST_REG_ADDR(inst), \
 		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(inst)), \
-		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, identifier), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, id), \
 		.pincfg = PINCTRL_DT_INST_DEV_CONFIG_GET(inst), \
 		.baud_rate = DT_INST_PROP_OR(inst, current_speed, 115200), \
 		IF_ENABLED(CONFIG_UART_INTERRUPT_DRIVEN, (.irq_config_func = v85xxp_uart_irq_config_func_##inst,)) \
