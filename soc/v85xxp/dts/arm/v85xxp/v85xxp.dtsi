@@ -57,7 +57,7 @@
 		flashc: flash-controller@fff00 {
 			compatible = "v85xxp,flash-controller";
 			reg = <0x000fff00 0x100>;
-			status = "okay";
+			status = "disabled";
 		};
 
 		dma0: dma@40010000 {
@@ -126,7 +126,7 @@
 			#gpio-cells = <2>;
 			ngpios = <16>;
 			clocks = <&clock V85XXP_APB_PMU>;
-			status = "okay";
+			status = "disabled";
 		};
 
 		gpiob: gpio@40000020 {
@@ -318,7 +318,7 @@
 			compatible = "v85xxp,crypt";
 			reg = <0x40014400 0x100>;
 			clocks = <&clock V85XXP_AHB_CRYPT>;
-			status = "okay";
+			status = "disabled";
 		};
 
 		wdt0: watchdog@40014000 {
@@ -347,12 +347,19 @@
 			status = "disabled";
 		};
 
+		pmu0: pmu@40014000 {
+			compatible = "v85xxp,pmu";
+			reg = <0x40014000 0x500>;
+			interrupts = <0 0>;
+			status = "okay";
+		};
+
 		ana0: analog@40011400 {
 			compatible = "v85xxp,analog";
 			reg = <0x40011400 0x100>;
 			interrupts = <14 0>; /* Shared with TMR but can be separated in driver */
 			clocks = <&clock V85XXP_APB_ANA>;
-			status = "okay";
+			status = "disabled";
 		};
 	};
 };

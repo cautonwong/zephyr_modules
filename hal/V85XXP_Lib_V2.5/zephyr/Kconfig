@@ -1,4 +1,45 @@
+# V85XXP HAL Kconfig - conditional inclusion per library module
+
 config HAS_V85XXP_HAL
-    bool "V85XXP HAL"
-    help
-      Enable V85XXP HAL
+	bool
+	help
+	  Enable V85XXP HAL
+
+config VANGO_V85XXP_HAL_ADC
+	bool
+config VANGO_V85XXP_HAL_ANA
+	bool
+config VANGO_V85XXP_HAL_CLK
+	bool
+config VANGO_V85XXP_HAL_CMP
+	bool
+config VANGO_V85XXP_HAL_CRYPT
+	bool
+config VANGO_V85XXP_HAL_DMA
+	bool
+config VANGO_V85XXP_HAL_FLASH
+	bool
+config VANGO_V85XXP_HAL_GPIO
+	bool
+config VANGO_V85XXP_HAL_I2C
+	bool
+config VANGO_V85XXP_HAL_ISO7816
+	bool
+config VANGO_V85XXP_HAL_LCD
+	bool
+config VANGO_V85XXP_HAL_PMU
+	bool
+config VANGO_V85XXP_HAL_PWM
+	bool
+config VANGO_V85XXP_HAL_RTC
+	bool
+config VANGO_V85XXP_HAL_SPI
+	bool
+config VANGO_V85XXP_HAL_TMR
+	bool
+config VANGO_V85XXP_HAL_U32K
+	bool
+config VANGO_V85XXP_HAL_UART
+	bool
+config VANGO_V85XXP_HAL_WDT
+	bool

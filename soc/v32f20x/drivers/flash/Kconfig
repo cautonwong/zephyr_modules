@@ -1,0 +1,10 @@
+# Vango V32F20X Flash configuration options
+
+config FLASH_V32F20X
+	bool "Vango V32F20X Flash driver"
+	default y
+	depends on DT_HAS_VANGO_V32F20X_FLASH_ENABLED
+	select FLASH_HAS_DRIVER_ENABLED
+	select FLASH_HAS_PAGE_LAYOUT
+	help
+	  Enable the Vango V32F20X Flash driver.

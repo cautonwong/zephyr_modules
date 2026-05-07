@@ -29,7 +29,7 @@ struct v85xxp_gpio_data {
 	sys_slist_t callbacks;
 };
 
-/* 判断是否为 PMUIO (Port A) */
+/* Port A uses PMUIO registers with a different register layout */
 static inline bool is_pmuio(uintptr_t base)
 {
 	return (base >= 0x40014000 && base < 0x40015000);
@@ -46,10 +46,8 @@ static int v85xxp_gpio_pin_configure(const struct device *dev,
 		return -EINVAL;
 	}
 
-	/* 设置引脚 */
 	init.GPIO_Pin = BIT(pin);
 
-	/* 设置模式 */
 	if ((flags & GPIO_INPUT) != 0U) {
 		init.GPIO_Mode = GPIO_MODE_INPUT;
 	} else if ((flags & GPIO_OUTPUT) != 0U) {
@@ -64,14 +62,14 @@ static int v85xxp_gpio_pin_configure(const struct device *dev,
 		return -ENOTSUP;
 	}
 
-	/* 执行初始化 (基于硬件事实区分 A 和 B-F) */
+	/* Port A (PMUIO) vs Port B-F use different init functions */
 	if (is_pmuio(cfg->base)) {
 		GPIOA_Init((GPIOA_Type *)cfg->base, &init);
 	} else {
 		GPIOBToF_Init((GPIO_Type *)cfg->base, &init);
 	}
 
-	/* 设置初始电平 */
+	/* Set initial output level */
 	if ((flags & GPIO_OUTPUT) != 0U) {
 		if ((flags & GPIO_OUTPUT_INIT_HIGH) != 0U) {
 			if (is_pmuio(cfg->base)) {
@@ -167,7 +165,7 @@ static int v85xxp_gpio_init(const struct device *dev)
 	const struct v85xxp_gpio_config *cfg = dev->config;
 	int ret;
 
-	/* 使能时钟 */
+	/* Enable peripheral clock */
 	ret = clock_control_on(cfg->clock_dev, cfg->clock_subsys);
 	if (ret != 0) {
 		return ret;

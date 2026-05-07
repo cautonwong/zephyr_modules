@@ -1,24 +1,124 @@
-# Copyright (c) 2026 Vango Technologies
-# SPDX-License-Identifier: Apache-2.0
+# V85XXP Drivers Kconfig - single source of truth
+# Each driver selects its corresponding HAL library module
 
-# Direct flat inclusion to prevent hierarchical path resolution errors
+menu "V85XXP Drivers"
+	depends on SOC_SERIES_V85XXP
+
+# Foundation Infrastructure
 rsource "drivers/clock_control/Kconfig"
 rsource "drivers/pinctrl/Kconfig"
 rsource "drivers/dma/Kconfig"
 
-# GPIO & UART handled directly here or via flat rsource
+# IO & Bus
 config V85XXP_GPIO
-    bool "V85XXP GPIO Driver"
-    default y
-    depends on SOC_SERIES_V85XXP
-    select GPIO
+	bool "V85XXP GPIO Driver"
+	default y
+	depends on DT_HAS_V85XXP_GPIO_ENABLED
+	select GPIO
+	select VANGO_V85XXP_HAL_GPIO
+	help
+	  Enable support for Vango V85XXP GPIO controller.
 
 config V85XXP_UART
-    bool "V85XXP UART Driver"
-    default y
-    depends on SOC_SERIES_V85XXP
-    select SERIAL_HAS_DRIVER
+	bool "V85XXP UART Driver"
+	default y
+	depends on DT_HAS_V85XXP_UART_ENABLED
+	select SERIAL_HAS_DRIVER
+	select SERIAL_SUPPORT_INTERRUPT
+	select VANGO_V85XXP_HAL_UART
+	help
+	  Enable support for Vango V85XXP UART.
+
+config I2C_V85XXP
+	bool "V85XXP I2C Driver"
+	default y
+	depends on DT_HAS_V85XXP_I2C_ENABLED
+	select I2C
+	select VANGO_V85XXP_HAL_I2C
+	help
+	  Enable support for Vango V85XXP I2C.
+
+config SPI_V85XXP
+	bool "V85XXP SPI Driver"
+	default y
+	depends on DT_HAS_V85XXP_SPI_ENABLED
+	select SPI
+	select VANGO_V85XXP_HAL_SPI
+	help
+	  Enable support for Vango V85XXP SPI.
+
+config V85XXP_ISO7816
+	bool "V85XXP ISO7816 Driver"
+	default y
+	depends on DT_HAS_V85XXP_ISO7816_ENABLED
+	select VANGO_V85XXP_HAL_ISO7816
+	help
+	  Enable support for Vango V85XXP ISO7816.
+
+# Analog & Timers
+config ADC_V85XXP
+	bool "V85XXP ADC Driver"
+	default y
+	depends on DT_HAS_V85XXP_ADC_ENABLED
+	select ADC
+	select VANGO_V85XXP_HAL_ADC
+	help
+	  Enable support for Vango V85XXP ADC.
+
+config PWM_V85XXP
+	bool "V85XXP PWM Driver"
+	default y
+	depends on DT_HAS_V85XXP_PWM_ENABLED
+	select PWM
+	select VANGO_V85XXP_HAL_PWM
+	help
+	  Enable support for Vango V85XXP PWM.
+
+config COUNTER_V85XXP_TMR
+	bool "V85XXP Timer Counter Driver"
+	default y
+	depends on DT_HAS_V85XXP_TMR_COUNTER_ENABLED
+	select COUNTER
+	select VANGO_V85XXP_HAL_TMR
+	help
+	  Enable support for Vango V85XXP TMR as counter device.
+
+config RTC_V85XXP
+	bool "V85XXP RTC Driver"
+	default y
+	depends on DT_HAS_V85XXP_RTC_ENABLED
+	select RTC
+	select VANGO_V85XXP_HAL_RTC
+	help
+	  Enable support for Vango V85XXP RTC.
 
 rsource "drivers/watchdog/Kconfig"
 rsource "drivers/flash/Kconfig"
 rsource "drivers/analog/Kconfig"
+
+# System & Graphics
+config CRYPT_V85XXP
+	bool "V85XXP Crypt Driver"
+	default y
+	depends on DT_HAS_V85XXP_CRYPT_ENABLED
+	select VANGO_V85XXP_HAL_CRYPT
+	help
+	  Enable support for Vango V85XXP hardware crypto.
+
+config LCD_V85XXP
+	bool "V85XXP LCD Segment Driver"
+	default y
+	depends on DT_HAS_V85XXP_LCD_ENABLED
+	select VANGO_V85XXP_HAL_LCD
+	help
+	  Enable support for Vango V85XXP segment LCD controller.
+
+config PMU_V85XXP
+	bool "V85XXP PMU Driver"
+	default y
+	depends on DT_HAS_V85XXP_PMU_ENABLED
+	select VANGO_V85XXP_HAL_PMU
+	help
+	  Enable support for Vango V85XXP Power Management Unit.
+
+endmenu

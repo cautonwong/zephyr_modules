@@ -1,0 +1,58 @@
+# Copyright (c) 2026 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: V85XXP Segment LCD Controller
+
+compatible: "v85xxp,lcd"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  clocks:
+    required: true
+
+  lcd_type:
+    type: int
+    default: 0
+    description: |
+      COM multiplexing mode:
+        0 = 4-COM (LCD_TYPE_4COM)
+        1 = 6-COM (LCD_TYPE_6COM)
+        2 = 8-COM (LCD_TYPE_8COM)
+
+  lcd_drv:
+    type: int
+    default: 0
+    description: |
+      Driving resistance:
+        0 = 300 ohm (LCD_DRV_300)
+        1 = 600 ohm (LCD_DRV_600)
+        2 = 150 ohm (LCD_DRV_150)
+        3 = 200 ohm (LCD_DRV_200)
+
+  lcd_freq:
+    type: int
+    default: 1
+    description: |
+      Scan frequency:
+        0 = 64 Hz (LCD_FRQ_64H)
+        1 = 128 Hz (LCD_FRQ_128H)
+        2 = 256 Hz (LCD_FRQ_256H)
+        3 = 512 Hz (LCD_FRQ_512H)
+
+  lcd_bias:
+    type: int
+    default: 0
+    description: |
+      Bias selection:
+        0 = DIV3 (LCD_BMODE_DIV3)
+        1 = DIV4 (LCD_BMODE_DIV4, ANA_REG6_LCDBMODE)
+
+  lcd_voltage:
+    type: int
+    default: 0
+    description: |
+      VLCD voltage selection, 0-15 (see AN A_REG6_VLCD values)

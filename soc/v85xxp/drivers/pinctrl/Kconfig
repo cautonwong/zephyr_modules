@@ -1,7 +1,8 @@
 config PINCTRL_V85XXP
-    bool "V85XXP Pinctrl Driver"
-    default y
-    depends on DT_HAS_V85XXP_PINCTRL_ENABLED
-    select PINCTRL
-    help
-      Enable driver for Vango V85XXP pin configuration.
+	bool "V85XXP Pinctrl Driver"
+	default y
+	depends on DT_HAS_V85XXP_PINCTRL_ENABLED
+	select PINCTRL
+	select VANGO_V85XXP_HAL_GPIO
+	help
+	  Enable driver for Vango V85XXP pin configuration.

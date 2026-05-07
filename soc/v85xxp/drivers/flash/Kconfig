@@ -1,15 +1,16 @@
 config FLASH_V85XXP
-    bool "V85XXP Internal Flash Driver"
-    default y
-    depends on DT_HAS_V85XXP_FLASH_CONTROLLER_ENABLED
-    select FLASH_HAS_DRIVER_ENABLED
-    select FLASH_HAS_PAGE_LAYOUT
-    help
-      Enable support for Vango V85XXP internal flash.
+	bool "V85XXP Internal Flash Driver"
+	default y
+	depends on DT_HAS_V85XXP_FLASH_CONTROLLER_ENABLED
+	select FLASH_HAS_DRIVER_ENABLED
+	select FLASH_HAS_PAGE_LAYOUT
+	select VANGO_V85XXP_HAL_FLASH
+	help
+	  Enable support for Vango V85XXP internal flash.
 
 config FLASH_INIT_PRIORITY
-    int "Flash init priority"
-    default 50
-    depends on FLASH_V85XXP
-    help
-      Initialization priority for the V85XXP internal flash driver.
+	int "Flash init priority"
+	default 50
+	depends on FLASH_V85XXP
+	help
+	  Initialization priority for the V85XXP internal flash driver.

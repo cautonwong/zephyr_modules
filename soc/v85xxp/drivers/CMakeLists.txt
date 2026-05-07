@@ -26,4 +26,7 @@ zephyr_library_sources_ifdef(CONFIG_COUNTER_V85XXP_TMR    counter/counter_v85xxp
 zephyr_library_sources_ifdef(CONFIG_FLASH_V85XXP          flash/flash_v85xxp.c)
 zephyr_library_sources_ifdef(CONFIG_LCD_V85XXP            lcd/lcd_v85xxp.c)
 zephyr_library_sources_ifdef(CONFIG_CRYPT_V85XXP          crypt/crypt_v85xxp.c)
-zephyr_library_sources_ifdef(CONFIG_ANALOG_V85XXP       analog/analog_v85xxp.c)
+zephyr_library_sources_ifdef(CONFIG_ANALOG_V85XXP         analog/analog_v85xxp.c)
+
+# Power Management
+zephyr_library_sources_ifdef(CONFIG_PMU_V85XXP            pmu/pmu_v85xxp.c)

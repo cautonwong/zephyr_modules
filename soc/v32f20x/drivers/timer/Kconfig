@@ -1,0 +1,9 @@
+# Vango V32F20X Timer/Counter configuration options
+
+config COUNTER_V32F20X
+	bool "Vango V32F20X Timer/Counter driver"
+	default y
+	depends on DT_HAS_VANGO_V32F20X_TIMER_ENABLED
+	select COUNTER
+	help
+	  Enable the Vango V32F20X Timer/Counter driver.

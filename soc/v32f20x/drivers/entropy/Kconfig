@@ -1,0 +1,9 @@
+# Vango V32F20X Entropy configuration options
+
+config ENTROPY_V32F20X
+	bool "Vango V32F20X Entropy driver"
+	default y
+	depends on DT_HAS_VANGO_V32F20X_RNG_ENABLED
+	select ENTROPY_HAS_DRIVER
+	help
+	  Enable the Vango V32F20X Entropy driver.

@@ -1,5 +1,20 @@
-# Board Kconfig
+# V32F20X Board Kconfig
+
 config BOARD_V32F20X_BOARD
 	bool "Vango V32F20x Board"
-	select SOC_V32F20X
+	select SOC_SERIES_V32F20X
+
+choice
+	prompt "V32F20X Core Selection"
+	default BOARD_V32F20X_CPU0
+	depends on BOARD_V32F20X_BOARD
+
+config BOARD_V32F20X_CPU0
+	bool "Cortex-M0 (CPU0)"
 	select SOC_V32F20X_CPU0
+
+config BOARD_V32F20X_CPU1
+	bool "Cortex-M33 (CPU1)"
+	select SOC_V32F20X_CPU1
+
+endchoice
