@@ -1,3 +1,0 @@
-config BOARD_V85XXP_BOARD
-	bool "V85XXP Development Board"
-	select SOC_V85XXP

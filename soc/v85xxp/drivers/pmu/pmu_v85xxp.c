@@ -3,10 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  * V85XXP Power Management Unit (PMU) Driver
- *
- * Wraps the V85XXP HAL PMU library into a Zephyr device. The PMU
- * controls deep-sleep/sleep entry, wakeup sources, BGP, VDD/AVCC/VDCIN
- * detectors, battery discharge, and reset-source tracking.
  */
 
 #define DT_DRV_COMPAT v85xxp_pmu
@@ -25,39 +21,34 @@ struct v85xxp_pmu_config {
 
 static int v85xxp_pmu_init(const struct device *dev)
 {
-	/* HAL PMU does not need explicit init — registers are at reset defaults.
-	 * Applications configure wakeup sources and power modes as needed.
-	 */
 	ARG_UNUSED(dev);
 	return 0;
 }
 
-/* --- Sleep / Deep-sleep --- */
+/* --- Power mode entry --- */
 
-static int v85xxp_pmu_enter_sleep(const struct device *dev)
+static int pmu_v85xxp_enter_sleep(const struct device *dev)
 {
 	ARG_UNUSED(dev);
 	PMU_EnterSleepMode();
 	return 0;
 }
 
-static int v85xxp_pmu_enter_deep_sleep(const struct device *dev)
+static int pmu_v85xxp_enter_deep_sleep(const struct device *dev)
 {
 	ARG_UNUSED(dev);
 	PMU_EnterDSleepMode();
 	return 0;
 }
 
-static int v85xxp_pmu_enter_idle(const struct device *dev)
+static int pmu_v85xxp_enter_idle(const struct device *dev)
 {
 	ARG_UNUSED(dev);
 	PMU_EnterIdleMode();
 	return 0;
 }
 
-/* --- Low-power configuration --- */
-
-static int v85xxp_pmu_enter_sleep_low_power(const struct device *dev,
+static int pmu_v85xxp_enter_sleep_low_power(const struct device *dev,
 					    const struct v85xxp_pmu_low_power_cfg *cfg)
 {
 	PMU_LowPWRTypeDef hal_cfg = {
@@ -79,35 +70,35 @@ static int v85xxp_pmu_enter_sleep_low_power(const struct device *dev,
 
 /* --- Wakeup configuration --- */
 
-static void v85xxp_pmu_wakeup_pin_config(const struct device *dev,
+static void pmu_v85xxp_wakeup_pin_config(const struct device *dev,
 					  uint16_t io_mask, uint32_t event)
 {
 	ARG_UNUSED(dev);
 	PMU_WakeUpPinConfig(io_mask, event);
 }
 
-static void v85xxp_pmu_sleep_wkup_ioa(const struct device *dev,
+static void pmu_v85xxp_sleep_wkup_ioa(const struct device *dev,
 				       uint16_t io_mask, uint32_t event, uint32_t priority)
 {
 	ARG_UNUSED(dev);
 	PMU_SleepWKUSRCConfig_IOA(io_mask, event, priority);
 }
 
-static void v85xxp_pmu_sleep_wkup_rtc(const struct device *dev,
+static void pmu_v85xxp_sleep_wkup_rtc(const struct device *dev,
 				       uint32_t events, uint32_t priority)
 {
 	ARG_UNUSED(dev);
 	PMU_SleepWKUSRCConfig_RTC(events, priority);
 }
 
-static void v85xxp_pmu_deep_sleep_wkup_ioa(const struct device *dev,
+static void pmu_v85xxp_deep_sleep_wkup_ioa(const struct device *dev,
 					    uint16_t io_mask, uint32_t event)
 {
 	ARG_UNUSED(dev);
 	PMU_DeepSleepWKUSRCConfig_IOA(io_mask, event);
 }
 
-static void v85xxp_pmu_deep_sleep_wkup_rtc(const struct device *dev,
+static void pmu_v85xxp_deep_sleep_wkup_rtc(const struct device *dev,
 					    uint32_t events)
 {
 	ARG_UNUSED(dev);
@@ -116,19 +107,19 @@ static void v85xxp_pmu_deep_sleep_wkup_rtc(const struct device *dev,
 
 /* --- Interrupts --- */
 
-static void v85xxp_pmu_int_config(const struct device *dev, uint32_t mask, bool enable)
+static void pmu_v85xxp_int_config(const struct device *dev, uint32_t mask, bool enable)
 {
 	ARG_UNUSED(dev);
 	PMU_INTConfig(mask, enable ? ENABLE : DISABLE);
 }
 
-static uint8_t v85xxp_pmu_get_int_status(const struct device *dev, uint32_t mask)
+static uint8_t pmu_v85xxp_get_int_status(const struct device *dev, uint32_t mask)
 {
 	ARG_UNUSED(dev);
 	return PMU_GetINTStatus(mask);
 }
 
-static void v85xxp_pmu_clear_int_status(const struct device *dev, uint32_t mask)
+static void pmu_v85xxp_clear_int_status(const struct device *dev, uint32_t mask)
 {
 	ARG_UNUSED(dev);
 	PMU_ClearINTStatus(mask);
@@ -136,13 +127,13 @@ static void v85xxp_pmu_clear_int_status(const struct device *dev, uint32_t mask)
 
 /* --- Reset source --- */
 
-static uint32_t v85xxp_pmu_get_reset_source(const struct device *dev)
+static uint32_t pmu_v85xxp_get_reset_source(const struct device *dev)
 {
 	ARG_UNUSED(dev);
 	return PMU_GetAllResetSource();
 }
 
-static void v85xxp_pmu_clear_reset_source(const struct device *dev, uint32_t mask)
+static void pmu_v85xxp_clear_reset_source(const struct device *dev, uint32_t mask)
 {
 	ARG_UNUSED(dev);
 	PMU_ClearResetSource(mask);
@@ -150,19 +141,19 @@ static void v85xxp_pmu_clear_reset_source(const struct device *dev, uint32_t mas
 
 /* --- Detectors --- */
 
-static void v85xxp_pmu_bgp_cmd(const struct device *dev, bool enable)
+static void pmu_v85xxp_bgp_cmd(const struct device *dev, bool enable)
 {
 	ARG_UNUSED(dev);
 	PMU_BGPCmd(enable ? ENABLE : DISABLE);
 }
 
-static void v85xxp_pmu_vdd_alarm_threshold(const struct device *dev, uint32_t threshold)
+static void pmu_v85xxp_vdd_alarm_threshold(const struct device *dev, uint32_t threshold)
 {
 	ARG_UNUSED(dev);
 	PMU_VDDAlarmTHConfig(threshold);
 }
 
-static void v85xxp_pmu_vdd_detector_cmd(const struct device *dev, uint32_t state)
+static void pmu_v85xxp_vdd_detector_cmd(const struct device *dev, uint32_t state)
 {
 	ARG_UNUSED(dev);
 	PMU_VDDDetectorCmd(state);
@@ -170,20 +161,16 @@ static void v85xxp_pmu_vdd_detector_cmd(const struct device *dev, uint32_t state
 
 /* --- Status --- */
 
-static uint8_t v85xxp_pmu_get_mode_status(const struct device *dev)
+static uint8_t pmu_v85xxp_get_mode_status(const struct device *dev)
 {
 	ARG_UNUSED(dev);
 	return PMU_GetModeStatus();
 }
 
 #ifdef CONFIG_PM_DEVICE
-static int v85xxp_pmu_pm_action(const struct device *dev,
+static int pmu_v85xxp_pm_action(const struct device *dev,
 				enum pm_device_action action)
 {
-	/* The PMU itself is the power controller — it remains active.
-	 * System-level suspend is handled by application calling
-	 * v85xxp_pmu_enter_sleep / deep_sleep directly.
-	 */
 	ARG_UNUSED(dev);
 	switch (action) {
 	case PM_DEVICE_ACTION_SUSPEND:
@@ -196,31 +183,31 @@ static int v85xxp_pmu_pm_action(const struct device *dev,
 #endif
 
 static const struct v85xxp_pmu_driver_api v85xxp_pmu_api = {
-	.enter_sleep              = v85xxp_pmu_enter_sleep,
-	.enter_deep_sleep         = v85xxp_pmu_enter_deep_sleep,
-	.enter_idle               = v85xxp_pmu_enter_idle,
-	.enter_sleep_low_power    = v85xxp_pmu_enter_sleep_low_power,
-	.wakeup_pin_config        = v85xxp_pmu_wakeup_pin_config,
-	.sleep_wkup_ioa           = v85xxp_pmu_sleep_wkup_ioa,
-	.sleep_wkup_rtc           = v85xxp_pmu_sleep_wkup_rtc,
-	.deep_sleep_wkup_ioa      = v85xxp_pmu_deep_sleep_wkup_ioa,
-	.deep_sleep_wkup_rtc      = v85xxp_pmu_deep_sleep_wkup_rtc,
-	.int_config               = v85xxp_pmu_int_config,
-	.get_int_status           = v85xxp_pmu_get_int_status,
-	.clear_int_status         = v85xxp_pmu_clear_int_status,
-	.get_reset_source         = v85xxp_pmu_get_reset_source,
-	.clear_reset_source       = v85xxp_pmu_clear_reset_source,
-	.bgp_cmd                  = v85xxp_pmu_bgp_cmd,
-	.vdd_alarm_threshold      = v85xxp_pmu_vdd_alarm_threshold,
-	.vdd_detector_cmd         = v85xxp_pmu_vdd_detector_cmd,
-	.get_mode_status          = v85xxp_pmu_get_mode_status,
+	.enter_sleep              = pmu_v85xxp_enter_sleep,
+	.enter_deep_sleep         = pmu_v85xxp_enter_deep_sleep,
+	.enter_idle               = pmu_v85xxp_enter_idle,
+	.enter_sleep_low_power    = pmu_v85xxp_enter_sleep_low_power,
+	.wakeup_pin_config        = pmu_v85xxp_wakeup_pin_config,
+	.sleep_wkup_ioa           = pmu_v85xxp_sleep_wkup_ioa,
+	.sleep_wkup_rtc           = pmu_v85xxp_sleep_wkup_rtc,
+	.deep_sleep_wkup_ioa      = pmu_v85xxp_deep_sleep_wkup_ioa,
+	.deep_sleep_wkup_rtc      = pmu_v85xxp_deep_sleep_wkup_rtc,
+	.int_config               = pmu_v85xxp_int_config,
+	.get_int_status           = pmu_v85xxp_get_int_status,
+	.clear_int_status         = pmu_v85xxp_clear_int_status,
+	.get_reset_source         = pmu_v85xxp_get_reset_source,
+	.clear_reset_source       = pmu_v85xxp_clear_reset_source,
+	.bgp_cmd                  = pmu_v85xxp_bgp_cmd,
+	.vdd_alarm_threshold      = pmu_v85xxp_vdd_alarm_threshold,
+	.vdd_detector_cmd         = pmu_v85xxp_vdd_detector_cmd,
+	.get_mode_status          = pmu_v85xxp_get_mode_status,
 };
 
 #define V85XXP_PMU_INIT(inst) \
 	static const struct v85xxp_pmu_config v85xxp_pmu_cfg_##inst = { \
 		.base = DT_INST_REG_ADDR(inst), \
 	}; \
-	PM_DEVICE_DT_INST_DEFINE(inst, v85xxp_pmu_pm_action); \
+	PM_DEVICE_DT_INST_DEFINE(inst, pmu_v85xxp_pm_action); \
 	DEVICE_DT_INST_DEFINE(inst, v85xxp_pmu_init, \
 			      PM_DEVICE_DT_INST_GET(inst), \
 			      NULL, &v85xxp_pmu_cfg_##inst, \

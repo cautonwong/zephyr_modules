@@ -3,18 +3,7 @@ if BOARD_V32F20X_BOARD
 config BOARD
 	default "v32f20x_board"
 
-if BOARD_V32F20X_CPU0
-
 config SOC
 	default "v32f20x"
-
-endif # BOARD_V32F20X_CPU0
-
-if BOARD_V32F20X_CPU1
-
-config SOC
-	default "v32f20x"
-
-endif # BOARD_V32F20X_CPU1
 
 endif # BOARD_V32F20X_BOARD

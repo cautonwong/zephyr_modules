@@ -17,7 +17,6 @@
 #include <zephyr/pm/device.h>
 #include <soc.h>
 #include <lib_lcd.h>
-#include <lib_pmu.h>
 
 /* Public API for V85XXP segment LCD */
 #include <zephyr/drivers/misc/v85xxp_lcd.h>
@@ -75,7 +74,6 @@ static int v85xxp_lcd_pm_action(const struct device *dev,
 {
 	switch (action) {
 	case PM_DEVICE_ACTION_SUSPEND:
-		PMU_LCDPWER_OFF;
 		LCD_Cmd(NULL, DISABLE);
 		break;
 	case PM_DEVICE_ACTION_RESUME:
@@ -90,21 +88,21 @@ static int v85xxp_lcd_pm_action(const struct device *dev,
 
 /* Custom segment LCD API implementation */
 
-static void v85xxp_lcd_update_data(const struct device *dev, uint8_t idx, uint32_t data)
+static void lcd_v85xxp_update_data(const struct device *dev, uint8_t idx, uint32_t data)
 {
 	if (idx < 16) {
 		*((volatile uint32_t *)(&LCD->DATA0 + idx)) = data;
 	}
 }
 
-static void v85xxp_lcd_clear(const struct device *dev)
+static void lcd_v85xxp_clear(const struct device *dev)
 {
 	for (int i = 0; i < 16; i++) {
 		*((volatile uint32_t *)(&LCD->DATA0 + i)) = 0;
 	}
 }
 
-static uint32_t v85xxp_lcd_get_data(const struct device *dev, uint8_t idx)
+static uint32_t lcd_v85xxp_get_data(const struct device *dev, uint8_t idx)
 {
 	if (idx < 16) {
 		return *((volatile uint32_t *)(&LCD->DATA0 + idx));
@@ -112,17 +110,17 @@ static uint32_t v85xxp_lcd_get_data(const struct device *dev, uint8_t idx)
 	return 0;
 }
 
-static int v85xxp_lcd_enable(const struct device *dev, bool enable)
+static int lcd_v85xxp_enable(const struct device *dev, bool enable)
 {
 	LCD_Cmd(NULL, enable ? ENABLE : DISABLE);
 	return 0;
 }
 
 static const struct v85xxp_lcd_driver_api v85xxp_lcd_api = {
-	.update_data = v85xxp_lcd_update_data,
-	.clear       = v85xxp_lcd_clear,
-	.get_data    = v85xxp_lcd_get_data,
-	.enable      = v85xxp_lcd_enable,
+	.update_data = lcd_v85xxp_update_data,
+	.clear       = lcd_v85xxp_clear,
+	.get_data    = lcd_v85xxp_get_data,
+	.enable      = lcd_v85xxp_enable,
 };
 
 #define V85XXP_LCD_INIT(inst) \
