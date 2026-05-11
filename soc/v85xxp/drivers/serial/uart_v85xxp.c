@@ -12,6 +12,7 @@
 #include <zephyr/drivers/uart.h>
 #include <zephyr/drivers/clock_control.h>
 #include <zephyr/drivers/pinctrl.h>
+#include <zephyr/drivers/dma.h>
 #include <zephyr/irq.h>
 
 #include <soc.h>
@@ -27,6 +28,10 @@ struct v85xxp_uart_config {
 #ifdef CONFIG_UART_INTERRUPT_DRIVEN
 	void (*irq_config_func)(const struct device *dev);
 #endif
+	/* DMA configurations */
+	const struct device *dma_dev;
+	uint32_t tx_dma_channel;
+	uint32_t rx_dma_channel;
 };
 
 struct v85xxp_uart_data {
@@ -34,6 +39,10 @@ struct v85xxp_uart_data {
 #ifdef CONFIG_UART_INTERRUPT_DRIVEN
 	uart_irq_callback_user_data_t callback;
 	void *cb_data;
+#endif
+#ifdef CONFIG_UART_ASYNC_API
+	uart_callback_t async_cb;
+	void *async_user_data;
 #endif
 };
 
@@ -198,6 +207,42 @@ static int v85xxp_uart_init(const struct device *dev)
 	return 0;
 }
 
+#ifdef CONFIG_UART_ASYNC_API
+static int v85xxp_uart_callback_set(const struct device *dev,
+				    uart_callback_t cb, void *user_data)
+{
+	struct v85xxp_uart_data *data = dev->data;
+	data->async_cb = cb;
+	data->async_user_data = user_data;
+	return 0;
+}
+
+static int v85xxp_uart_async_tx(const struct device *dev, const uint8_t *buf,
+				 size_t len, int32_t timeout)
+{
+	const struct v85xxp_uart_config *config = dev->config;
+	struct dma_config dma_cfg = {0};
+	struct dma_block_config dma_block = {0};
+
+	if (config->dma_dev == NULL) {
+		return -ENOTSUP;
+	}
+
+	dma_block.source_address = (uintptr_t)buf;
+	dma_block.dest_address = (uintptr_t)&config->base->TXDATA; /* Match V85XXP UART register */
+	dma_block.block_size = len;
+
+	dma_cfg.channel_direction = MEMORY_TO_PERIPHERAL;
+	dma_cfg.source_data_size = 1;
+	dma_cfg.dest_data_size = 1;
+	dma_cfg.head_block = &dma_block;
+	dma_cfg.dma_slot = config->tx_dma_channel;
+
+	dma_config(config->dma_dev, config->tx_dma_channel, &dma_cfg);
+	return dma_start(config->dma_dev, config->tx_dma_channel);
+}
+#endif
+
 static const struct uart_driver_api v85xxp_uart_driver_api = {
 	.poll_in = v85xxp_uart_poll_in,
 	.poll_out = v85xxp_uart_poll_out,
@@ -215,6 +260,10 @@ static const struct uart_driver_api v85xxp_uart_driver_api = {
 	.irq_update = v85xxp_uart_irq_update,
 	.irq_callback_set = v85xxp_uart_irq_callback_set,
 #endif
+#ifdef CONFIG_UART_ASYNC_API
+	.callback_set = v85xxp_uart_callback_set,
+	.tx = v85xxp_uart_async_tx,
+#endif
 };
 
 #define V85XXP_UART_IRQ_HANDLER_DECL(inst) \
@@ -229,6 +278,19 @@ static const struct uart_driver_api v85xxp_uart_driver_api = {
 		irq_enable(DT_INST_IRQN(inst)); \
 	}
 
+#define V85XXP_UART_DMA_INIT(inst)                                             \
+	.dma_dev = DEVICE_DT_GET(DT_INST_DMAS_CTLR_BY_NAME(inst, tx)),         \
+	.tx_dma_channel = DT_INST_DMAS_CELL_BY_NAME(inst, tx, channel),       \
+	.rx_dma_channel = DT_INST_DMAS_CELL_BY_NAME(inst, rx, channel),
+
+#if defined(CONFIG_DMA_V85XXP)
+#define V85XXP_UART_DMA_COND(inst) \
+	COND_CODE_1(DT_INST_NODE_HAS_PROP(inst, dmas), \
+		    (V85XXP_UART_DMA_INIT(inst)), ())
+#else
+#define V85XXP_UART_DMA_COND(inst)
+#endif
+
 #define V85XXP_UART_INIT(inst) \
 	PINCTRL_DT_INST_DEFINE(inst); \
 	IF_ENABLED(CONFIG_UART_INTERRUPT_DRIVEN, (V85XXP_UART_IRQ_HANDLER_DECL(inst))) \
@@ -238,6 +300,7 @@ static const struct uart_driver_api v85xxp_uart_driver_api = {
 		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, id), \
 		.pincfg = PINCTRL_DT_INST_DEV_CONFIG_GET(inst), \
 		.baud_rate = DT_INST_PROP_OR(inst, current_speed, 115200), \
+		V85XXP_UART_DMA_COND(inst) \
 		IF_ENABLED(CONFIG_UART_INTERRUPT_DRIVEN, (.irq_config_func = v85xxp_uart_irq_config_func_##inst,)) \
 	}; \
 	static struct v85xxp_uart_data v85xxp_uart_data_##inst; \

@@ -16,6 +16,7 @@
 #include <soc.h>
 #include "lib_gpio.h"
 #include "lib_clk.h"
+#include "lib_pmu.h"
 
 struct v85xxp_gpio_config {
 	struct gpio_driver_config common;
@@ -160,6 +161,67 @@ static int v85xxp_gpio_port_toggle_bits(const struct device *dev,
 	return 0;
 }
 
+static int v85xxp_gpio_pin_interrupt_configure(const struct device *dev,
+					       gpio_pin_t pin,
+					       enum gpio_int_mode mode,
+					       enum gpio_int_trig trig)
+{
+	const struct v85xxp_gpio_config *cfg = dev->config;
+	uint32_t wakeup_event = IOA_DISABLE;
+
+	if (!is_pmuio(cfg->base)) {
+		return -ENOTSUP;
+	}
+
+	if (mode == GPIO_INT_MODE_DISABLED) {
+		wakeup_event = IOA_DISABLE;
+	} else if (mode == GPIO_INT_MODE_LEVEL) {
+		wakeup_event = (trig == GPIO_INT_TRIG_HIGH) ? IOA_HIGH : IOA_LOW;
+	} else if (mode == GPIO_INT_MODE_EDGE) {
+		if (trig == GPIO_INT_TRIG_BOTH) {
+			wakeup_event = IOA_EDGEBOTH;
+		} else {
+			wakeup_event = (trig == GPIO_INT_TRIG_HIGH) ? IOA_RISING : IOA_FALLING;
+		}
+	} else {
+		return -ENOTSUP;
+	}
+
+	/* Configure PMU wakeup/interrupt for IOA */
+	PMU_WakeUpPinConfig(BIT(pin), wakeup_event);
+
+	/* Ensure PMU global interrupt for IOA is enabled */
+	if (wakeup_event != IOA_DISABLE) {
+		PMU_INTConfig(PMU_INT_IOAEN, ENABLE);
+	}
+
+	return 0;
+}
+
+static int v85xxp_gpio_manage_callback(const struct device *dev,
+				       struct gpio_callback *callback,
+				       bool set)
+{
+	struct v85xxp_gpio_data *data = dev->data;
+
+	return gpio_manage_callback(&data->callbacks, callback, set);
+}
+
+static void v85xxp_pmu_isr(const struct device *dev)
+{
+	struct v85xxp_gpio_data *data = dev->data;
+	uint16_t status;
+
+	status = PMU_GetIOAAllINTStatus();
+	if (status != 0) {
+		/* Fire callbacks for Port A */
+		gpio_fire_callbacks(&data->callbacks, dev, status);
+
+		/* Clear processed interrupts */
+		PMU_ClearIOAINTStatus(status);
+	}
+}
+
 static int v85xxp_gpio_init(const struct device *dev)
 {
 	const struct v85xxp_gpio_config *cfg = dev->config;
@@ -169,6 +231,14 @@ static int v85xxp_gpio_init(const struct device *dev)
 	ret = clock_control_on(cfg->clock_dev, cfg->clock_subsys);
 	if (ret != 0) {
 		return ret;
+	}
+
+	/* Port A (PMUIO) routes its interrupts through IRQ 0 (PMU) */
+	if (is_pmuio(cfg->base)) {
+		IRQ_CONNECT(DT_IRQN(DT_NODELABEL(pmu0)),
+			    DT_IRQ(DT_NODELABEL(pmu0), priority),
+			    v85xxp_pmu_isr, DEVICE_DT_GET(DT_NODELABEL(gpioa)), 0);
+		irq_enable(DT_IRQN(DT_NODELABEL(pmu0)));
 	}
 
 	return 0;
@@ -181,6 +251,8 @@ static DEVICE_API(gpio, v85xxp_gpio_api) = {
 	.port_set_bits_raw = v85xxp_gpio_port_set_bits_raw,
 	.port_clear_bits_raw = v85xxp_gpio_port_clear_bits_raw,
 	.port_toggle_bits = v85xxp_gpio_port_toggle_bits,
+	.pin_interrupt_configure = v85xxp_gpio_pin_interrupt_configure,
+	.manage_callback = v85xxp_gpio_manage_callback,
 };
 
 #define V85XXP_GPIO_INIT(inst) \

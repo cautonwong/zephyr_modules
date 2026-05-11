@@ -24,6 +24,21 @@
 		reg = <0x20000000 DT_SIZE_K(64)>;
 	};
 
+	power-states {
+		shallow_sleep: shallow_sleep {
+			compatible = "zephyr,power-state";
+			power-state-name = "standby";
+			min-residency-us = <1000>;
+			exit-latency-us = <100>;
+		};
+		deep_sleep: deep_sleep {
+			compatible = "zephyr,power-state";
+			power-state-name = "suspend-to-idle";
+			min-residency-us = <5000>;
+			exit-latency-us = <1000>;
+		};
+	};
+
 	flash0: flash@0 {
 		compatible = "soc-nv-flash";
 		reg = <0x00000000 DT_SIZE_K(512)>;
@@ -76,6 +91,8 @@
 			reg = <0x40011800 0x18>;
 			interrupts = <6 0>;
 			clocks = <&clock V85XXP_APB_UART0>;
+			dmas = <&dma0 2>, <&dma0 3>;
+			dma-names = "tx", "rx";
 			status = "disabled";
 		};
 
@@ -84,6 +101,8 @@
 			reg = <0x40011820 0x18>;
 			interrupts = <7 0>;
 			clocks = <&clock V85XXP_APB_UART1>;
+			dmas = <&dma0 4>, <&dma0 5>;
+			dma-names = "tx", "rx";
 			status = "disabled";
 		};
 
@@ -92,6 +111,8 @@
 			reg = <0x40011840 0x18>;
 			interrupts = <8 0>;
 			clocks = <&clock V85XXP_APB_UART2>;
+			dmas = <&dma0 6>, <&dma0 7>;
+			dma-names = "tx", "rx";
 			status = "disabled";
 		};
 
@@ -100,6 +121,8 @@
 			reg = <0x40011860 0x18>;
 			interrupts = <9 0>;
 			clocks = <&clock V85XXP_APB_UART3>;
+			dmas = <&dma0 8>, <&dma0 9>;
+			dma-names = "tx", "rx";
 			status = "disabled";
 		};
 
@@ -108,6 +131,8 @@
 			reg = <0x40011880 0x18>;
 			interrupts = <10 0>;
 			clocks = <&clock V85XXP_APB_UART4>;
+			dmas = <&dma0 10>, <&dma0 11>;
+			dma-names = "tx", "rx";
 			status = "disabled";
 		};
 
@@ -116,6 +141,24 @@
 			reg = <0x400118a0 0x18>;
 			interrupts = <11 0>;
 			clocks = <&clock V85XXP_APB_UART5>;
+			dmas = <&dma0 12>, <&dma0 13>;
+			dma-names = "tx", "rx";
+			status = "disabled";
+		};
+
+		u32k0: uart@40014100 {
+			compatible = "v85xxp,uart32k";
+			reg = <0x40014100 0x20>;
+			interrupts = <2 0>;
+			clocks = <&clock V85XXP_APB_U32K0>;
+			status = "disabled";
+		};
+
+		u32k1: uart@40014180 {
+			compatible = "v85xxp,uart32k";
+			reg = <0x40014180 0x20>;
+			interrupts = <3 0>;
+			clocks = <&clock V85XXP_APB_U32K1>;
 			status = "disabled";
 		};
 

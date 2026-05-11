@@ -1,4 +1,13 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
 name: v32f20x_hal
 build:
   cmake: zephyr
   kconfig: zephyr/Kconfig
+  # Standard-compliant header exports relative to this YAML file
+  include:
+    - ../Libraries/include
+    - ../Libraries/Drivers/Inc
+    - ../Libraries/CMSIS/Include
+    - include

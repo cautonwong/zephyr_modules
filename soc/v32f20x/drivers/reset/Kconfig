@@ -1,7 +1,9 @@
+# Vango V32F20X Reset configuration options
+
 config RESET_V32F20X
-    bool "V32F20X Reset Driver"
-    default y
-    depends on DT_HAS_VANGO_V32F20X_RESET_ENABLED
-    select RESET_CONTROLLER
-    help
-      Enable driver for V32F20X reset controller.
+	bool "Vango V32F20X Reset controller driver"
+	default y
+	depends on DT_HAS_VANGO_V32F20X_RESET_ENABLED
+	select VANGO_V32F20X_HAL_SYSCFG
+	help
+	  Enable the Vango V32F20X Reset controller driver.

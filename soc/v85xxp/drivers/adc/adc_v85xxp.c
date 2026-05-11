@@ -17,7 +17,6 @@
 #include "lib_clk.h"
 
 struct v85xxp_adc_config {
-	ADC_Type *base;
 	const struct device *clock_dev;
 	clock_control_subsys_t clock_subsys;
 };
@@ -114,9 +113,8 @@ static DEVICE_API(adc, v85xxp_adc_api) = {
 
 #define V85XXP_ADC_INIT(inst) \
 	static const struct v85xxp_adc_config v85xxp_adc_cfg_##inst = { \
-		.base = (ADC_Type *)DT_INST_REG_ADDR(inst), \
 		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(inst)), \
-		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, identifier), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(inst, id), \
 	}; \
 	static struct v85xxp_adc_data v85xxp_adc_data_##inst; \
 	DEVICE_DT_INST_DEFINE(inst, v85xxp_adc_init, NULL, \

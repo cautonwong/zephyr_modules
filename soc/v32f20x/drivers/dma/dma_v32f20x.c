@@ -10,13 +10,17 @@
 #include <zephyr/irq.h>
 #include <soc.h>
 
-#if defined(V32F20XXX_CM0_CORE)
+#if defined(CONFIG_SOC_V32F20X_CPU0)
 #include <lib_bdma.h>
 #else
 #include <lib_dma.h>
 #endif
 
+#if defined(CONFIG_SOC_V32F20X_CPU0)
+#define VANGO_DMA_MAX_CHANNELS 4
+#else
 #define VANGO_DMA_MAX_CHANNELS 8
+#endif
 
 struct dma_v32f20x_channel_data {
 	dma_callback_t callback;
@@ -35,20 +39,20 @@ struct dma_v32f20x_data {
 static int dma_v32f20x_configure(const struct device *dev, uint32_t channel,
 				 struct dma_config *config)
 {
+	const struct dma_v32f20x_config *dev_conf = dev->config;
 	struct dma_v32f20x_data *data = dev->data;
 
 	if (channel >= VANGO_DMA_MAX_CHANNELS) {
 		return -EINVAL;
 	}
 
-#if defined(V32F20XXX_CM0_CORE)
-    ARG_UNUSED(dev);
+#if defined(CONFIG_SOC_V32F20X_CPU0)
 	BDMA_InitType init_struct;
 	BDMA_StructInit(&init_struct);
 
 	init_struct.SrcAddr = config->head_block->source_address;
 	init_struct.DestAddr = config->head_block->dest_address;
-	/* BDMA uses PackLen and FrameLen, mapping simplified for now */
+	/* BDMA uses PackLen and FrameLen */
 	init_struct.FrameLen = (uint8_t)(config->head_block->block_size & 0xFF);
 
 	switch (config->source_data_size) {
@@ -64,7 +68,6 @@ static int dma_v32f20x_configure(const struct device *dev, uint32_t channel,
 	BDMA_Init(&init_struct, channel);
 
 	if (config->dma_callback) {
-		/* BDMA_INTConfig implementation detail might vary */
 		BDMA_INTConfig(BDMA_INT_C0DA << channel, ENABLE);
 	}
 #else
@@ -99,7 +102,7 @@ static int dma_v32f20x_configure(const struct device *dev, uint32_t channel,
 
 static int dma_v32f20x_start(const struct device *dev, uint32_t channel)
 {
-#if defined(V32F20XXX_CM0_CORE)
+#if defined(CONFIG_SOC_V32F20X_CPU0)
 	BDMA_Cmd(channel, ENABLE);
 #else
 	const struct dma_v32f20x_config *dev_conf = dev->config;
@@ -111,7 +114,7 @@ static int dma_v32f20x_start(const struct device *dev, uint32_t channel)
 
 static int dma_v32f20x_stop(const struct device *dev, uint32_t channel)
 {
-#if defined(V32F20XXX_CM0_CORE)
+#if defined(CONFIG_SOC_V32F20X_CPU0)
 	BDMA_Cmd(channel, DISABLE);
 #else
 	const struct dma_v32f20x_config *dev_conf = dev->config;
@@ -125,8 +128,8 @@ static void dma_v32f20x_isr(const struct device *dev)
 {
 	struct dma_v32f20x_data *data = dev->data;
 
-#if defined(V32F20XXX_CM0_CORE)
-	for (int i = 0; i < 4; i++) { /* BDMA usually has 4 channels */
+#if defined(CONFIG_SOC_V32F20X_CPU0)
+	for (int i = 0; i < 4; i++) {
 		if (BDMA_GetINTStatus(BDMA_INT_C0DA << i)) {
 			BDMA_ClearINTStatus(BDMA_INT_C0DA << i);
 			if (data->chan_data[i].callback) {
@@ -138,7 +141,7 @@ static void dma_v32f20x_isr(const struct device *dev)
 	const struct dma_v32f20x_config *dev_conf = dev->config;
 	for (int i = 0; i < VANGO_DMA_MAX_CHANNELS; i++) {
 		DMA_Channel_Type *chan_regs = (DMA_Channel_Type *)((uintptr_t)dev_conf->regs + 0x100 + (i * 0x58));
-		if (DMA_GetITtatus(chan_regs, DMA_CTL1_DONE)) {
+		if (DMA_GetITStatus(chan_regs, DMA_CTL1_DONE)) {
 			DMA_ClearITStatus(chan_regs, DMA_CTL1_DONE);
 			if (data->chan_data[i].callback) {
 				data->chan_data[i].callback(dev, data->chan_data[i].user_data, i, 0);
@@ -158,7 +161,7 @@ static int dma_v32f20x_init(const struct device *dev)
 {
 	const struct dma_v32f20x_config *dev_conf = dev->config;
 
-#if defined(V32F20XXX_CM0_CORE)
+#if defined(CONFIG_SOC_V32F20X_CPU0)
 	/* BDMA initialization if needed */
 #else
 	DMA_Cmd((DMA_Type *)dev_conf->regs, ENABLE);

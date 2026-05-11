@@ -149,7 +149,9 @@
   */
 void ADC_DeInit(void)
 {
+#if !defined(V32F20XXX_CM0_CORE)
   SYSCFG0_Periph1Reset(SYSCFG0_Periph1Reset_ADC);
+#endif
 }
 
 /**
@@ -1170,6 +1172,7 @@ void ADC_AnalogWDGSingleChannelConfig(ADC_Type* ADCx, uint8_t ADC_Channel)
   */
 void ADC_TempSensorVrefintCtrl(FunctionalState NewState)
 {
+#if !defined(V32F20XXX_CM0_CORE)
   /* Check the parameters */
   assert_parameters(IS_FUNCTIONAL_STATE(NewState));
 
@@ -1183,6 +1186,7 @@ void ADC_TempSensorVrefintCtrl(FunctionalState NewState)
     /* Disable the temperature sensor and Vrefint channel*/
     ADC1->CTRL2 &= CTRL2_TSVREFE_Rst;
   }
+#endif
 }
 
 /**

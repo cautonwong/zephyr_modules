@@ -1,0 +1,13 @@
+description: Vango V85XXP UART32K controller
+
+compatible: "v85xxp,uart32k"
+
+include: uart-controller.yaml
+
+properties:
+    reg:
+      required: true
+    interrupts:
+      required: true
+    clocks:
+      required: true

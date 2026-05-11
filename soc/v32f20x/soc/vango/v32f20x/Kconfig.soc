@@ -19,6 +19,7 @@ config SOC_V32F20X_CPU1
 	select ARM
 	select CPU_CORTEX_M33
 	select CPU_HAS_ARM_MPU
+	select CPU_HAS_ARM_SAU
 	select CPU_HAS_FPU
 	select ARMV8_M_DSP
 	select SOC_FAMILY_VANGO

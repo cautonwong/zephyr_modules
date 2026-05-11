@@ -9,13 +9,12 @@
 #include <zephyr/dt-bindings/clock/vango_v32f20x_clock.h>
 #include <soc.h>
 #include <lib_clk.h>
+#include <lib_syscfg.h>
 
 struct v32f20x_clock_config {
-	/* No config needed for now */
 };
 
 struct v32f20x_clock_data {
-	/* No dynamic state needed for now */
 };
 
 static int v32f20x_clock_on(const struct device *dev,
@@ -23,10 +22,6 @@ static int v32f20x_clock_on(const struct device *dev,
 {
 	uint32_t clk_id = (uint32_t)subsys;
 
-	/* 
-	 * Vango V32F20X maps clocks through SYSCFG1->CLK_EN0/1
-	 * Bit 0-31: EN0, Bit 32-63: EN1
-	 */
 	if (clk_id < 32) {
 		SYSCFG1_Periph0ClockCmd(1UL << clk_id, ENABLE);
 	} else {
@@ -55,21 +50,11 @@ static int v32f20x_clock_get_rate(const struct device *dev,
 				 uint32_t *rate)
 {
 	uint32_t clk_id = (uint32_t)subsys;
-	CLK_ClocksType clocks;
 
-	CLK_GetClocksFreq(&clocks);
-
-	/* 
-	 * Assign rate based on peripheral bus mapping.
-	 * Most peripherals in V32F20X are on PCLK1.
-	 */
-	if (clk_id >= 32 && clk_id <= 45) { /* FLEXCOMM 0-13 */
-		*rate = clocks.PCLK1_Frequency;
-	} else if (clk_id >= 100 && clk_id <= 105) { /* UART 14-19 */
-		*rate = clocks.PCLK1_Frequency;
+	if (clk_id >= 100 && clk_id <= 105) {
+		*rate = CLK_GetPCLK1Freq();
 	} else {
-		/* Default to HCLK for high speed peripherals like DMA */
-		*rate = clocks.HCLK_Frequency;
+		*rate = CLK_GetPCLK1Freq();
 	}
 
 	return 0;

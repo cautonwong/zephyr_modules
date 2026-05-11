@@ -18,6 +18,15 @@ config SYS_CLOCK_HW_CYCLES_PER_SEC
 config NUM_IRQS
 	default 128
 
+config CLOCK_CONTROL_INIT_PRIORITY
+	default 40
+
+config RESET_INIT_PRIORITY
+	default 40
+
+config GPIO_INIT_PRIORITY
+	default 40
+
 if SOC_V32F20X_CPU1 # M33
 config ARM_MPU
 	default y

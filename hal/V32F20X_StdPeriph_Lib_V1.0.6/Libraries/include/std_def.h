@@ -150,7 +150,9 @@
 #define UNUSED(X)             (void)X      /* To avoid gcc/g++ warnings */
 
 #define REG_BIT_NOT(x)        (~(x))
+#ifndef IS_BIT_SET
 #define IS_BIT_SET(REG, BIT)  (((REG) & (BIT)) == (BIT))
+#endif
 #define IS_BIT_CLR(REG, BIT)  (((REG) & (BIT)) == 0U)
 #define SET_BIT(REG, BIT)     ((REG) |= (BIT))
 #define CLEAR_BIT(REG, BIT)   ((REG) &= ~(BIT))

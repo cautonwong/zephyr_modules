@@ -13,7 +13,6 @@ elseif(CONFIG_SOC_V32F20X_CPU1)
 endif()
 
 # 2. Public Include Directories (visible to SoC and Drivers)
-# Matching actual directory: Inc
 zephyr_include_directories(
     include                      # Our custom lib_conf.h
     ../Libraries/Drivers/Inc     # Peripheral driver headers
@@ -21,11 +20,7 @@ zephyr_include_directories(
     ../Libraries/CMSIS/cm0       # system_target_cm0.h
     ../Libraries/CMSIS/cm33/core0
     ../Libraries/CMSIS/cm33/core1
-)
-
-# 3. Private Include Directories
-zephyr_library_include_directories(
-    ../Libraries/CMSIS/Include
+    ../Libraries/CMSIS/Include   # CMSIS core types (__IO, __IOM, etc.)
 )
 
 # 4. Conditional Sources - MATCHING ACTUAL DIRECTORY (Src)

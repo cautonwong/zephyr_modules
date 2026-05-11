@@ -62,6 +62,7 @@ config ADC_V85XXP
 	depends on DT_HAS_V85XXP_ADC_ENABLED
 	select ADC
 	select VANGO_V85XXP_HAL_ADC
+	select VANGO_V85XXP_HAL_RTC
 	help
 	  Enable support for Vango V85XXP ADC.
 
