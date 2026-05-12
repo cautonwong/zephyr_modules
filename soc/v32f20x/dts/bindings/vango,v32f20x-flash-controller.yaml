@@ -1,0 +1,12 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango V32F20X Flash Controller
+
+compatible: "vango,v32f20x-flash-controller"
+
+include: [flash-controller.yaml, base.yaml]
+
+properties:
+    reg:
+      required: true

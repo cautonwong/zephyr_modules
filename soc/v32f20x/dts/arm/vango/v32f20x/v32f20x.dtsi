@@ -39,7 +39,7 @@
     };
 
     flash0: flash@8000000 {
-        compatible = "soc-nv-flash";
+        compatible = "vango,v32f20x-flash-controller";
         reg = <0x08000000 DT_SIZE_K(2304)>;
     };
 
