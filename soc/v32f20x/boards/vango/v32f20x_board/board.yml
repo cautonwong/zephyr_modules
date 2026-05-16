@@ -4,3 +4,8 @@ board:
   vendor: vango
   socs:
     - name: v32f20x
+      variants:
+        - name: cpu0
+          cpucluster: cpu0
+        - name: cpu1
+          cpucluster: cpu1

@@ -28,6 +28,7 @@ zephyr_library_include_directories(${V32_HAL_DIR}/Libraries/CMSIS/Include)
 
 # 4. Bind to kernel interface for universal visibility
 target_include_directories(zephyr_interface INTERFACE ${V32_HAL_DIR}/Libraries/include)
+target_compile_definitions(zephyr_interface INTERFACE CONFIG_SOC_FAMILY="vango")
 
 # 5. Set the Linker Script
 set(SOC_LINKER_SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/linker.ld CACHE INTERNAL "")

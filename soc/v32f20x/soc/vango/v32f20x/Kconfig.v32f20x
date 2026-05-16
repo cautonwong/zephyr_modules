@@ -3,56 +3,51 @@
 
 source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/soc/vango/v32f20x/Kconfig.soc"
 
-if SOC_SERIES_V32F20X
-
 config SOC_FAMILY
-    default "vango"
+    default "vango" if SOC_FAMILY_VANGO
 
 config SOC_SERIES
-    default "v32f20x"
+    default "v32f20x" if SOC_SERIES_V32F20X
 
 config SOC
-    default "v32f20x"
+    default "v32f20x" if SOC_SERIES_V32F20X
 
 # 1. Register HAL capability
 config HAS_V32F20X_HAL
     bool
     default y
+    depends on SOC_SERIES_V32F20X
 
 # 2. Force Enable HAL Component Symbols
-# To ensure they are active when building the HAL library
-
 config VANGO_V32F20X_HAL_ADC
-    default y if ADC
+    default y if ADC && SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_CAN
-    default y if CAN
+    default y if CAN && SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_CLK
-    default y
+    default y if SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_CRC
-    default y
+    default y if SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_CRYPT
-    default y
+    default y if SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_DAC
-    default y
+    default y if SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_DMA
     bool
 config VANGO_V32F20X_HAL_BDMA
     bool
 config VANGO_V32F20X_HAL_GPIO
-    default y
+    default y if SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_I2C
-    default y if I2C
+    default y if I2C && SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_UART
-    default y if SERIAL
+    default y if SERIAL && SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_SPI
-    default y if SPI
+    default y if SPI && SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_SYSCFG
-    default y
+    default y if SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_TIMER
-    default y
+    default y if SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_WDT
-    default y if WATCHDOG
+    default y if WATCHDOG && SOC_SERIES_V32F20X
 config VANGO_V32F20X_HAL_MISC
-    default y
-
-endif
+    default y if SOC_SERIES_V32F20X
