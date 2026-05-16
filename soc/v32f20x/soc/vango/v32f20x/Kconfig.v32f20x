@@ -4,12 +4,15 @@
 source "$(ZEPHYR_V32F20X_SOC_MODULE_DIR)/soc/vango/v32f20x/Kconfig.soc"
 
 config SOC_FAMILY
+    string
     default "vango" if SOC_FAMILY_VANGO
 
 config SOC_SERIES
+    string
     default "v32f20x" if SOC_SERIES_V32F20X
 
 config SOC
+    string
     default "v32f20x" if SOC_SERIES_V32F20X
 
 # 1. Register HAL capability
@@ -18,36 +21,53 @@ config HAS_V32F20X_HAL
     default y
     depends on SOC_SERIES_V32F20X
 
-# 2. Force Enable HAL Component Symbols
+# 2. Select HAL Component Symbols
+if SOC_SERIES_V32F20X
+
 config VANGO_V32F20X_HAL_ADC
-    default y if ADC && SOC_SERIES_V32F20X
+    bool
+    default y if ADC
 config VANGO_V32F20X_HAL_CAN
-    default y if CAN && SOC_SERIES_V32F20X
+    bool
+    default y if CAN
 config VANGO_V32F20X_HAL_CLK
-    default y if SOC_SERIES_V32F20X
+    bool
+    default y
 config VANGO_V32F20X_HAL_CRC
-    default y if SOC_SERIES_V32F20X
+    bool
+    default y
 config VANGO_V32F20X_HAL_CRYPT
-    default y if SOC_SERIES_V32F20X
+    bool
+    default y
 config VANGO_V32F20X_HAL_DAC
-    default y if SOC_SERIES_V32F20X
-config VANGO_V32F20X_HAL_DMA
     bool
-config VANGO_V32F20X_HAL_BDMA
-    bool
+    default y
 config VANGO_V32F20X_HAL_GPIO
-    default y if SOC_SERIES_V32F20X
+    bool
+    default y
 config VANGO_V32F20X_HAL_I2C
-    default y if I2C && SOC_SERIES_V32F20X
+    bool
+    default y if I2C
 config VANGO_V32F20X_HAL_UART
-    default y if SERIAL && SOC_SERIES_V32F20X
+    bool
+    default y if SERIAL
 config VANGO_V32F20X_HAL_SPI
-    default y if SPI && SOC_SERIES_V32F20X
+    bool
+    default y if SPI
 config VANGO_V32F20X_HAL_SYSCFG
-    default y if SOC_SERIES_V32F20X
+    bool
+    default y
 config VANGO_V32F20X_HAL_TIMER
-    default y if SOC_SERIES_V32F20X
+    bool
+    default y
 config VANGO_V32F20X_HAL_WDT
-    default y if WATCHDOG && SOC_SERIES_V32F20X
+    bool
+    default y if WATCHDOG
+config VANGO_V32F20X_HAL_MAILBOX
+    bool
+    default y if MBOX_V32F20X
 config VANGO_V32F20X_HAL_MISC
-    default y if SOC_SERIES_V32F20X
+    bool
+    default y
+
+endif

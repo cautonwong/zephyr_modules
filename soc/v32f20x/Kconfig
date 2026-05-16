@@ -10,6 +10,7 @@ rsource "drivers/timer/Kconfig"
 rsource "drivers/watchdog/Kconfig"
 rsource "drivers/flash/Kconfig"
 rsource "drivers/entropy/Kconfig"
+rsource "drivers/mbox/Kconfig"
 
 # 2. Basic IO (Legacy support for simple toggles)
 config V32F20X_GPIO

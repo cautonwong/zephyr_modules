@@ -12,21 +12,13 @@ elseif(CONFIG_SOC_V32F20X_CPU1)
     zephyr_library_compile_definitions(V32F20XXX_CM33_CORE0)
 endif()
 
-# 2. Public Include Directories (visible to SoC and Drivers)
-zephyr_include_directories(
-    include                      # Our custom lib_conf.h
-    ../Libraries/Drivers/Inc     # Peripheral driver headers
-    ../Libraries/include         # target.h
-    ../Libraries/CMSIS/cm0       # system_target_cm0.h
-    ../Libraries/CMSIS/cm33/core0
-    ../Libraries/CMSIS/cm33/core1
-    ../Libraries/CMSIS/Include   # CMSIS core types (__IO, __IOM, etc.)
-)
+# 2. Includes
+zephyr_library_include_directories(include)
+zephyr_library_include_directories(../Libraries/include)
+zephyr_library_include_directories(../Libraries/Drivers/Inc)
+zephyr_library_include_directories(../Libraries/CMSIS/Include)
 
-# 4. Conditional Sources - MATCHING ACTUAL DIRECTORY (Src)
-# Always include MISC for initialization
-zephyr_library_sources(../Libraries/Drivers/Src/misc.c)
-
+# 3. Sources
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_ADC      ../Libraries/Drivers/Src/lib_adc.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_CAN      ../Libraries/Drivers/Src/lib_can.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_CLK      ../Libraries/Drivers/Src/lib_clk.c)
@@ -34,18 +26,10 @@ zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_CRC      ../Libraries/Driv
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_CRYPT    ../Libraries/Drivers/Src/lib_crypt.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_DAC      ../Libraries/Drivers/Src/lib_dac.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_DMA      ../Libraries/Drivers/Src/lib_dma.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_BDMA     ../Libraries/Drivers/Src/lib_bdma.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_FLASH    ../Libraries/Drivers/Src/lib_flash.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_GPIO     ../Libraries/Drivers/Src/lib_gpio.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_GPIO     ../Libraries/Drivers/Src/lib_gpio_ex.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_I2C      ../Libraries/Drivers/Src/lib_i2c.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_I2S      ../Libraries/Drivers/Src/lib_i2s.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_MAILBOX  ../Libraries/Drivers/Src/lib_mailbox.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_OSPI     ../Libraries/Drivers/Src/lib_ospi.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_PMU      ../Libraries/Drivers/Src/lib_pmu.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_RNG      ../Libraries/Drivers/Src/lib_rng.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_RTC      ../Libraries/Drivers/Src/lib_rtc.c)
-zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_SDIO     ../Libraries/Drivers/Src/lib_sdio.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_SPI      ../Libraries/Drivers/Src/lib_spi.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_SYSCFG   ../Libraries/Drivers/Src/lib_syscfg1.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_TIMER    ../Libraries/Drivers/Src/lib_timer.c)

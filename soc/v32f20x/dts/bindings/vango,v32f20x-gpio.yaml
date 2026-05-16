@@ -26,6 +26,10 @@ properties:
   "#gpio-cells":
     type: int
     const: 2
+  vango,port:
+    type: int
+    required: true
+    description: Port index (0=A, 1=B, etc.)
 
 gpio-cells:
   - pin

@@ -1,0 +1,10 @@
+# Vango V32F20x Mailbox configuration options
+
+config MBOX_V32F20X
+    bool "Vango V32F20x Mailbox driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_MBOX_ENABLED
+    select MBOX
+    select VANGO_V32F20X_HAL_MAILBOX
+    help
+      Enable the Vango V32F20x Mailbox driver.

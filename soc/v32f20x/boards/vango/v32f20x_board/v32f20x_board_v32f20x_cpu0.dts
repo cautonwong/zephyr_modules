@@ -8,6 +8,7 @@
     chosen {
         zephyr,sram = &sram0;
         zephyr,flash = &flash0;
+        zephyr,ipc_shm = &ipc_shm;
         zephyr,console = &uart14;
         zephyr,shell-uart = &uart14;
     };

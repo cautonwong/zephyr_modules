@@ -9,12 +9,12 @@ include: [uart-controller.yaml, pinctrl-device.yaml, base.yaml]
 
 properties:
   reg:
-    required: true
+    required: false
   interrupts:
-    required: true
+    required: false
   clocks:
     type: phandle-array
-    required: true
+    required: false
   resets:
     type: phandle-array
-    required: true
+    required: false

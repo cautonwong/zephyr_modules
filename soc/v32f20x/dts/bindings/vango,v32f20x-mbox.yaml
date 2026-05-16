@@ -1,0 +1,19 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango V32F20x Mailbox Controller
+
+compatible: "vango,v32f20x-mbox"
+
+include: [base.yaml, mailbox-controller.yaml]
+
+properties:
+    reg:
+      required: true
+    interrupts:
+      required: true
+    "#mbox-cells":
+      const: 1
+
+mbox-cells:
+  - channel

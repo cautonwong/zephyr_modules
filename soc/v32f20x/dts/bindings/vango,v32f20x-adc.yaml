@@ -10,16 +10,16 @@ include: [adc-controller.yaml, base.yaml]
 properties:
   reg:
     type: array
-    required: true
+    required: false
   interrupts:
     type: array
-    required: true
+    required: false
   clocks:
     type: phandle-array
-    required: true
+    required: false
   resets:
     type: phandle-array
-    required: true
+    required: false
   "#io-channel-cells":
     type: int
     const: 1

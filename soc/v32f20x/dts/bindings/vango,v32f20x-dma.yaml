@@ -10,24 +10,24 @@ include: [dma-controller.yaml, base.yaml]
 properties:
   reg:
     type: array
-    required: true
+    required: false
   interrupts:
     type: array
-    required: true
+    required: false
   dma-channels:
     type: int
-    required: true
+    required: false
     description: Number of DMA channels (8 for DMA0/1, 4 for BDMA)
   clocks:
     type: phandle-array
     required: false
   resets:
     type: phandle-array
-    required: true
+    required: false
   "#dma-cells":
     type: int
-    const: 1
-    description: <channel>
+    const: 2
 
 dma-cells:
   - channel
+  - slot

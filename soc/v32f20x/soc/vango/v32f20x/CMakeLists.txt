@@ -20,11 +20,14 @@ endif()
 
 # 3. Global Header Injection
 set(V32_HAL_DIR /root/fast_space/modules/hal/V32F20X_StdPeriph_Lib_V1.0.6)
-zephyr_library_include_directories(include)
-zephyr_library_include_directories(.)
-zephyr_library_include_directories(${V32_HAL_DIR}/Libraries/include)
-zephyr_library_include_directories(${V32_HAL_DIR}/Libraries/Drivers/Inc)
-zephyr_library_include_directories(${V32_HAL_DIR}/Libraries/CMSIS/Include)
+
+# Use zephyr_include_directories for global visibility (including kernel offsets.c)
+zephyr_include_directories(.)
+zephyr_include_directories(${V32_HAL_DIR}/Libraries/include)
+zephyr_include_directories(${V32_HAL_DIR}/Libraries/Drivers/Inc)
+zephyr_include_directories(${V32_HAL_DIR}/Libraries/CMSIS/Include)
+zephyr_include_directories(${V32_HAL_DIR}/Libraries/CMSIS/cm0)
+zephyr_include_directories(${V32_HAL_DIR}/Libraries/CMSIS/cm33/core0)
 
 # 4. Bind to kernel interface for universal visibility
 target_include_directories(zephyr_interface INTERFACE ${V32_HAL_DIR}/Libraries/include)
