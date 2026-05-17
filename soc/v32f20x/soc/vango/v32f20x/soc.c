@@ -5,25 +5,40 @@
 
 #include <zephyr/device.h>
 #include <zephyr/init.h>
+#include <zephyr/kernel.h>
+#include <zephyr/pm/pm.h>
 #include <soc.h>
-#include <zephyr/arch/cpu.h>
 
-#include <lib_clk.h>
-
-void z_arm_platform_init(void)
+void pm_state_set(enum pm_state state, uint8_t substate_id)
 {
-    /* Call HAL SystemInit to configure core clocks and basic peripherals */
-    SystemInit();
+    ARG_UNUSED(substate_id);
+
+    switch (state) {
+    case PM_STATE_SUSPEND_TO_RAM:
+        /* Vango V32 STOP mode logic */
+        __WFI();
+        break;
+    case PM_STATE_SOFT_OFF:
+        /* Vango V32 STANDBY mode logic */
+        __WFI();
+        break;
+    default:
+        break;
+    }
 }
 
-/**
- * @brief Perform basic hardware initialization at boot.
- */
-static int v32f20x_init(void)
+void pm_state_exit_post_ops(enum pm_state state, uint8_t substate_id)
 {
-    /* Additional SoC specific initialization */
-    
+    ARG_UNUSED(state);
+    ARG_UNUSED(substate_id);
+
+    /* Re-enable interrupts and restore clocks if necessary */
+    __enable_irq();
+}
+
+static int v32f20x_soc_init(void)
+{
     return 0;
 }
 
-SYS_INIT(v32f20x_init, PRE_KERNEL_1, 0);
+SYS_INIT(v32f20x_soc_init, PRE_KERNEL_1, 0);

@@ -71,6 +71,12 @@
                 #mbox-cells = <1>;
                 status = "okay";
             };
+
+            cmp0: cmp {
+                compatible = "vango,v32f20x-ana-cmp";
+                interrupts = <30 1>;
+                status = "disabled";
+            };
         };
 
         rng: rng@40201000 {

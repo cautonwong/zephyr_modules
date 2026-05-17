@@ -5,461 +5,107 @@
 
 #define DT_DRV_COMPAT vango_v32f20x_uart
 
-#undef IS_BIT_SET
-#include <lib_uart.h>
-#include <soc.h>
+#include <zephyr/device.h>
 #include <zephyr/drivers/uart.h>
-#include <zephyr/drivers/clock_control.h>
-#include <zephyr/drivers/pinctrl.h>
-#include <zephyr/drivers/reset.h>
-#include <zephyr/drivers/dma.h>
-#include <lib_syscfg.h>
-#include <zephyr/logging/log.h>
+#include <zephyr/pm/device.h>
+#include <zephyr/pm/device_runtime.h>
+#include <soc.h>
+#include "lib_uart.h"
+#include "lib_syscfg.h"
 
-LOG_MODULE_REGISTER(uart_v32f20x, CONFIG_UART_LOG_LEVEL);
+#ifdef CONFIG_UART_INTERRUPT_DRIVEN
+#include <zephyr/irq.h>
+#endif
+
+#undef IS_BIT_SET
+#define IS_BIT_SET(value, bit) ((((value) >> (bit)) & (0x1)) != 0)
 
 struct uart_v32f20x_config {
-	UART_Type *regs;
-	const struct device *clock_dev;
-	clock_control_subsys_t clock_subsys;
-	struct reset_dt_spec reset;
-	const struct pinctrl_dev_config *pincfg;
-	uint32_t baud_rate;
-#ifdef CONFIG_UART_INTERRUPT_DRIVEN
-	void (*irq_config_func)(const struct device *dev);
-#endif
-	const struct device *dma_dev;
-	uint32_t tx_dma_channel;
-	uint32_t rx_dma_channel;
+    UART_Type *base;
 };
 
 struct uart_v32f20x_data {
-	struct uart_config uart_cfg;
-#ifdef CONFIG_UART_INTERRUPT_DRIVEN
-	uart_irq_callback_user_data_t callback;
-	void *cb_data;
-#endif
-#ifdef CONFIG_UART_ASYNC_API
-	const struct device *uart_dev;
-	uart_callback_t async_cb;
-	void *async_user_data;
-#endif
+    struct uart_config uart_cfg;
 };
 
-static int uart_v32f20x_poll_in(const struct device *dev,
-				unsigned char *p_char)
+static int uart_v32f20x_poll_in(const struct device *dev, unsigned char *p_char)
 {
-	const struct uart_v32f20x_config *config = dev->config;
-
-	if (UART_GetFlag(config->regs, UART_FLAG_RX) == RESET) {
-		return -1;
-	}
-
-	*p_char = UART_ReceiveData(config->regs);
-	return 0;
+    const struct uart_v32f20x_config *config = dev->config;
+    if (UART_GetFlag(config->base, UART_FLAG_RX) == SET) {
+        *p_char = UART_ReceiveData(config->base);
+        return 0;
+    }
+    return -1;
 }
 
-static void uart_v32f20x_poll_out(const struct device *dev,
-				  unsigned char out_char)
+static void uart_v32f20x_poll_out(const struct device *dev, unsigned char out_char)
 {
-	const struct uart_v32f20x_config *config = dev->config;
-
-	while (UART_GetFlag(config->regs, UART_FLAG_TXE) == RESET) {
-	}
-
-	UART_SendData(config->regs, out_char);
+    const struct uart_v32f20x_config *config = dev->config;
+    while (UART_GetFlag(config->base, UART_FLAG_TXE) == RESET);
+    UART_SendData(config->base, out_char);
 }
 
-static int uart_v32f20x_err_check(const struct device *dev)
+static int uart_v32f20x_configure(const struct device *dev, const struct uart_config *cfg)
 {
-	const struct uart_v32f20x_config *config = dev->config;
-	uint32_t lsr = config->regs->LSR;
-	int err = 0;
+    const struct uart_v32f20x_config *config = dev->config;
+    UART_InitType init_struct;
 
-	if (lsr & UART_LSR_OE) {
-		err |= UART_ERROR_OVERRUN;
-	}
-	if (lsr & UART_LSR_PE) {
-		err |= UART_ERROR_PARITY;
-	}
-	if (lsr & UART_LSR_FE) {
-		err |= UART_ERROR_FRAMING;
-	}
-
-	return err;
+    UART_StructInit(&init_struct);
+    init_struct.Baudrate = cfg->baudrate;
+    init_struct.SerialClock = 24000000;
+    
+    UART_Init(config->base, &init_struct);
+    return 0;
 }
 
-static int uart_v32f20x_configure(const struct device *dev,
-				  const struct uart_config *cfg)
+static int uart_v32f20x_config_get(const struct device *dev, struct uart_config *cfg)
 {
-	const struct uart_v32f20x_config *config = dev->config;
-	struct uart_v32f20x_data *data = dev->data;
-	UART_InitType init_struct;
-	uint32_t clock_rate;
-
-	if (clock_control_get_rate(config->clock_dev, config->clock_subsys,
-				   &clock_rate) != 0) {
-		LOG_ERR("Failed to get clock rate for %s", dev->name);
-		return -EIO;
-	}
-
-	UART_StructInit(&init_struct);
-	init_struct.Baudrate = cfg->baudrate;
-	init_struct.SerialClock = clock_rate;
-
-	switch (cfg->parity) {
-	case UART_CFG_PARITY_NONE:
-		init_struct.Parity = UART_PARITY_NONE;
-		break;
-	case UART_CFG_PARITY_ODD:
-		init_struct.Parity = UART_PARITY_ODD;
-		break;
-	case UART_CFG_PARITY_EVEN:
-		init_struct.Parity = UART_PARITY_EVEN;
-		break;
-	default:
-		LOG_ERR("Unsupported parity");
-		return -ENOTSUP;
-	}
-
-	switch (cfg->stop_bits) {
-	case UART_CFG_STOP_BITS_1:
-		init_struct.StopBit = UART_STOPBIT_1;
-		break;
-	case UART_CFG_STOP_BITS_2:
-		init_struct.StopBit = UART_STOPBIT_2;
-		break;
-	case UART_CFG_STOP_BITS_1_5:
-		init_struct.StopBit = UART_STOPBIT_1_5;
-		break;
-	default:
-		LOG_ERR("Unsupported stop bits");
-		return -ENOTSUP;
-	}
-
-	switch (cfg->data_bits) {
-	case UART_CFG_DATA_BITS_5:
-		init_struct.DataLength = UART_DATALEN_5B;
-		break;
-	case UART_CFG_DATA_BITS_6:
-		init_struct.DataLength = UART_DATALEN_6B;
-		break;
-	case UART_CFG_DATA_BITS_7:
-		init_struct.DataLength = UART_DATALEN_7B;
-		break;
-	case UART_CFG_DATA_BITS_8:
-		init_struct.DataLength = UART_DATALEN_8B;
-		break;
-	default:
-		LOG_ERR("Unsupported data bits");
-		return -ENOTSUP;
-	}
-
-	UART_Init(config->regs, &init_struct);
-
-	config->regs->FCR |= UART_FCR_FIFOEN;
-	config->regs->FCR &= ~UART_FCR_RT_MASK;
-	config->regs->FCR |= UART_FIFOLEVEL_8;
-	config->regs->FCR |= (UART_FCR_RXFIFORESET | UART_FCR_TXFIFORESET);
-
-	data->uart_cfg = *cfg;
-	LOG_INF("%s: Baudrate set to %u", dev->name, cfg->baudrate);
-	return 0;
+    struct uart_v32f20x_data *data = dev->data;
+    *cfg = data->uart_cfg;
+    return 0;
 }
 
-static int uart_v32f20x_config_get(const struct device *dev,
-				   struct uart_config *cfg)
+#ifdef CONFIG_PM_DEVICE
+static int uart_v32f20x_pm_action(const struct device *dev, enum pm_device_action action)
 {
-	struct uart_v32f20x_data *data = dev->data;
-	*cfg = data->uart_cfg;
-	return 0;
-}
+#if !defined(CONFIG_SOC_V32F20X_CPU0)
+    const struct uart_v32f20x_config *config = dev->config;
+    uint32_t uart_idx = ((uintptr_t)config->base - 0x40000000) / 0x400;
 
-#ifdef CONFIG_UART_INTERRUPT_DRIVEN
-static int uart_v32f20x_fifo_fill(const struct device *dev,
-				  const uint8_t *tx_data, int len)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	int num_tx = 0;
-
-	while ((len - num_tx > 0) &&
-	       (UART_GetFlag(config->regs, UART_FLAG_TXE) != RESET)) {
-		UART_SendData(config->regs, tx_data[num_tx++]);
-	}
-	return num_tx;
-}
-
-static int uart_v32f20x_fifo_read(const struct device *dev, uint8_t *rx_data,
-				  const int len)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	int num_rx = 0;
-
-	while ((len - num_rx > 0) &&
-	       (UART_GetFlag(config->regs, UART_FLAG_RX) != RESET)) {
-		rx_data[num_rx++] = UART_ReceiveData(config->regs);
-	}
-	return num_rx;
-}
-
-static void uart_v32f20x_irq_tx_enable(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	UART_INTConfig(config->regs, UART_INT_TXE, ENABLE);
-}
-
-static void uart_v32f20x_irq_tx_disable(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	UART_INTConfig(config->regs, UART_INT_TXE, DISABLE);
-}
-
-static int uart_v32f20x_irq_tx_ready(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	return (UART_GetFlag(config->regs, UART_FLAG_TXE) != RESET) &&
-	       (config->regs->IER & UART_INT_TXE);
-}
-
-static void uart_v32f20x_irq_rx_enable(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	UART_INTConfig(config->regs, UART_INT_RX | UART_INT_RXERR, ENABLE);
-}
-
-static void uart_v32f20x_irq_rx_disable(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	UART_INTConfig(config->regs, UART_INT_RX | UART_INT_RXERR, DISABLE);
-}
-
-static int uart_v32f20x_irq_tx_complete(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	return (config->regs->LSR & UART_LSR_TEMT) ? 1 : 0;
-}
-
-static int uart_v32f20x_irq_rx_ready(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	return (UART_GetFlag(config->regs, UART_FLAG_RX) != RESET) &&
-	       (config->regs->IER & UART_INT_RX);
-}
-
-static void uart_v32f20x_irq_err_enable(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	UART_INTConfig(config->regs, UART_INT_RXERR, ENABLE);
-}
-
-static void uart_v32f20x_irq_err_disable(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	UART_INTConfig(config->regs, UART_INT_RXERR, DISABLE);
-}
-
-static int uart_v32f20x_irq_is_pending(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	return !(config->regs->IIR & 0x1);
-}
-
-static int uart_v32f20x_irq_update(const struct device *dev)
-{
-	ARG_UNUSED(dev);
-	return 1;
-}
-
-static void uart_v32f20x_irq_callback_set(const struct device *dev,
-					  uart_irq_callback_user_data_t cb,
-					  void *cb_data)
-{
-	struct uart_v32f20x_data *data = dev->data;
-	data->callback = cb;
-	data->cb_data = cb_data;
-}
-
-static void uart_v32f20x_isr(const struct device *dev)
-{
-	struct uart_v32f20x_data *data = dev->data;
-
-	if (data->callback) {
-		data->callback(dev, data->cb_data);
-	}
-}
-#endif /* CONFIG_UART_INTERRUPT_DRIVEN */
-
-static int uart_v32f20x_init(const struct device *dev)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	int ret;
-
-#if defined(CONFIG_SOC_V32F20XXX_CM0_CORE)
-	if ((uint32_t)config->regs < 0x41000000) {
-		LOG_ERR("CPU0 cannot access FLEXCOMM UART %p", config->regs);
-		return -EACCES;
-	}
+    switch (action) {
+    case PM_DEVICE_ACTION_SUSPEND:
+        SYSCFG0_FlexcommUARTRxCmd((FLEXCOMM_Type)uart_idx, DISABLE);
+        break;
+    case PM_DEVICE_ACTION_RESUME:
+        SYSCFG0_FlexcommUARTRxCmd((FLEXCOMM_Type)uart_idx, ENABLE);
+        break;
+    default:
+        return -ENOTSUP;
+    }
 #endif
-
-#if !defined(CONFIG_CPU_CORTEX_M0)
-	if ((uint32_t)config->regs < 0x41000000) {
-		uint8_t fc_idx = ((uint32_t)config->regs - 0x40010000) / 0x800;
-		SYSCFG0_FlexcommModeConfig((FLEXCOMM_Type)fc_idx, SYSCFG0_FC_UART);
-	}
-#endif
-
-	ret = pinctrl_apply_state(config->pincfg, PINCTRL_STATE_DEFAULT);
-	if (ret < 0) {
-		LOG_ERR("Failed to apply pinctrl for %s", dev->name);
-		return ret;
-	}
-
-	if (config->reset.dev != NULL) {
-		reset_line_toggle(config->reset.dev, config->reset.id);
-	}
-
-	ret = clock_control_on(config->clock_dev, config->clock_subsys);
-	if (ret < 0) {
-		LOG_ERR("Failed to enable clock for %s", dev->name);
-		return ret;
-	}
-
-#ifdef CONFIG_UART_ASYNC_API
-	if (config->dma_dev != NULL) {
-		if (!device_is_ready(config->dma_dev)) {
-			LOG_ERR("DMA device %s not ready", config->dma_dev->name);
-			return -ENODEV;
-		}
-	}
-#endif
-
-	struct uart_config uart_cfg = {
-		.baudrate = config->baud_rate,
-		.parity = UART_CFG_PARITY_NONE,
-		.stop_bits = UART_CFG_STOP_BITS_1,
-		.data_bits = UART_CFG_DATA_BITS_8,
-		.flow_ctrl = UART_CFG_FLOW_CTRL_NONE,
-	};
-
-	ret = uart_v32f20x_configure(dev, &uart_cfg);
-	if (ret < 0) {
-		return ret;
-	}
-
-#ifdef CONFIG_UART_INTERRUPT_DRIVEN
-	config->irq_config_func(dev);
-#endif
-
-	return 0;
-}
-
-#ifdef CONFIG_UART_ASYNC_API
-static int uart_v32f20x_callback_set(const struct device *dev,
-				     uart_callback_t cb, void *user_data)
-{
-	struct uart_v32f20x_data *data = dev->data;
-	data->async_cb = cb;
-	data->async_user_data = user_data;
-	return 0;
-}
-
-static int uart_v32f20x_async_tx(const struct device *dev, const uint8_t *buf,
-				 size_t len, int32_t timeout)
-{
-	const struct uart_v32f20x_config *config = dev->config;
-	struct dma_config dma_cfg = {0};
-	struct dma_block_config dma_block = {0};
-
-	if (config->dma_dev == NULL) {
-		return -ENOTSUP;
-	}
-
-	dma_block.source_address = (uintptr_t)buf;
-	dma_block.dest_address = (uintptr_t)&config->regs->THR;
-	dma_block.block_size = len;
-
-	dma_cfg.channel_direction = MEMORY_TO_PERIPHERAL;
-	dma_cfg.source_data_size = 1;
-	dma_cfg.dest_data_size = 1;
-	dma_cfg.head_block = &dma_block;
-	dma_cfg.dma_slot = config->tx_dma_channel;
-
-	dma_config(config->dma_dev, config->tx_dma_channel, &dma_cfg);
-	return dma_start(config->dma_dev, config->tx_dma_channel);
+    return 0;
 }
 #endif
 
 static const struct uart_driver_api uart_v32f20x_driver_api = {
-	.poll_in = uart_v32f20x_poll_in,
-	.poll_out = uart_v32f20x_poll_out,
-	.err_check = uart_v32f20x_err_check,
-	.configure = uart_v32f20x_configure,
-	.config_get = uart_v32f20x_config_get,
-#ifdef CONFIG_UART_INTERRUPT_DRIVEN
-	.fifo_fill = uart_v32f20x_fifo_fill,
-	.fifo_read = uart_v32f20x_fifo_read,
-	.irq_tx_enable = uart_v32f20x_irq_tx_enable,
-	.irq_tx_disable = uart_v32f20x_irq_tx_disable,
-	.irq_tx_ready = uart_v32f20x_irq_tx_ready,
-	.irq_rx_enable = uart_v32f20x_irq_rx_enable,
-	.irq_rx_disable = uart_v32f20x_irq_rx_disable,
-	.irq_tx_complete = uart_v32f20x_irq_tx_complete,
-	.irq_rx_ready = uart_v32f20x_irq_rx_ready,
-	.irq_err_enable = uart_v32f20x_irq_err_enable,
-	.irq_err_disable = uart_v32f20x_irq_err_disable,
-	.irq_is_pending = uart_v32f20x_irq_is_pending,
-	.irq_update = uart_v32f20x_irq_update,
-	.irq_callback_set = uart_v32f20x_irq_callback_set,
-#endif
-#ifdef CONFIG_UART_ASYNC_API
-	.callback_set = uart_v32f20x_callback_set,
-	.tx = uart_v32f20x_async_tx,
-#endif
+    .poll_in = uart_v32f20x_poll_in,
+    .poll_out = uart_v32f20x_poll_out,
+    .configure = uart_v32f20x_configure,
+    .config_get = uart_v32f20x_config_get,
 };
 
-#ifdef CONFIG_UART_INTERRUPT_DRIVEN
-#define UART_V32F20X_CONFIG_FUNC(n) \
-	static void uart_v32f20x_irq_config_##n(const struct device *dev) { \
-		IRQ_CONNECT(DT_INST_IRQN(n), DT_INST_IRQ(n, priority), uart_v32f20x_isr, \
-			    DEVICE_DT_INST_GET(n), 0); \
-		irq_enable(DT_INST_IRQN(n)); \
-	}
-#define UART_V32F20X_IRQ_CFG_FUNC_INIT(n) \
-	.irq_config_func = uart_v32f20x_irq_config_##n,
-#else
-#define UART_V32F20X_CONFIG_FUNC(n)
-#define UART_V32F20X_IRQ_CFG_FUNC_INIT(n)
+static int uart_v32f20x_init(const struct device *dev)
+{
+    struct uart_v32f20x_data *data = dev->data;
+    uart_v32f20x_configure(dev, &data->uart_cfg);
+
+#ifdef CONFIG_PM_DEVICE_RUNTIME
+    pm_device_runtime_enable(dev);
 #endif
 
-#define UART_V32F20X_DMA_INIT(n) \
-	.dma_dev = DEVICE_DT_GET(DT_INST_DMAS_CTLR_BY_NAME(n, tx)), \
-	.tx_dma_channel = DT_INST_DMAS_CELL_BY_NAME(n, tx, channel), \
-	.rx_dma_channel = DT_INST_DMAS_CELL_BY_NAME(n, rx, channel),
+    return 0;
+}
 
-#if defined(CONFIG_DMA_V32F20X)
-#define UART_V32F20X_DMA_COND(n) \
-	COND_CODE_1(DT_INST_NODE_HAS_PROP(n, dmas), \
-		    (UART_V32F20X_DMA_INIT(n)), ())
-#else
-#define UART_V32F20X_DMA_COND(n)
-#endif
+#define UART_V32F20X_DEVICE(n)                                                  static struct uart_v32f20x_data uart_v32f20x_data_##n = {                       .uart_cfg = {                                                                   .baudrate = DT_INST_PROP(n, current_speed),                                 .parity = UART_CFG_PARITY_NONE,                                             .stop_bits = UART_CFG_STOP_BITS_1,                                          .data_bits = UART_CFG_DATA_BITS_8,                                          .flow_ctrl = UART_CFG_FLOW_CTRL_NONE,                                   }                                                                       };                                                                          static const struct uart_v32f20x_config uart_v32f20x_config_##n = {             .base = (UART_Type *)DT_INST_REG_ADDR(n),                               };                                                                          PM_DEVICE_DT_INST_DEFINE(n, uart_v32f20x_pm_action);                       DEVICE_DT_INST_DEFINE(n, uart_v32f20x_init,                                                     PM_DEVICE_DT_INST_GET(n),                                                   &uart_v32f20x_data_##n,                                                     &uart_v32f20x_config_##n, PRE_KERNEL_1,                                     CONFIG_SERIAL_INIT_PRIORITY,                                                &uart_v32f20x_driver_api);
 
-#define UART_V32F20X_INIT(n) \
-	PINCTRL_DT_INST_DEFINE(n); \
-	UART_V32F20X_CONFIG_FUNC(n) \
-	static const struct uart_v32f20x_config uart_v32f20x_config_##n = { \
-		.regs = (UART_Type *)DT_INST_REG_ADDR(n), \
-		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(n)), \
-		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(n, id), \
-		.reset = RESET_DT_SPEC_INST_GET_OR(n, {0}), \
-		.pincfg = PINCTRL_DT_INST_DEV_CONFIG_GET(n), \
-		.baud_rate = DT_INST_PROP(n, current_speed), \
-		UART_V32F20X_DMA_COND(n) \
-		UART_V32F20X_IRQ_CFG_FUNC_INIT(n)}; \
-	static struct uart_v32f20x_data uart_v32f20x_data_##n; \
-	DEVICE_DT_INST_DEFINE(n, uart_v32f20x_init, NULL, &uart_v32f20x_data_##n, \
-			      &uart_v32f20x_config_##n, PRE_KERNEL_1, \
-			      CONFIG_SERIAL_INIT_PRIORITY, \
-			      &uart_v32f20x_driver_api);
-
-DT_INST_FOREACH_STATUS_OKAY(UART_V32F20X_INIT)
+DT_INST_FOREACH_STATUS_OKAY(UART_V32F20X_DEVICE)
