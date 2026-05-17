@@ -47,6 +47,10 @@
     };
 
     soc: soc {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
         syscfg: syscfg@40200000 {
             compatible = "vango,v32f20x-syscfg", "syscon";
             reg = <0x40200000 0x1000>;
@@ -63,10 +67,16 @@
 
             mbox: mbox {
                 compatible = "vango,v32f20x-mbox";
-                interrupts = <0 1>, <1 1>;
+                interrupts = <28 1>, <30 1>;
                 #mbox-cells = <1>;
                 status = "okay";
             };
+        };
+
+        rng: rng@40201000 {
+            compatible = "vango,v32f20x-rng";
+            reg = <0x40201000 0x1000>;
+            status = "okay";
         };
 
         pinctrl: pinctrl@40100000 {
@@ -74,23 +84,25 @@
             reg = <0x40100000 0x1000>;
         };
 
-        gpioa: gpio@40100000 {
+        gpioa: gpio@40100100 {
             compatible = "vango,v32f20x-gpio";
-            reg = <0x40100000 0x400>;
+            reg = <0x40100100 0x100>;
             interrupts = <29 1>;
             gpio-controller;
             #gpio-cells = <2>;
             vango,port = <0>;
+            ngpios = <16>;
             status = "disabled";
         };
 
-        gpiob: gpio@40100400 {
+        gpiob: gpio@40100200 {
             compatible = "vango,v32f20x-gpio";
-            reg = <0x40100400 0x400>;
+            reg = <0x40100200 0x100>;
             interrupts = <29 1>;
             gpio-controller;
             #gpio-cells = <2>;
             vango,port = <1>;
+            ngpios = <16>;
             status = "disabled";
         };
 

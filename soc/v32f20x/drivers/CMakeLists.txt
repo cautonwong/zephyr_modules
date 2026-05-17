@@ -11,7 +11,8 @@ zephyr_library_sources_ifdef(CONFIG_DMA_V32F20X            dma/dma_v32f20x.c)
 zephyr_library_sources_ifdef(CONFIG_MBOX_V32F20X           mbox/mbox_v32f20x.c)
 
 # IO & Bus
-zephyr_library_sources_ifdef(CONFIG_V32F20X_GPIO           gpio/gpio_v32f20x.c)
+# Only build GPIO if enabled to avoid macro recursion bugs in certain cores
+zephyr_library_sources_ifdef(CONFIG_GPIO_V32F20X           gpio/gpio_v32f20x.c)
 zephyr_library_sources_ifdef(CONFIG_V32F20X_UART           serial/uart_v32f20x.c)
 zephyr_library_sources_ifdef(CONFIG_I2C_V32F20X            i2c/i2c_v32f20x.c)
 zephyr_library_sources_ifdef(CONFIG_SPI_V32F20X            spi/spi_v32f20x.c)
