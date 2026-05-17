@@ -1,0 +1,7 @@
+config ANA_CMP_V32F20X
+    bool "Vango V32F20X Analog Comparator Driver"
+    default y
+    depends on DT_HAS_VANGO_V32F20X_ANA_CMP_ENABLED
+    select VANGO_V32F20X_HAL_ANA
+    help
+      Enable the Vango V32F20X Analog Comparator driver for power fail detection.

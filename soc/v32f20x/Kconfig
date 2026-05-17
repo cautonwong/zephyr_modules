@@ -11,6 +11,7 @@ rsource "drivers/watchdog/Kconfig"
 rsource "drivers/flash/Kconfig"
 rsource "drivers/entropy/Kconfig"
 rsource "drivers/mbox/Kconfig"
+rsource "drivers/analog/Kconfig"
 rsource "drivers/gpio/Kconfig"
 
 # 2. Basic IO (Legacy support for simple toggles)

@@ -9,6 +9,7 @@ zephyr_library_sources_ifdef(CONFIG_PINCTRL_V32F20X        pinctrl/pinctrl_v32f2
 zephyr_library_sources_ifdef(CONFIG_RESET_V32F20X          reset/reset_v32f20x.c)
 zephyr_library_sources_ifdef(CONFIG_DMA_V32F20X            dma/dma_v32f20x.c)
 zephyr_library_sources_ifdef(CONFIG_MBOX_V32F20X           mbox/mbox_v32f20x.c)
+zephyr_library_sources_ifdef(CONFIG_ANA_CMP_V32F20X     analog/ana_cmp_v32f20x.c)
 
 # IO & Bus
 # Only build GPIO if enabled to avoid macro recursion bugs in certain cores
