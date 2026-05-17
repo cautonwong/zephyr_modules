@@ -4,3 +4,5 @@
  */
 
 #include <zephyr/arch/arm/cortex_m/scripts/linker.ld>
+
+/* Linker level fix for Zephyr Modbus/DTS edge case if needed */

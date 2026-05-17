@@ -12,7 +12,6 @@
 #include "lib_mailbox.h"
 
 struct mbox_v32f20x_config {
-    uintptr_t base;
     uint32_t irqs[2];
 };
 
@@ -114,7 +113,6 @@ static int mbox_v32f20x_init(const struct device *dev)
 
 static struct mbox_v32f20x_data mbox_v32f20x_data_0;
 static const struct mbox_v32f20x_config mbox_v32f20x_config_0 = {
-    .base = DT_INST_REG_ADDR(0),
     .irqs = {
         DT_INST_IRQ_BY_IDX(0, 0, irq),
         DT_INST_IRQ_BY_IDX(0, 1, irq),

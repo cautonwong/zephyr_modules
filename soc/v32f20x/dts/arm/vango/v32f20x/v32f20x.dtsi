@@ -31,9 +31,14 @@
         reg = <0x20000000 DT_SIZE_K(1088)>;
     };
 
-    ipc_shm: memory@20110000 {
+    ipc_shm_0: memory@20110000 {
         compatible = "zephyr,ipc_shm";
-        reg = <0x20110000 DT_SIZE_K(16)>;
+        reg = <0x20110000 DT_SIZE_K(8)>;
+    };
+
+    ipc_shm_1: memory@20112000 {
+        compatible = "zephyr,ipc_shm";
+        reg = <0x20112000 DT_SIZE_K(8)>;
     };
 
     flash0: flash@8000000 {
@@ -41,27 +46,7 @@
         reg = <0x08000000 DT_SIZE_K(2304)>;
     };
 
-    soc {
-        #address-cells = <1>;
-        #size-cells = <1>;
-        ranges;
-        interrupt-parent = <&nvic>;
-
-        nvic: interrupt-controller@e000e100 {
-            compatible = "arm,v6m-nvic";
-            reg = <0xe000e100 0xc00>;
-            interrupt-controller;
-            #interrupt-cells = <2>;
-        };
-
-        mbox: mbox@40200000 {
-            compatible = "vango,v32f20x-mbox";
-            reg = <0x40200000 0x1000>;
-            interrupts = <0 1>, <1 1>;
-            #mbox-cells = <1>;
-            status = "okay";
-        };
-
+    soc: soc {
         syscfg: syscfg@40200000 {
             compatible = "vango,v32f20x-syscfg", "syscon";
             reg = <0x40200000 0x1000>;
@@ -74,6 +59,13 @@
             clock: clock-controller {
                 compatible = "vango,v32f20x-clock";
                 #clock-cells = <1>;
+            };
+
+            mbox: mbox {
+                compatible = "vango,v32f20x-mbox";
+                interrupts = <0 1>, <1 1>;
+                #mbox-cells = <1>;
+                status = "okay";
             };
         };
 
@@ -102,71 +94,55 @@
             status = "disabled";
         };
 
-        gpioc: gpio@40100800 {
-            compatible = "vango,v32f20x-gpio";
-            reg = <0x40100800 0x400>;
-            interrupts = <29 1>;
-            gpio-controller;
-            #gpio-cells = <2>;
-            vango,port = <2>;
-            status = "disabled";
-        };
-
-        gpiod: gpio@40100c00 {
-            compatible = "vango,v32f20x-gpio";
-            reg = <0x40100c00 0x400>;
-            interrupts = <29 1>;
-            gpio-controller;
-            #gpio-cells = <2>;
-            vango,port = <3>;
-            status = "disabled";
-        };
-
         uart0: uart@40000000 {
-            clocks = <&clock 0>;
-            resets = <&reset 0>;
             compatible = "vango,v32f20x-uart";
             reg = <0x40000000 0x400>;
             interrupts = <0 1>;
+            clocks = <&clock 0>;
+            resets = <&reset 0>;
             status = "disabled";
         };
 
         uart1: uart@40000400 {
-            clocks = <&clock 1>;
-            resets = <&reset 1>;
             compatible = "vango,v32f20x-uart";
             reg = <0x40000400 0x400>;
             interrupts = <1 1>;
+            clocks = <&clock 1>;
+            resets = <&reset 1>;
             status = "disabled";
         };
 
         uart14: uart@40003800 {
-            clocks = <&clock 14>;
-            resets = <&reset 14>;
             compatible = "vango,v32f20x-uart";
             reg = <0x40003800 0x400>;
             interrupts = <14 1>;
+            clocks = <&clock 14>;
+            resets = <&reset 14>;
             status = "disabled";
         };
 
         adc0: adc@40010000 {
-            clocks = <&clock 15>;
-            resets = <&reset 15>;
             compatible = "vango,v32f20x-adc";
             reg = <0x40010000 0x400>;
             interrupts = <15 1>;
+            clocks = <&clock 15>;
+            resets = <&reset 15>;
             status = "disabled";
             #io-channel-cells = <1>;
         };
 
         dma0: dma@40020000 {
-            clocks = <&clock 20>;
-            resets = <&reset 20>;
             compatible = "vango,v32f20x-dma";
             reg = <0x40020000 0x400>;
             interrupts = <20 1>;
+            clocks = <&clock 20>;
+            resets = <&reset 20>;
             #dma-cells = <2>;
             status = "disabled";
         };
     };
+};
+
+&nvic {
+    arm,num-irq-priority-bits = <2>;
 };

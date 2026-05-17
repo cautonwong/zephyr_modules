@@ -8,38 +8,22 @@
     chosen {
         zephyr,sram = &sram0;
         zephyr,flash = &flash0;
-        zephyr,ipc_shm = &ipc_shm;
-        zephyr,console = &uart0;
-        zephyr,shell-uart = &uart0;
-    };
-
-    aliases {
-        uart-0 = &uart0;
-        gpio-0 = &gpioa;
+        zephyr,console = &uart1;
+        zephyr,shell-uart = &uart1;
     };
 };
 
-&nvic {
-    compatible = "arm,v8m-nvic";
-    arm,num-irq-priority-bits = <3>;
-};
-
-&systick {
-    compatible = "arm,armv8m-systick";
-};
-
-&uart0 {
-    pinctrl-0 = <&uart0_default>;
-    pinctrl-names = "default";
+&uart1 {
     status = "okay";
     current-speed = <115200>;
 };
 
-&pinctrl {
-    uart0_default: uart0_default {
-        group1 {
-            pinmux = <VANGO_PINMUX(VANGO_PORT_A, 9, 1)>, /* UART0_TX */
-                     <VANGO_PINMUX(VANGO_PORT_A, 10, 1)>; /* UART0_RX */
-        };
+&soc {
+    nvic: interrupt-controller@e000e100 {
+        compatible = "arm,v8m-nvic";
+        reg = <0xe000e100 0xc00>;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+        arm,num-irq-priority-bits = <3>;
     };
 };

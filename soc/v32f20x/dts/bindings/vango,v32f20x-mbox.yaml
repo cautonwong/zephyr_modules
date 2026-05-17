@@ -8,8 +8,6 @@ compatible: "vango,v32f20x-mbox"
 include: [base.yaml, mailbox-controller.yaml]
 
 properties:
-    reg:
-      required: true
     interrupts:
       required: true
     "#mbox-cells":

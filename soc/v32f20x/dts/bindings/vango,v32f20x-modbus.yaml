@@ -1,0 +1,8 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies Modbus Serial Node
+
+compatible: "vango,v32f20x-modbus"
+
+include: ["zephyr,modbus-serial.yaml"]
