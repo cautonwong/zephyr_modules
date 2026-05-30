@@ -18,6 +18,8 @@ child-binding:
       pinmux:
         required: true
         type: array
+      psels:
+        type: array
       bias-pull-up:
         type: boolean
       bias-pull-down:

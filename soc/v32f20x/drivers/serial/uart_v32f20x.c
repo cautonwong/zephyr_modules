@@ -68,7 +68,7 @@ static int uart_v32f20x_config_get(const struct device *dev, struct uart_config 
 #ifdef CONFIG_PM_DEVICE
 static int uart_v32f20x_pm_action(const struct device *dev, enum pm_device_action action)
 {
-#if !defined(CONFIG_SOC_V32F20X_CPU0)
+#if !defined(CONFIG_SOC_V32F20X_CPUMETER)
     const struct uart_v32f20x_config *config = dev->config;
     uint32_t uart_idx = ((uintptr_t)config->base - 0x40000000) / 0x400;
 

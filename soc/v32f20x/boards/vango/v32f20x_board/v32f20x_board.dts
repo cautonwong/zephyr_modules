@@ -12,6 +12,8 @@
         zephyr,shell-uart = &uart0;
     };
 
+
+
     aliases {
         uart-0 = &uart0;
         gpio-0 = &gpioa;
@@ -26,11 +28,24 @@
     current-speed = <115200>;
 };
 
+&uart1 {
+    pinctrl-0 = <&uart1_default>;
+    pinctrl-names = "default";
+    status = "okay";
+};
+
 &pinctrl {
     uart0_default: uart0_default {
         group1 {
             pinmux = <VANGO_PINMUX(VANGO_PORT_A, 9, 1)>, /* UART0_TX */
                      <VANGO_PINMUX(VANGO_PORT_A, 10, 1)>; /* UART0_RX */
+        };
+    };
+    uart1_default: uart1_default {
+        group1 {
+            pinmux = <VANGO_PINMUX(VANGO_PORT_A, 2, 1)>,
+                     <VANGO_PINMUX(VANGO_PORT_A, 3, 1)>;
+            psels = <0>, <0>;
         };
     };
 };

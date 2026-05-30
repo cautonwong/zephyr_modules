@@ -5,7 +5,9 @@ board:
   socs:
     - name: v32f20x
       variants:
-        - name: cpu0
-          cpucluster: cpu0
-        - name: cpu1
-          cpucluster: cpu1
+        - name: cpumeter
+          cpucluster: cpumeter
+        - name: cpuapp
+          cpucluster: cpuapp
+        - name: cpuapp_ns
+          cpucluster: cpuapp

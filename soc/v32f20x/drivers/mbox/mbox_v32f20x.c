@@ -42,9 +42,9 @@ static int mbox_v32f20x_register_callback(const struct device *dev, uint32_t cha
 {
     struct mbox_v32f20x_data *data = dev->data;
 
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
     if (channel != 0) return -EINVAL;
-#elif defined(CONFIG_SOC_V32F20X_CPU1)
+#elif defined(CONFIG_SOC_V32F20X_CPUAPP)
     if (channel != 1) return -EINVAL;
 #endif
 
@@ -77,12 +77,12 @@ static void mbox_v32f20x_isr(const struct device *dev)
 {
     struct mbox_v32f20x_data *data = dev->data;
 
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
     MB_ClearInterrupt(MB_INT_CM33_CORE0);
     if (data->cb) {
         data->cb(dev, 0, data->user_data, NULL);
     }
-#elif defined(CONFIG_SOC_V32F20X_CPU1)
+#elif defined(CONFIG_SOC_V32F20X_CPUAPP)
     MB_ClearInterrupt(MB_INT_CM0_CORE);
     if (data->cb) {
         data->cb(dev, 1, data->user_data, NULL);
@@ -99,11 +99,11 @@ static const struct mbox_driver_api mbox_v32f20x_api = {
 
 static int mbox_v32f20x_init(const struct device *dev)
 {
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
     IRQ_CONNECT(DT_INST_IRQ_BY_IDX(0, 0, irq),
                 DT_INST_IRQ_BY_IDX(0, 0, priority),
                 mbox_v32f20x_isr, DEVICE_DT_INST_GET(0), 0);
-#elif defined(CONFIG_SOC_V32F20X_CPU1)
+#elif defined(CONFIG_SOC_V32F20X_CPUAPP)
     IRQ_CONNECT(DT_INST_IRQ_BY_IDX(0, 1, irq),
                 DT_INST_IRQ_BY_IDX(0, 1, priority),
                 mbox_v32f20x_isr, DEVICE_DT_INST_GET(0), 0);

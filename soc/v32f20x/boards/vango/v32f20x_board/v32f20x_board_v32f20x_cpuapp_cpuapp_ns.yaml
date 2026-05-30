@@ -1,0 +1,13 @@
+identifier: v32f20x_board/v32f20x/cpuapp/cpuapp_ns
+name: Vango V32F20x Board (Cortex-M33 Non-Secure)
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+ram: 1104
+flash: 2304
+supported:
+  - adc
+  - gpio
+  - uart
+  - flash

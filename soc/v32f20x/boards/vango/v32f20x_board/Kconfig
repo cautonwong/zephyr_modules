@@ -1,8 +1,10 @@
 # V32F20X Board Kconfig
-# Each CPU target is selected via board qualifier (e.g. v32f20x_board/v32f20x/cpu0)
-# Zephyr auto-generates BOARD_V32F20X_BOARD_V32F20X_CPU0/CPU1 based on the qualifier path
+# Each CPU target is selected via board qualifier (e.g. v32f20x_board/v32f20x/cpuapp)
+# Zephyr auto-generates BOARD_V32F20X_BOARD_V32F20X_CPUAPP/CPUMETER based on the qualifier path
 
 config BOARD_V32F20X_BOARD
 	bool "Vango V32F20x Board"
 	select SOC_SERIES_V32F20X
-	select SOC_V32F20X_CPU1 if BOARD_V32F20X_BOARD_V32F20X_CPU1
+	select SOC_V32F20X_CPUAPP if BOARD_V32F20X_BOARD_V32F20X_CPUAPP
+	select SOC_V32F20X_CPUAPP if BOARD_V32F20X_BOARD_V32F20X_CPUAPP_NS
+	select SOC_V32F20X_CPUMETER if BOARD_V32F20X_BOARD_V32F20X_CPUMETER

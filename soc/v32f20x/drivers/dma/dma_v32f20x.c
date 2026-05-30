@@ -10,13 +10,13 @@
 #include <zephyr/irq.h>
 #include <soc.h>
 
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
 #include <lib_bdma.h>
 #else
 #include <lib_dma.h>
 #endif
 
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
 #define VANGO_DMA_MAX_CHANNELS 4
 #else
 #define VANGO_DMA_MAX_CHANNELS 8
@@ -46,7 +46,7 @@ static int dma_v32f20x_configure(const struct device *dev, uint32_t channel,
 		return -EINVAL;
 	}
 
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
 	BDMA_InitType init_struct;
 	BDMA_StructInit(&init_struct);
 
@@ -102,7 +102,7 @@ static int dma_v32f20x_configure(const struct device *dev, uint32_t channel,
 
 static int dma_v32f20x_start(const struct device *dev, uint32_t channel)
 {
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
 	BDMA_Cmd(channel, ENABLE);
 #else
 	const struct dma_v32f20x_config *dev_conf = dev->config;
@@ -114,7 +114,7 @@ static int dma_v32f20x_start(const struct device *dev, uint32_t channel)
 
 static int dma_v32f20x_stop(const struct device *dev, uint32_t channel)
 {
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
 	BDMA_Cmd(channel, DISABLE);
 #else
 	const struct dma_v32f20x_config *dev_conf = dev->config;
@@ -128,7 +128,7 @@ static void dma_v32f20x_isr(const struct device *dev)
 {
 	struct dma_v32f20x_data *data = dev->data;
 
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
 	for (int i = 0; i < 4; i++) {
 		if (BDMA_GetINTStatus(BDMA_INT_C0DA << i)) {
 			BDMA_ClearINTStatus(BDMA_INT_C0DA << i);
@@ -161,7 +161,7 @@ static int dma_v32f20x_init(const struct device *dev)
 {
 	const struct dma_v32f20x_config *dev_conf = dev->config;
 
-#if defined(CONFIG_SOC_V32F20X_CPU0)
+#if defined(CONFIG_SOC_V32F20X_CPUMETER)
 	/* BDMA initialization if needed */
 #else
 	DMA_Cmd((DMA_Type *)dev_conf->regs, ENABLE);

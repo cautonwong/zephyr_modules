@@ -9,8 +9,8 @@ config SOC_SERIES
 config SOC
 	default "v32f20x"
 
-config SOC_V32F20X_CPU0
-	default y if !SOC_V32F20X_CPU1
+config SOC_V32F20X_CPUMETER
+	default y if !SOC_V32F20X_CPUAPP
 
 config SYS_CLOCK_HW_CYCLES_PER_SEC
 	default 160000000
@@ -27,7 +27,7 @@ config RESET_INIT_PRIORITY
 config GPIO_INIT_PRIORITY
 	default 40
 
-if SOC_V32F20X_CPU1 # M33
+if SOC_V32F20X_CPUAPP # M33
 config ARM_MPU
 	default y
 config FPU

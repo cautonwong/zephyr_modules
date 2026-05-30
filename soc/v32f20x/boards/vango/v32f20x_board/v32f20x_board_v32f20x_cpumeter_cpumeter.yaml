@@ -1,0 +1,13 @@
+identifier: v32f20x_board/v32f20x/cpumeter/cpumeter
+name: Vango V32F20x Board (Cortex-M0)
+type: mcu
+arch: arm
+toolchain:
+  - zephyr
+ram: 1104
+flash: 2304
+supported:
+  - adc
+  - gpio
+  - uart
+  - flash

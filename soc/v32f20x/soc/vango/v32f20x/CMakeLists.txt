@@ -8,9 +8,9 @@ zephyr_library()
 zephyr_library_sources(soc.c)
 zephyr_compile_definitions(V32F209XX)
 
-if(CONFIG_SOC_V32F20X_CPU0)
+if(CONFIG_SOC_V32F20X_CPUMETER)
     zephyr_compile_definitions(V32F20XXX_CM0_CORE)
-elseif(CONFIG_SOC_V32F20X_CPU1)
+elseif(CONFIG_SOC_V32F20X_CPUAPP)
     zephyr_compile_definitions(V32F20XXX_CM33_CORE0)
 endif()
 

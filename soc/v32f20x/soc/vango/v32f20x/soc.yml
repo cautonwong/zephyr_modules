@@ -5,5 +5,5 @@ family:
         socs:
           - name: v32f20x
             cpuclusters:
-              - name: cpu0
-              - name: cpu1
+              - name: cpuapp
+              - name: cpumeter

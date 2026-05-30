@@ -13,15 +13,15 @@
         #address-cells = <1>;
         #size-cells = <0>;
 
-        cpu0: cpu@0 {
+        cpuapp: cpu@0 {
             device_type = "cpu";
-            compatible = "arm,cortex-m0";
+            compatible = "arm,cortex-m33";
             reg = <0>;
         };
 
-        cpu1: cpu@1 {
+        cpumeter: cpu@1 {
             device_type = "cpu";
-            compatible = "arm,cortex-m33";
+            compatible = "arm,cortex-m0";
             reg = <1>;
         };
     };
@@ -41,15 +41,24 @@
         reg = <0x20112000 DT_SIZE_K(8)>;
     };
 
-    flash0: flash@8000000 {
-        compatible = "vango,v32f20x-flash-controller";
-        reg = <0x08000000 DT_SIZE_K(2304)>;
-    };
-
     soc: soc {
         #address-cells = <1>;
         #size-cells = <1>;
         ranges;
+
+        flash_controller: flash-controller@40022000 {
+            compatible = "vango,v32f20x-flash-controller";
+            reg = <0x40022000 0x1000>;
+            #address-cells = <1>;
+            #size-cells = <1>;
+
+            flash0: flash@8000000 {
+                compatible = "soc-nv-flash";
+                reg = <0x08000000 DT_SIZE_K(2304)>;
+                erase-block-size = <1024>;
+                write-block-size = <4>;
+            };
+        };
 
         syscfg: syscfg@40200000 {
             compatible = "vango,v32f20x-syscfg", "syscon";

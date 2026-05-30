@@ -4,7 +4,7 @@
 config SOC_FAMILY_VANGO
     bool
 
-config SOC_V32F20X_CPU0
+config SOC_V32F20X_CPUMETER
         bool "V32F20X Cortex-M0 Core"
         select ARM
         select CPU_CORTEX_M0
@@ -12,16 +12,10 @@ config SOC_V32F20X_CPU0
         select CPU_CORTEX_M_HAS_SYSTICK
         select CORTEX_M_SYSTICK
         select HAS_V32F20X_HAL
-        select CLOCK_CONTROL_V32F20X
-        select PINCTRL_V32F20X
-        select V32F20X_GPIO
-        select V32F20X_UART
         select HAS_SEGGER_RTT
         select HAS_PM
-        select SERIAL_SUPPORT_INTERRUPT
-        select MBOX_V32F20X
 
-config SOC_V32F20X_CPU1
+config SOC_V32F20X_CPUAPP
         bool "V32F20X Cortex-M33 Core"
         select ARM
         select CPU_CORTEX_M33
@@ -33,14 +27,8 @@ config SOC_V32F20X_CPU1
         select CPU_CORTEX_M_HAS_SYSTICK
         select CORTEX_M_SYSTICK
         select HAS_V32F20X_HAL
-        select CLOCK_CONTROL_V32F20X
-        select PINCTRL_V32F20X
-        select V32F20X_GPIO
-        select V32F20X_UART
         select HAS_SEGGER_RTT
         select HAS_PM
-        select SERIAL_SUPPORT_INTERRUPT
-        select MBOX_V32F20X
 
 config SOC_SERIES_V32F20X
         bool
@@ -48,5 +36,3 @@ config SOC_SERIES_V32F20X
         select HAS_V32F20X_HAL
         select HAS_SEGGER_RTT
         select HAS_PM
-        select SERIAL_SUPPORT_INTERRUPT
-        select MBOX_V32F20X
