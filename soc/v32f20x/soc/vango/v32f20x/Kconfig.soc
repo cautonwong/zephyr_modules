@@ -12,7 +12,7 @@ config SOC_V32F20X_CPUMETER
         select CPU_CORTEX_M_HAS_SYSTICK
         select CORTEX_M_SYSTICK
         select HAS_V32F20X_HAL
-        select HAS_SEGGER_RTT
+        # select HAS_SEGGER_RTT
         select HAS_PM
 
 config SOC_V32F20X_CPUAPP
@@ -21,18 +21,19 @@ config SOC_V32F20X_CPUAPP
         select CPU_CORTEX_M33
         select CPU_HAS_ARM_MPU
         select CPU_HAS_ARM_SAU
+        select HAS_TFM
         select CPU_HAS_FPU
         select ARMV8_M_DSP
         select SOC_FAMILY_VANGO
         select CPU_CORTEX_M_HAS_SYSTICK
         select CORTEX_M_SYSTICK
         select HAS_V32F20X_HAL
-        select HAS_SEGGER_RTT
+        # select HAS_SEGGER_RTT
         select HAS_PM
 
 config SOC_SERIES_V32F20X
         bool
         select SOC_FAMILY_VANGO
         select HAS_V32F20X_HAL
-        select HAS_SEGGER_RTT
+        # select HAS_SEGGER_RTT
         select HAS_PM

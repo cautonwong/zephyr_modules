@@ -47,12 +47,14 @@ static int adc_v32f20x_read(const struct device *dev,
 
 	k_sem_take(&data->lock, K_FOREVER);
 
+	/* Simplified single channel sync read for now */
 	uint32_t channel = find_lsb_set(sequence->channels) - 1;
-
-	ADC_RegularChannelConfig(config->regs, channel, 1, ADC_SampleTime_28_5);
+	
+	ADC_RegularChannelConfig(config->regs, channel, 1, ADC_SampleTime_55_5);
 	ADC_SoftwareStartConvCtrl(config->regs, ENABLE);
 
 	while (ADC_GetFlagStatus(config->regs, ADC_FLAG_EC) == RESET) {
+		/* Timeout logic should be added here for production */
 	}
 
 	uint16_t val = ADC_GetConversionValue(config->regs);
@@ -78,6 +80,7 @@ static int adc_v32f20x_init(const struct device *dev)
 	clock_control_on(config->clock_dev, config->clock_subsys);
 
 	ADC_StructInit(&init_struct);
+	/* V32F20X ADC specific init */
 	ADC_Init(config->regs, &init_struct);
 	ADC_Ctrl(config->regs, ENABLE);
 

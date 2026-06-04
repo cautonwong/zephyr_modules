@@ -6,4 +6,10 @@ config BOARD
 config SOC
 	default "v32f20x"
 
+
+
+config TFM_BOARD
+        default "vango_v32f20x_cpuapp"
+
+
 endif # BOARD_V32F20X_BOARD

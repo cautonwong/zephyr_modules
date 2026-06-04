@@ -12,3 +12,9 @@ properties:
     required: true
   interrupts:
     required: true
+  "#mbox-cells":
+    type: int
+    const: 1
+
+mbox-cells:
+  - channel

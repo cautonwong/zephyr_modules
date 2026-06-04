@@ -28,6 +28,7 @@ zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_DAC      ../Libraries/Driv
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_DMA      ../Libraries/Drivers/Src/lib_dma.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_FLASH    ../Libraries/Drivers/Src/lib_flash.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_GPIO     ../Libraries/Drivers/Src/lib_gpio.c)
+zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_GPIO     ../Libraries/Drivers/Src/lib_gpio_ex.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_I2C      ../Libraries/Drivers/Src/lib_i2c.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_MAILBOX  ../Libraries/Drivers/Src/lib_mailbox.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_SPI      ../Libraries/Drivers/Src/lib_spi.c)
@@ -35,6 +36,7 @@ zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_SYSCFG   ../Libraries/Driv
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_TIMER    ../Libraries/Drivers/Src/lib_timer.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_UART     ../Libraries/Drivers/Src/lib_uart.c)
 zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_WDT      ../Libraries/Drivers/Src/lib_wdt.c)
+zephyr_library_sources_ifdef(CONFIG_VANGO_V32F20X_HAL_RNG      ../Libraries/Drivers/Src/lib_rng.c)
 
 # SYSCFG0 is CM33 specific
 if(NOT CONFIG_CPU_CORTEX_M0)

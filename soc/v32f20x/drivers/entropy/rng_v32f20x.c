@@ -62,7 +62,7 @@ static int entropy_v32f20x_init(const struct device *dev)
 #define ENTROPY_V32F20X_INIT(n) \
 	static const struct entropy_v32f20x_config entropy_v32f20x_config_##n = { \
 		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(n)), \
-		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(n, identifier), \
+		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(n, id), \
 	}; \
 	DEVICE_DT_INST_DEFINE(n, entropy_v32f20x_init, NULL, \
 			      NULL, &entropy_v32f20x_config_##n, \

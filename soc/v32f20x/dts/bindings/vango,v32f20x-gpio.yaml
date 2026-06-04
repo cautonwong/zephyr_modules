@@ -5,7 +5,7 @@ description: Vango Technologies V32F20X GPIO Controller
 
 compatible: "vango,v32f20x-gpio"
 
-include: [gpio-controller.yaml, base.yaml]
+include: [gpio-controller.yaml, pinctrl-device.yaml, base.yaml]
 
 properties:
   reg:

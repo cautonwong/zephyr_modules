@@ -9,13 +9,15 @@ rsource "clock_control/Kconfig"
 rsource "pinctrl/Kconfig"
 rsource "reset/Kconfig"
 rsource "dma/Kconfig"
+rsource "mbox/Kconfig"
 
 # 2. IO & Bus Drivers
+rsource "gpio/Kconfig"
 config V32F20X_GPIO
     bool "V32F20X GPIO Driver"
     default y
+    depends on GPIO
     depends on DT_HAS_VANGO_V32F20X_GPIO_ENABLED
-    select GPIO
     select VANGO_V32F20X_HAL_GPIO
     help
       Enable support for Vango V32F20X GPIO controller.
@@ -23,9 +25,11 @@ config V32F20X_GPIO
 config V32F20X_UART
     bool "V32F20X UART Driver"
     default y
+    depends on SERIAL
     depends on DT_HAS_VANGO_V32F20X_UART_ENABLED
     select SERIAL_HAS_DRIVER
     select SERIAL_SUPPORT_INTERRUPT
+    select SERIAL_SUPPORT_ASYNC
     select VANGO_V32F20X_HAL_UART
     help
       Enable support for Vango V32F20X UART.
@@ -33,24 +37,24 @@ config V32F20X_UART
 config I2C_V32F20X
     bool "V32F20X I2C Driver"
     default y
+    depends on I2C
     depends on DT_HAS_VANGO_V32F20X_I2C_ENABLED
-    select I2C
     help
       Enable support for Vango V32F20X I2C.
 
 config SPI_V32F20X
     bool "V32F20X SPI Driver"
     default y
+    depends on SPI
     depends on DT_HAS_VANGO_V32F20X_SPI_ENABLED
-    select SPI
     help
       Enable support for Vango V32F20X SPI.
 
 config CAN_V32F20X
     bool "V32F20X CAN Driver"
     default y
+    depends on CAN
     depends on DT_HAS_VANGO_V32F20X_CAN_ENABLED
-    select CAN
     help
       Enable support for Vango V32F20X CAN.
 
@@ -58,8 +62,8 @@ config CAN_V32F20X
 config ADC_V32F20X
     bool "V32F20X ADC Driver"
     default y
+    depends on ADC
     depends on DT_HAS_VANGO_V32F20X_ADC_ENABLED
-    select ADC
     select VANGO_V32F20X_HAL_ADC
     help
       Enable support for Vango V32F20X ADC.

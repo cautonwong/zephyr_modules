@@ -5,21 +5,23 @@ description: Vango Technologies V32F20X ADC
 
 compatible: "vango,v32f20x-adc"
 
-include: [adc-controller.yaml, base.yaml]
+include: [adc-controller.yaml, pinctrl-device.yaml, base.yaml]
 
 properties:
   reg:
     type: array
-    required: false
+    required: true
   interrupts:
     type: array
-    required: false
+    required: true
   clocks:
     type: phandle-array
-    required: false
+    required: true
   resets:
     type: phandle-array
     required: false
   "#io-channel-cells":
-    type: int
     const: 1
+
+io-channel-cells:
+  - input

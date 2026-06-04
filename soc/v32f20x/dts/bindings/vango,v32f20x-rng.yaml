@@ -1,0 +1,20 @@
+# Copyright (c) 2024 Vango Technologies
+# SPDX-License-Identifier: Apache-2.0
+
+description: Vango Technologies V32F20X RNG
+
+compatible: "vango,v32f20x-rng"
+
+include: base.yaml
+
+properties:
+  reg:
+    type: array
+    description: MMIO register space for the RNG.
+    required: true
+  clocks:
+    type: phandle-array
+    required: false
+  resets:
+    type: phandle-array
+    required: false

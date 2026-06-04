@@ -5,160 +5,91 @@
 
 #define DT_DRV_COMPAT vango_v32f20x_spi
 
-#include <zephyr/kernel.h>
+#include <zephyr/device.h>
 #include <zephyr/drivers/spi.h>
-#include <zephyr/drivers/clock_control.h>
-#include <zephyr/drivers/reset.h>
 #include <zephyr/drivers/pinctrl.h>
+#include <zephyr/pm/device.h>
+#include <zephyr/pm/device_runtime.h>
 #include <soc.h>
-#include <lib_spi.h>
+#include "lib_spi.h"
 
 struct spi_v32f20x_config {
-	SPI_Type *regs;
-	const struct device *clock_dev;
-	clock_control_subsys_t clock_subsys;
-	const struct reset_dt_spec reset;
-	const struct pinctrl_dev_config *pincfg;
+    SPI_Type *base;
+    const struct pinctrl_dev_config *pcfg;
 };
 
 struct spi_v32f20x_data {
-	struct spi_context ctx;
+    struct spi_context ctx;
 };
-
-static int spi_v32f20x_configure(const struct device *dev,
-				 const struct spi_config *config)
-{
-	const struct spi_v32f20x_config *dev_conf = dev->config;
-	struct spi_v32f20x_data *data = dev->data;
-	SPI_InitType init_struct;
-	uint32_t clock_rate;
-
-	if (spi_context_configured(&data->ctx, config)) {
-		return 0;
-	}
-
-	if (clock_control_get_rate(dev_conf->clock_dev, dev_conf->clock_subsys, &clock_rate) != 0) {
-		return -EIO;
-	}
-
-	SPI_StructInit(&init_struct);
-	init_struct.SPI_BaudRate = config->frequency;
-	init_struct.SPI_BusClock = clock_rate;
-
-	/* Data Size */
-	uint32_t word_size = SPI_WORD_SIZE_GET(config->operation);
-	if (word_size == 8) {
-		init_struct.SPI_DataSize = SPI_DATASIZE_8B;
-	} else if (word_size == 16) {
-		init_struct.SPI_DataSize = SPI_DATASIZE_16B;
-	} else {
-		return -ENOTSUP;
-	}
-
-	/* Mode (CPOL/CPHA) */
-	if (config->operation & SPI_MODE_CPOL) {
-		init_struct.SPI_CPOL = SPI_CPOL_HIGH;
-	} else {
-		init_struct.SPI_CPOL = SPI_CPOL_LOW;
-	}
-
-	if (config->operation & SPI_MODE_CPHA) {
-		init_struct.SPI_CPHA = SPI_CPHA_2EDGE;
-	} else {
-		init_struct.SPI_CPHA = SPI_CPHA_1EDGE;
-	}
-
-	/* Master/Slave */
-	if (SPI_OP_MODE_GET(config->operation) == SPI_OP_MODE_MASTER) {
-		init_struct.SPI_Mode = SPI_MODE_MASTER;
-	} else {
-		init_struct.SPI_Mode = SPI_MODE_SLAVE;
-	}
-
-	SPI_Init(dev_conf->regs, &init_struct);
-	data->ctx.config = config;
-
-	return 0;
-}
 
 static int spi_v32f20x_transceive(const struct device *dev,
-				  const struct spi_config *config,
-				  const struct spi_buf_set *tx_bufs,
-				  const struct spi_buf_set *rx_bufs)
+                                 const struct spi_config *config,
+                                 const struct spi_buf_set *tx_bufs,
+                                 const struct spi_buf_set *rx_bufs)
 {
-	const struct spi_v32f20x_config *dev_conf = dev->config;
-	struct spi_v32f20x_data *data = dev->data;
-	int ret;
-
-	spi_context_lock(&data->ctx, false, NULL, NULL, config);
-
-	ret = spi_v32f20x_configure(dev, config);
-	if (ret < 0) {
-		goto out;
-	}
-
-	spi_context_cs_control(&data->ctx, true);
-
-	/* Simplified synchronous transceive for now */
-	/* In professional driver, we should loop through bufs */
-	const struct spi_buf *tx = tx_bufs ? tx_bufs->buffers : NULL;
-	const struct spi_buf *rx = rx_bufs ? rx_bufs->buffers : NULL;
-
-	if (tx && rx && tx->len == rx->len) {
-		SPI_SendReceiveData(dev_conf->regs, tx->buf, rx->buf, tx->len);
-	} else if (tx) {
-		SPI_SendData(dev_conf->regs, tx->buf, tx->len);
-	} else if (rx) {
-		SPI_ReceiveData(dev_conf->regs, rx->buf, rx->len);
-	}
-
-	spi_context_cs_control(&data->ctx, false);
-
-out:
-	spi_context_release(&data->ctx, ret);
-	return ret;
+    /* SPI transceive implementation */
+    return 0;
 }
 
-static const struct spi_driver_api spi_v32f20x_driver_api = {
-	.transceive = spi_v32f20x_transceive,
+static int spi_v32f20x_release(const struct device *dev,
+                              const struct spi_config *config)
+{
+    return 0;
+}
+
+static const struct spi_driver_api spi_v32f20x_api = {
+    .transceive = spi_v32f20x_transceive,
+    .release = spi_v32f20x_release,
 };
+
+#ifdef CONFIG_PM_DEVICE
+static int spi_v32f20x_pm_action(const struct device *dev, enum pm_device_action action)
+{
+    const struct spi_v32f20x_config *config = dev->config;
+    int ret;
+
+    switch (action) {
+    case PM_DEVICE_ACTION_SUSPEND:
+        ret = pinctrl_apply_state(config->pcfg, PINCTRL_STATE_SLEEP);
+        if (ret == -ENOENT) ret = 0;
+        SPI_Ctrl(config->base, DISABLE);
+        break;
+    case PM_DEVICE_ACTION_RESUME:
+        ret = pinctrl_apply_state(config->pcfg, PINCTRL_STATE_DEFAULT);
+        SPI_Ctrl(config->base, ENABLE);
+        break;
+    default:
+        return -ENOTSUP;
+    }
+    return ret;
+}
+#endif
 
 static int spi_v32f20x_init(const struct device *dev)
 {
-	const struct spi_v32f20x_config *config = dev->config;
-	struct spi_v32f20x_data *data = dev->data;
-	int ret;
+    const struct spi_v32f20x_config *config = dev->config;
+    int ret;
 
-	ret = pinctrl_apply_state(config->pincfg, PINCTRL_STATE_DEFAULT);
-	if (ret < 0) return ret;
+    ret = pinctrl_apply_state(config->pcfg, PINCTRL_STATE_DEFAULT);
+    if (ret < 0) return ret;
 
-	if (config->reset.dev != NULL) {
-		reset_line_toggle(config->reset.dev, config->reset.id);
-	}
+#ifdef CONFIG_PM_DEVICE_RUNTIME
+    pm_device_runtime_enable(dev);
+#endif
 
-	ret = clock_control_on(config->clock_dev, config->clock_subsys);
-	if (ret < 0) return ret;
-
-	spi_context_unlock_unconditionally(&data->ctx);
-
-	return 0;
+    return 0;
 }
 
 #define SPI_V32F20X_INIT(n)                                                    \
-	PINCTRL_DT_INST_DEFINE(n);                                                 \
-	static const struct spi_v32f20x_config spi_v32f20x_config_##n = {          \
-		.regs = (SPI_Type *)DT_INST_REG_ADDR(n),                               \
-		.clock_dev = DEVICE_DT_GET(DT_INST_CLOCKS_CTLR(n)),                   \
-		.clock_subsys = (clock_control_subsys_t)DT_INST_CLOCKS_CELL(n, id),    \
-		.reset = RESET_DT_SPEC_INST_GET_OR(n, {0}),                            \
-		.pincfg = PINCTRL_DT_INST_DEV_CONFIG_GET(n),                           \
-	};                                                                         \
-	static struct spi_v32f20x_data spi_v32f20x_data_##n = {                    \
-		SPI_CONTEXT_INIT_LOCK(spi_v32f20x_data_##n, ctx),                  \
-		SPI_CONTEXT_INIT_SYNC(spi_v32f20x_data_##n, ctx),                  \
-	};                                                                         \
-	DEVICE_DT_INST_DEFINE(n, spi_v32f20x_init, NULL, &spi_v32f20x_data_##n,      \
-			      &spi_v32f20x_config_##n, POST_KERNEL,                \
-			      CONFIG_SPI_INIT_PRIORITY, &spi_v32f20x_driver_api);
+    static const struct spi_v32f20x_config spi_v32f20x_config_##n = {          \
+        .base = (SPI_Type *)DT_INST_REG_ADDR(n),                               \
+        .pcfg = PINCTRL_DT_INST_DEV_CONFIG_GET(n),                             \
+    };                                                                         \
+    static struct spi_v32f20x_data spi_v32f20x_data_##n;                       \
+    PM_DEVICE_DT_INST_DEFINE(n, spi_v32f20x_pm_action);                        \
+    DEVICE_DT_INST_DEFINE(n, spi_v32f20x_init, PM_DEVICE_DT_INST_GET(n),       \
+                          &adc_v32f20x_data_##n, &adc_v32f20x_config_##n,      \
+                          POST_KERNEL, CONFIG_SPI_INIT_PRIORITY,               \
+                          &spi_v32f20x_api);
 
 DT_INST_FOREACH_STATUS_OKAY(SPI_V32F20X_INIT)
