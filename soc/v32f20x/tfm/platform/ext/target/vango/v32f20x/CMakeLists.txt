@@ -8,6 +8,10 @@
 cmake_policy(SET CMP0076 NEW)
 set(CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_LIST_DIR})
 
+# V32F20X HAL include path (StdPeriph Lib)
+set(V32F20X_HAL_INCLUDE_DIR /root/fast_space/modules/hal/V32F20X_StdPeriph_Lib_V1.0.6/Libraries/include)
+set(V32F20X_HAL_CMSIS_DIR /root/fast_space/modules/hal/V32F20X_StdPeriph_Lib_V1.0.6/Libraries/CMSIS/cm33/core0)
+
 #========================= Platform region defs ===============================#
 
 target_include_directories(platform_region_defs
@@ -29,7 +33,7 @@ target_add_scatter_file(tfm_s
 
 target_sources(tfm_s
     PRIVATE
-        startup_v32f20x.c
+        vectors_v32f20x.c
 )
 
 if(BL2)
@@ -38,7 +42,7 @@ if(BL2)
     )
     target_sources(bl2
         PRIVATE
-            startup_v32f20x.c
+            vectors_v32f20x.c
     )
 endif()
 
@@ -49,6 +53,8 @@ target_include_directories(platform_s
         .
         partition
         ${PLATFORM_DIR}/..
+        ${V32F20X_HAL_INCLUDE_DIR}
+        ${V32F20X_HAL_CMSIS_DIR}
 )
 
 target_sources(platform_s
@@ -70,6 +76,8 @@ if(BL2)
         PUBLIC
             .
             partition
+            ${V32F20X_HAL_INCLUDE_DIR}
+            ${V32F20X_HAL_CMSIS_DIR}
         PRIVATE
             ${PLATFORM_DIR}/..
     )

@@ -88,3 +88,32 @@ FIH_RET_TYPE(enum tfm_hal_status_t) tfm_hal_memory_check(
 
     FIH_RET(fih_int_encode(TFM_HAL_ERROR_MEM_FAULT));
 }
+
+FIH_RET_TYPE(enum tfm_hal_status_t) tfm_hal_bind_boundary(
+                                    const struct partition_load_info_t *p_ldinf,
+                                    uintptr_t *p_boundary)
+{
+    (void)p_ldinf;
+    if (!p_boundary) {
+        FIH_RET(fih_int_encode(TFM_HAL_ERROR_GENERIC));
+    }
+    *p_boundary = 0;
+    FIH_RET(fih_int_encode(TFM_HAL_SUCCESS));
+}
+
+FIH_RET_TYPE(enum tfm_hal_status_t) tfm_hal_activate_boundary(
+                             const struct partition_load_info_t *p_ldinf,
+                             uintptr_t boundary)
+{
+    (void)p_ldinf;
+    (void)boundary;
+    FIH_RET(fih_int_encode(TFM_HAL_SUCCESS));
+}
+
+FIH_RET_TYPE(bool) tfm_hal_boundary_need_switch(uintptr_t boundary_from,
+                                                uintptr_t boundary_to)
+{
+    (void)boundary_from;
+    (void)boundary_to;
+    FIH_RET(fih_int_encode(false));
+}

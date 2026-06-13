@@ -69,6 +69,7 @@ ipc_shm_1: memory@20112000 {
         };
 
         systick: timer@e000e010 {
+            status = "okay";
             compatible = "arm,armv8m-systick";
             reg = <0xe000e010 0x10>;
         };

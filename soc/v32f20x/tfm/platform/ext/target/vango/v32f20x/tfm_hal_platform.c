@@ -11,13 +11,6 @@
 #include "tfm_hal_platform.h"
 #include "tfm_plat_defs.h"
 
-struct memory_region_limits memory_regions = {
-    .non_secure_code_start  = NS_CODE_START,
-    .non_secure_code_limit  = NS_CODE_LIMIT,
-    .non_secure_data_start  = NS_DATA_START,
-    .non_secure_data_limit  = NS_DATA_LIMIT,
-};
-
 FIH_RET_TYPE(enum tfm_hal_status_t) tfm_hal_platform_init(void)
 {
     enum tfm_plat_err_t plat_err;
@@ -49,15 +42,15 @@ FIH_RET_TYPE(enum tfm_hal_status_t) tfm_hal_platform_init(void)
 
 uint32_t tfm_hal_get_ns_VTOR(void)
 {
-    return memory_regions.non_secure_code_start;
+    return NS_CODE_START;
 }
 
 uint32_t tfm_hal_get_ns_MSP(void)
 {
-    return *((uint32_t *)memory_regions.non_secure_code_start);
+    return *((uint32_t *)NS_CODE_START);
 }
 
 uint32_t tfm_hal_get_ns_entry_point(void)
 {
-    return *((uint32_t *)(memory_regions.non_secure_code_start + 4));
+    return *((uint32_t *)(NS_CODE_START + 4));
 }
