@@ -13,8 +13,8 @@
 #define FLASH_TOTAL_SIZE                (0x240000)  /* 2304 KB */
 
 /* Partition Sizes (Task 1.1 Specification) */
-#define FLASH_S_PARTITION_SIZE          (0x40000)   /* 256 KB */
-#define FLASH_NS_PARTITION_SIZE         (0x50000)   /* 320 KB */
+#define FLASH_S_PARTITION_SIZE          (0x40000)   /* S partition: 256 KB */
+#define FLASH_NS_PARTITION_SIZE         (0x50000)   /* NS partition: 320 KB */
 #define FLASH_MAX_PARTITION_SIZE        (FLASH_S_PARTITION_SIZE + FLASH_NS_PARTITION_SIZE)
 
 #ifndef MCUBOOT_IMAGE_NUMBER
@@ -74,9 +74,13 @@
 #define FLASH_AREA_MODEL_OFFSET         (0x190000)
 #define FLASH_AREA_MODEL_SIZE           (0x20000)   /* 128KB */
 
-/* 0x1B0000 - 0x240000: Golden Recovery (576KB) */
+/* Golden Recovery and OTP */
 #define FLASH_AREA_RECOVERY_OFFSET      (0x1B0000)
-#define FLASH_AREA_RECOVERY_SIZE        (0x90000)
+#define FLASH_AREA_RECOVERY_SIZE        (0x8F000)   /* 572KB */
+
+#define FLASH_AREA_OTP_OFFSET           (0x23F000)
+#define FLASH_AREA_OTP_SIZE             (0x1000)    /* 4KB */
+#define FLASH_OTP_ID                    (9)
 
 /* --- TF-M Driver Configuration --- */
 #define TFM_HAL_FLASH_PROGRAM_UNIT       (0x4)

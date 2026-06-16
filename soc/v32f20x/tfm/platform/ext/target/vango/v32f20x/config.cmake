@@ -20,3 +20,5 @@ set(MCUBOOT_BUILTIN_KEY               ON    CACHE BOOL   "Use builtin key for va
 
 # V32F20x does not require Nordic SPU configuration
 set(NRF_BOARD_SELECTED                FALSE)
+set(TFM_PARTITION_INITIAL_ATTESTATION ON)
+set(TFM_IA_MAX_TOKEN_SIZE 1024)

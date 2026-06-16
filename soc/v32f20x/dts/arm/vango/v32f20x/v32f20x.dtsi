@@ -112,11 +112,7 @@
         gpioa: gpio@40106000 {
             compatible = "vango,v32f20x-gpio";
             reg = <0x40106000 0x100>;
-            /* Aligned with hardware interrupt mapping: GPIO Pins 0-15 mapped to unique IRQs */
-            interrupts = <20 0>, <21 0>, <22 0>, <23 0>, 
-                         <24 0>, <25 0>, <26 0>, <27 0>,
-                         <28 0>, <29 0>, <30 0>, <31 0>,
-                         <32 0>, <33 0>, <34 0>, <35 0>;
+            interrupts = <29 0>;
             gpio-controller;
             #gpio-cells = <2>;
             ngpios = <32>;
@@ -129,10 +125,7 @@
         gpiob: gpio@40106100 {
             compatible = "vango,v32f20x-gpio";
             reg = <0x40106100 0x100>;
-            interrupts = <36 0>, <37 0>, <38 0>, <39 0>, 
-                         <40 0>, <41 0>, <42 0>, <43 0>,
-                         <44 0>, <45 0>, <46 0>, <47 0>,
-                         <48 0>, <49 0>, <50 0>, <51 0>;
+            interrupts = <29 0>;
             gpio-controller;
             #gpio-cells = <2>;
             ngpios = <32>;
@@ -168,7 +161,15 @@
             status = "disabled";
         };
 
-        /* All SOC UARTs (Standardizing) */
+        rng0: rng@40091000 {
+            compatible = "vango,v32f20x-rng";
+            reg = <0x40091000 0x100>;
+            interrupts = <31 0>;
+            clocks = <&clock 83>;
+            status = "disabled";
+        };
+
+        /* All SOC UARTs */
         uart0: uart@40010000 { compatible = "vango,v32f20x-uart"; reg = <0x40010000 0x800>; interrupts = <60 0>; clocks = <&clock 32>; resets = <&reset 32>; status = "disabled"; };
         uart1: uart@40010800 { compatible = "vango,v32f20x-uart"; reg = <0x40010800 0x800>; interrupts = <61 0>; clocks = <&clock 33>; resets = <&reset 33>; pinctrl-0 = <&uart1_default>; pinctrl-1 = <&uart1_sleep>; pinctrl-names = "default", "sleep"; status = "disabled"; };
         uart2: uart@40011000 { compatible = "vango,v32f20x-uart"; reg = <0x40011000 0x800>; interrupts = <62 0>; clocks = <&clock 34>; resets = <&reset 34>; status = "disabled"; };

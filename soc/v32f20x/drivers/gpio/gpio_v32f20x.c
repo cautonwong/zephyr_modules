@@ -208,11 +208,11 @@ static int gpio_v32f20x_init(const struct device *dev)
         return 0;
 }
 
-#define GPIO_V32F20X_IRQ_CONNECT(idx, inst) \
-        IRQ_CONNECT(DT_INST_IRQ_BY_IDX(inst, idx, irq), \
-                    DT_INST_IRQ_BY_IDX(inst, idx, priority), \
+#define GPIO_V32F20X_IRQ_CONNECT_ONCE() \
+        IRQ_CONNECT(DT_INST_IRQ_BY_IDX(0, 0, irq), \
+                    DT_INST_IRQ_BY_IDX(0, 0, priority), \
                     gpio_v32f20x_isr, NULL, 0); \
-        irq_enable(DT_INST_IRQ_BY_IDX(inst, idx, irq));
+        irq_enable(DT_INST_IRQ_BY_IDX(0, 0, irq));
 
 #define GPIO_V32F20X_INIT(n)                                                   \
         static const struct gpio_v32f20x_config gpio_v32f20x_config_##n = {        \
@@ -235,7 +235,7 @@ DT_INST_FOREACH_STATUS_OKAY(GPIO_V32F20X_INIT)
 #if DT_NUM_INST_STATUS_OKAY(vango_v32f20x_gpio) > 0
 static int gpio_v32f20x_irq_init(void)
 {
-        LISTIFY(16, GPIO_V32F20X_IRQ_CONNECT, (;), 0)
+        GPIO_V32F20X_IRQ_CONNECT_ONCE()
         return 0;
 }
 SYS_INIT(gpio_v32f20x_irq_init, PRE_KERNEL_1, CONFIG_GPIO_INIT_PRIORITY);

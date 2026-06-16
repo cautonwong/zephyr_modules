@@ -1,0 +1,17 @@
+description: Vango V32F20X Watchdog Timer
+
+compatible: "vango,v32f20x-wdt"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+
+  clocks:
+    type: phandle-array
+    required: true
+
+  resets:
+    type: phandle-array
+    required: true

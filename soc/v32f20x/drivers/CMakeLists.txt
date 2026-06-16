@@ -21,7 +21,7 @@ zephyr_library_sources_ifdef(CONFIG_SPI_V32F20X            spi/spi_v32f20x.c)
 # Analog & Timers
 zephyr_library_sources_ifdef(CONFIG_ADC_V32F20X            adc/adc_v32f20x.c)
 zephyr_library_sources_ifdef(CONFIG_TIMER_V32F20X          timer/timer_v32f20x.c)
-zephyr_library_sources_ifdef(CONFIG_WDT_V32F20X            watchdog/watchdog_v32f20x.c)
+zephyr_library_sources_ifdef(CONFIG_WDT_V32F20X            watchdog/wdt_v32f20x.c)
 
 # System
 zephyr_library_sources_ifdef(CONFIG_FLASH_V32F20X          flash/flash_v32f20x.c)

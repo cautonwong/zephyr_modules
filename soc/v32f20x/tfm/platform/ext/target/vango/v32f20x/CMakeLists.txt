@@ -61,6 +61,7 @@ target_sources(platform_s
     PRIVATE
         cmsis_drivers/Driver_Flash.c
         cmsis_drivers/Driver_USART.c
+        tfm_plat_crypto_keys.c
         $<$<BOOL:${TFM_PARTITION_PLATFORM}>:${CMAKE_CURRENT_SOURCE_DIR}/services/src/tfm_platform_hal_ioctl.c>
 )
 
@@ -86,6 +87,7 @@ if(BL2)
         PRIVATE
             cmsis_drivers/Driver_Flash.c
             cmsis_drivers/Driver_USART.c
+        tfm_plat_crypto_keys.c
     )
 
     target_compile_definitions(platform_bl2
